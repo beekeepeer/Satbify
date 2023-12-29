@@ -1,100 +1,159 @@
 package org.example.module;
 
 
+import org.example.module.enums.*;
+
 public class Chord {
 
-    // replace int values with enums
+    /*TODO:
+       add int values to enum values.
+       set default values.
+    */
 
-    KeyRoot keyRoot;
-    ChordRoot chordRoot;
-    Mode mode;
-    MelodicPosition melodicPosition;
-    Spacing spacing;
-    Inversion inversion;
-    ChordType type;
-    Alteration alteration;
-    long timePosition;
+    private static KeyRoot keyRoot;
+    private static KeyMode keyMode;
+    private ChordRoot chordRoot;
+    private MelodicPosition melodicPosition; // delete and provide by midi note to "sopranoNote" variable
+    private Spacing spacing;
+    private Inversion inversion;
+    private ChordType type;
+    private Alteration alteration;
+    private long tickNoteOn;
+    private long tickNoteOff;
 
-    ChordNote sopranoNote;
-    ChordNote altoNote;
-    ChordNote tenorNote;
-    ChordNote bassNote;
+    private ChordNote sopranoNote;
+    private ChordNote altoNote;
+    private ChordNote tenorNote;
+    private ChordNote bassNote;
 
-    public Chord(KeyRoot keyRoot, ChordRoot chordRoot, Mode mode,
-                 MelodicPosition melodicPosition, Spacing spacing,
+    public Chord(ChordRoot chordRoot, MelodicPosition melodicPosition, Spacing spacing,
                  Inversion inversion, ChordType type, Alteration alteration) {
-        this.keyRoot = keyRoot;
         this.chordRoot = chordRoot;
-        this.mode = mode;
         this.melodicPosition = melodicPosition;
         this.spacing = spacing;
         this.inversion = inversion;
         this.type = type;
         this.alteration = alteration;
     }
+
+
+    // getters and setters:
+
+
+    public KeyRoot getKeyRoot() {
+        return keyRoot;
+    }
+
+    public void setKeyRoot(KeyRoot keyRoot) {
+        this.keyRoot = keyRoot;
+    }
+
+    public ChordRoot getChordRoot() {
+        return chordRoot;
+    }
+
+    public void setChordRoot(ChordRoot chordRoot) {
+        this.chordRoot = chordRoot;
+    }
+
+    public KeyMode getMode() {
+        return keyMode;
+    }
+
+    public void setMode(KeyMode keyMode) {
+        this.keyMode = keyMode;
+    }
+
+    public MelodicPosition getMelodicPosition() {
+        return melodicPosition;
+    }
+
+    public void setMelodicPosition(MelodicPosition melodicPosition) {
+        this.melodicPosition = melodicPosition;
+    }
+
+    public Spacing getSpacing() {
+        return spacing;
+    }
+
+    public void setSpacing(Spacing spacing) {
+        this.spacing = spacing;
+    }
+
+    public Inversion getInversion() {
+        return inversion;
+    }
+
+    public void setInversion(Inversion inversion) {
+        this.inversion = inversion;
+    }
+
+    public ChordType getType() {
+        return type;
+    }
+
+    public void setType(ChordType type) {
+        this.type = type;
+    }
+
+    public Alteration getAlteration() {
+        return alteration;
+    }
+
+    public void setAlteration(Alteration alteration) {
+        this.alteration = alteration;
+    }
+
+    public long getTickNoteOn() {
+        return tickNoteOn;
+    }
+
+    public void setTickNoteOn(long tickNoteOn) {
+        this.tickNoteOn = tickNoteOn;
+    }
+
+    public long getTickNoteOff() {
+        return tickNoteOff;
+    }
+
+    public void setTickNoteOff(long tickNoteOff) {
+        this.tickNoteOff = tickNoteOff;
+    }
+
+    public ChordNote getSopranoNote() {
+        return sopranoNote;
+    }
+
+    public void setSopranoNote(ChordNote sopranoNote) {
+        this.sopranoNote = sopranoNote;
+    }
+
+    public ChordNote getAltoNote() {
+        return altoNote;
+    }
+
+    public void setAltoNote(ChordNote altoNote) {
+        this.altoNote = altoNote;
+    }
+
+    public ChordNote getTenorNote() {
+        return tenorNote;
+    }
+
+    public void setTenorNote(ChordNote tenorNote) {
+        this.tenorNote = tenorNote;
+    }
+
+    public ChordNote getBassNote() {
+        return bassNote;
+    }
+
+    public void setBassNote(ChordNote bassNote) {
+        this.bassNote = bassNote;
+    }
 }
 
-// add int values to enum values:
 
-
-enum KeyRoot {
-    I, II, III, IV, V, VI, VII
-}
-
-enum ChordRoot {
-    I, II, III, IV, V, VI, VII
-}
-
-enum Mode {
-    MAJOR_NATURAL,
-    MAJOR_HARMONIC,
-    MINOR_NATURAL,
-    MINOR_HARMONIC
-}
-
-enum MelodicPosition {
-    I, III, V, VII, IX
-}
-
-enum Spacing {
-    NARROW, WIDE
-}
-
-enum Inversion {
-    I, III, V, VII, IX
-}
-
-enum ChordType {
-    TRIAD,
-    SEVENTH,
-    NINTH
-}
-
-enum alteration {
-
-}
-
-enum ChordNote {
-    I, III, V, VII, IX
-}
-
-enum Alteration {
-    RAISED_I,  // probably should be deleted
-    RAISED_II,
-    RAISED_III,
-    RAISED_IV, // Группа аккордов двойной доминанты
-    RAISED_V,
-    RAISED_VI,
-    RAISED_VII,   // probably should be deleted потому что и в мажоре и в минору это норма
-
-    LOWERED_I,
-    LOWERED_II,
-    LOWERED_III,
-    LOWERED_IV,
-    LOWERED_V,
-    LOWERED_VI,
-    LOWERED_VII
-}
 
 
 
