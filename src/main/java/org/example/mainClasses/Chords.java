@@ -40,6 +40,11 @@ public class Chords {
         а не в виде enum как в других случаях.
             - Также должно быть учтено всё что связано с понятием "Приготовление"
             - Additional methods for each alteration. Do not take a altered chord.
+            - inside a connection method, add an option to lower bass one octave lower.
+            it will reduce the repository twice. If between tenor and bass is exact octave -
+            raise bass octave higher in the repository.
+            - add an operation to change octave of the whole chord if the previous chord is
+            significantly far from current or next by all voices.
 
      */
 
