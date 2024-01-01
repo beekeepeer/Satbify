@@ -23,8 +23,8 @@ public class Chord {
 
 
     // constructor:
-    public Chord(Degree chordDegree, MelodicPosition melodicPosition, Spacing spacing, Inversion inversion, ChordType chordType, Alteration alteration, Occurrence occurrence, NoteOfScale bassNote, NoteOfScale tenorNote, NoteOfScale altoNote, NoteOfScale sopranoNote) {
-        this.chordDegree = chordDegree;
+    public Chord(MelodicPosition melodicPosition, Spacing spacing, Inversion inversion, ChordType chordType, Alteration alteration, Occurrence occurrence, NoteOfScale bassNote, NoteOfScale tenorNote, NoteOfScale altoNote, NoteOfScale sopranoNote) {
+
         this.melodicPosition = melodicPosition;
         this.spacing = spacing;
         this.inversion = inversion;
@@ -46,7 +46,7 @@ public class Chord {
     }
 
     public void setKeyRoot(KeyRoot keyRoot) {
-        // todo using this method calculate the tonality. Change input of the method to int from keyswitch and set the enum value. Or not... bad idea.
+        // todo set tonality attributes only by static Chords.methods
 
 
         this.keyRoot = keyRoot;
