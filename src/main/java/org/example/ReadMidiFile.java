@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.sound.midi.*;
 
+// todo: covert int from keyswitch to Degree enam
 public class ReadMidiFile {
     public static void main(String[] args) {
 

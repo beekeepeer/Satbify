@@ -1,11 +1,12 @@
 package org.example.mainClasses;
 
-import static org.example.module.Chord.keyRoot;
-import static org.example.module.Chord.keyScale;
 
-public class Scale {
+import org.example.module.Scale;
 
-    public static int relativizeNote(int chordDegree, int octave) {
+public class ScaleMoveToChordsClass {
+
+    // this method is for decoding objects to midi for saving midi file
+    public static int relativizeNote(Scale scale, int chordDegree, int octave) {
 
         int[] I = new int[]{24, 36, 48, 60, 72, 84, 96};
         int[] II = new int[]{26, 38, 50, 62, 74, 86, 98};
@@ -18,10 +19,10 @@ public class Scale {
         int[] VIIb = new int[]{34, 46, 58, 70, 82, 94, 106};
         int[] VII = new int[]{35, 47, 59, 71, 83, 95, 107};
 
-        int[] theNote = new int[7];
+        int[] outputNotesArray = new int[7];
 
-        if (keyScale == 13) {                      // major natural
-            theNote = switch (chordDegree) {
+        if (scale.ordinal() == 13) {                      // major natural
+            outputNotesArray = switch (chordDegree) {
                 default -> I;
                 case 14 -> II;
                 case 16 -> III;
@@ -30,8 +31,8 @@ public class Scale {
                 case 21 -> VI;
                 case 23 -> VII;
             };
-        } else if (keyScale == 15) {                      // major harmonic
-            theNote = switch (chordDegree) {
+        } else if (scale.ordinal() == 15) {                      // major harmonic
+            outputNotesArray = switch (chordDegree) {
                 default -> I;
                 case 14 -> II;
                 case 16 -> III;
@@ -40,8 +41,8 @@ public class Scale {
                 case 21 -> VIb;
                 case 23 -> VII;
             };
-        } else if (keyScale == 18) {                      // minor natural
-            theNote = switch (chordDegree) {
+        } else if (scale.ordinal() == 18) {                      // minor natural
+            outputNotesArray = switch (chordDegree) {
                 default -> I;
                 case 14 -> II;
                 case 16 -> IIIb;
@@ -50,8 +51,8 @@ public class Scale {
                 case 21 -> VIb;
                 case 23 -> VIIb;
             };
-        } else if (keyScale == 20) {                      // minor harmonic
-            theNote = switch (chordDegree) {
+        } else if (scale.ordinal() == 20) {                      // minor harmonic
+            outputNotesArray = switch (chordDegree) {
                 default -> I;
                 case 14 -> II;
                 case 16 -> IIIb;
@@ -60,8 +61,8 @@ public class Scale {
                 case 21 -> VIb;
                 case 23 -> VII;
             };
-        } else if (keyScale == 22) {                      // ascending minor melodic. descending should be natural.
-            theNote = switch (chordDegree) {
+        } else if (scale.ordinal() == 22) {                      // ascending minor melodic. descending should be natural.
+            outputNotesArray = switch (chordDegree) {
                 default -> I;
                 case 14 -> II;
                 case 16 -> IIIb;
@@ -75,6 +76,7 @@ public class Scale {
 
 
 
-        return theNote[octave] + keyRoot;
+        // returns the specific note on MIDI message as int from string argument
+        return outputNotesArray[octave] + scale.ordinal();
     }
 }
