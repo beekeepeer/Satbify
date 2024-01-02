@@ -11,7 +11,8 @@ public enum KeyRoot {
     G(7),
     G_Sharp(8),
     A(9),
-    A_Sharp(10);
+    A_Sharp(10),
+    B(11);
 
     KeyRoot(int keyRoot) {
     }

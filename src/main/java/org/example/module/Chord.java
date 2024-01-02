@@ -2,6 +2,7 @@ package org.example.module;
 
 // The chord mutable POJO
 public class Chord {
+//    int id;
 
     public KeyRoot keyRoot = KeyRoot.C;
     public Scale keyScale = Scale.MAJOR_NATURAL;
@@ -35,6 +36,45 @@ public class Chord {
         this.altoNote = altoNote;
         this.tenorNote = tenorNote;
         this.bassNote = bassNote;
+    }
+    public Chord(){}
+
+    public void applyKeySwitch(byte KeySwitch){
+        switch (KeySwitch){
+            case 0: keyRoot = KeyRoot.C;       break;
+            case 1: keyRoot = KeyRoot.C_Sharp; break;
+            case 2: keyRoot = KeyRoot.D;       break;
+            case 3: keyRoot = KeyRoot.D_Sharp; break;
+            case 4: keyRoot = KeyRoot.E;       break;
+            case 5: keyRoot = KeyRoot.F;       break;
+            case 6: keyRoot = KeyRoot.F_Sharp; break;
+            case 7: keyRoot = KeyRoot.G;       break;
+            case 8: keyRoot = KeyRoot.G_Sharp; break;
+            case 9: keyRoot = KeyRoot.A;       break;
+            case 10: keyRoot = KeyRoot.A_Sharp;break;
+
+            case 12: chordDegree = Degree.I;         break;
+            case 13: keyScale = Scale.MAJOR_NATURAL; break;
+            case 14: chordDegree = Degree.II;        break;
+            case 15: keyScale = Scale.MAJOR_HARMONIC;break;
+            case 16: chordDegree = Degree.III;       break;
+            case 17: chordDegree = Degree.IV;        break;
+            case 18: keyScale = Scale.MINOR_NATURAL; break;
+            case 19: chordDegree = Degree.V;         break;
+            case 20: keyScale = Scale.MINOR_HARMONIC;break;
+            case 21: chordDegree = Degree.VI;        break;
+            case 22: keyScale = Scale.MINOR_MELODIC; break;
+            case 23: chordDegree = Degree.VII;       break;
+
+            case 109: alteration = Alteration.NONE;
+            case 110: alteration = Alteration.NONE;
+            case 111: alteration = Alteration.NONE;
+            case 112: alteration = Alteration.NONE;
+            case 113: alteration = Alteration.NONE;
+
+
+        }
+
     }
 
 

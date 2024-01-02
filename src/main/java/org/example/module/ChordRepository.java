@@ -3,7 +3,7 @@ package org.example.module;
 import java.util.ArrayList;
 
 /*
-The substance of the database of all variations of chords without mentioning its Degree, tonality and scale.
+This is a substance of the database of all variations of chords without mentioning its Degree, tonality and scale.
 todo: add comments to lines about practical usage.
  */
 public class ChordRepository {

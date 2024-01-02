@@ -1,17 +1,22 @@
 package org.example;
 
+import org.example.module.Chord;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.sound.midi.*;
 
-// todo: covert int from keyswitch to Degree enam
-public class ReadMidiFile {
+// todo: convert int from keyswitch to Degree enum
+public class Main {
+    static Chord chord;
     public static void main(String[] args) {
+
 
         // create a File object from directory
         var file =  new File("/Users/homestudio/Music/Chord Track Reaper project/Audio/1_ScaleTonDegree.mid");
+        int noteNumber;
 
         try (var fis = new FileInputStream(file);){
             Sequence sequence = MidiSystem.getSequence(fis);
@@ -20,16 +25,32 @@ public class ReadMidiFile {
             for (int i = 0; i < track.size(); i++) {
 
                 MidiEvent event = track.get(i);
-                var x = event.getMessage().getMessage()[0];
-                if(x == -112)
-                    System.out.println("Byte " + x + " - " + event.getTick() / 960); // print through all events
+                int status = event.getMessage().getStatus();  // note on = 144 / off = 128/ CC/ all note off 176, 255
+                MidiMessage midiMessage = event.getMessage();
+                byte[] bytes = midiMessage.getMessage();
+
+                if(status == 144){      // if this is a note On message
+                    chord = new Chord();
+                    noteNumber = bytes[1]; // note number
+                    if(noteNumber < 23 || noteNumber > 107) {
+                        chord.setTickStartTime(event.getTick()); // set time position of a message. one quarter not contains 960 ticks
+                        chord.applyKeySwitch(bytes[1]);
+                    }
+
+
+
+
+                } else if (status == 128) {      // if this is a note Off message
+                    byte noteOffNumber = bytes[1]; // note number
+                    chord.setTickEndTime(event.getTick()); // set time position of a message. one quarter not contains 960 ticks
+                }
 //                System.out.println("Status " + event.getMessage().getStatus());
 
 //                System.out.println(event.getTick()); // print event position in time:
                 // print the resolution of the sequence:
 //                System.out.println(sequence.getResolution()); // 960
                 // print note offsets
-                byte[] bytes = event.getMessage().getMessage();
+
 
 
 

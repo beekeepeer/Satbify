@@ -7,8 +7,8 @@ package org.example.module;
  */
 public enum Alteration {
     NONE(),
-    DD_Sharp_IV(),
-
+    DD_Sharp_IV()
+    // add more
     /*
     Интервал увеличенной сексты образуется между шестой
 ступенью минора или гармонического мажора и четвертой
