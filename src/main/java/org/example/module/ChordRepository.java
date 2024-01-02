@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /*
 This is a substance of the database of all variations of chords without mentioning its Degree, tonality and scale.
-todo: add comments to lines about practical usage.
+add comments to lines about practical usage.
  */
 public class ChordRepository {
 

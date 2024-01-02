@@ -6,8 +6,11 @@ package org.example.module;
 есть нe создает выхода за пределы данной тональности.
  */
 public enum Alteration {
-    NONE(),
-    DD_Sharp_IV()
+    NONE,
+    DD_Sharp_IV,
+    DD_Flat_IV,
+    II_Sharp, // only in major
+    II_Flat,
     // add more
     /*
     Интервал увеличенной сексты образуется между шестой

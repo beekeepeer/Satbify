@@ -1,6 +1,8 @@
 package org.example;
 
 import org.example.module.Chord;
+import org.example.module.KeyRoot;
+import org.example.module.Scale;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,6 +19,8 @@ public class Main {
         // create a File object from directory
         var file =  new File("/Users/homestudio/Music/Chord Track Reaper project/Audio/1_ScaleTonDegree.mid");
         int noteNumber;
+        KeyRoot keyRoot = KeyRoot.C;
+        Scale keyScale = Scale.MAJOR_NATURAL;
 
         try (var fis = new FileInputStream(file);){
             Sequence sequence = MidiSystem.getSequence(fis);
@@ -32,9 +36,15 @@ public class Main {
                 if(status == 144){      // if this is a note On message
                     chord = new Chord();
                     noteNumber = bytes[1]; // note number
+
+                    // keyRoot = switch statement; maybe in Chord class
+                    // keyScale = switch statement; maybe in Chord class
+
                     if(noteNumber < 23 || noteNumber > 107) {
                         chord.setTickStartTime(event.getTick()); // set time position of a message. one quarter not contains 960 ticks
                         chord.applyKeySwitch(bytes[1]);
+                    } else {
+
                     }
 
 

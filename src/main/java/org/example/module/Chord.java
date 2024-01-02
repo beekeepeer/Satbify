@@ -11,7 +11,7 @@ public class Chord {
     private Spacing spacing = Spacing.CLOSE;
     private Inversion inversion = Inversion.ROOT_POSITION;
     private ChordType chordType = ChordType.TRIAD;
-    private Alteration alteration;             // for additional features
+    private Alteration alteration = Alteration.NONE;             // for additional features
     private Occurrence occurrence;
 
 
@@ -41,6 +41,7 @@ public class Chord {
 
     public void applyKeySwitch(byte KeySwitch){
         switch (KeySwitch){
+
             case 0: keyRoot = KeyRoot.C;       break;
             case 1: keyRoot = KeyRoot.C_Sharp; break;
             case 2: keyRoot = KeyRoot.D;       break;
@@ -53,6 +54,7 @@ public class Chord {
             case 9: keyRoot = KeyRoot.A;       break;
             case 10: keyRoot = KeyRoot.A_Sharp;break;
 
+            // Degree and scale:
             case 12: chordDegree = Degree.I;         break;
             case 13: keyScale = Scale.MAJOR_NATURAL; break;
             case 14: chordDegree = Degree.II;        break;
@@ -66,12 +68,32 @@ public class Chord {
             case 22: keyScale = Scale.MINOR_MELODIC; break;
             case 23: chordDegree = Degree.VII;       break;
 
-            case 109: alteration = Alteration.NONE;
-            case 110: alteration = Alteration.NONE;
-            case 111: alteration = Alteration.NONE;
-            case 112: alteration = Alteration.NONE;
-            case 113: alteration = Alteration.NONE;
+            // a feature to add
+//            case 108: alteration = null; break;
+//            case 109: alteration = null; break;
+//            case 110: alteration = null; break;
+//            case 111: alteration = null; break;
 
+            case 112: melodicPosition = MelodicPosition.I; break;
+            case 113: melodicPosition = MelodicPosition.III; break;
+            case 114: melodicPosition = MelodicPosition.V; break;
+            case 115: melodicPosition = MelodicPosition.VII; break;
+            case 116: melodicPosition = MelodicPosition.IX; break;
+
+
+            case 117: chordType = ChordType.TRIAD;          break;
+            case 118: chordType = ChordType.SEVENTH_CHORD;  break;
+            case 119: chordType = ChordType.NINTH_CHORD;    break;
+
+            case 120: inversion = Inversion.ROOT_POSITION;   break;
+            case 121: inversion = Inversion.FIRST_INVERSION; break;
+            case 122: inversion = Inversion.SECOND_INVERSION;break;
+            case 123: inversion = Inversion.THIRD_INVERSION; break;
+
+            case 124: spacing = Spacing.OPEN;    break;
+            case 125: spacing = Spacing.CLOSE;   break;
+            case 126: spacing = Spacing.MIXED_1; break;
+            case 127: spacing = Spacing.MIXED_2; break;
 
         }
 
