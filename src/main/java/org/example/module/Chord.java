@@ -39,6 +39,7 @@ public class Chord {
     }
     public Chord(){}
 
+    // maybe int values in all enums are not needed. but for now I leave it there.
     public void applyKeySwitch(byte KeySwitch){
         switch (KeySwitch){
 
