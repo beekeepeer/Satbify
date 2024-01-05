@@ -1,7 +1,9 @@
 package org.example.module;
 
+import javax.sound.midi.MidiEvent;
+
 // The chord mutable POJO
-public class Chord {
+public class Chord implements Cloneable {
 //    int id;
 
     public KeyRoot keyRoot = KeyRoot.C;
@@ -23,7 +25,7 @@ public class Chord {
     private NoteOfScale bassNote = new NoteOfScale(Degree.I, 4);
 
 
-    // constructor:
+    // constructor for repository creation:
     public Chord(MelodicPosition melodicPosition, Spacing spacing, Inversion inversion, ChordType chordType, Alteration alteration, Occurrence occurrence, NoteOfScale bassNote, NoteOfScale tenorNote, NoteOfScale altoNote, NoteOfScale sopranoNote) {
 
         this.melodicPosition = melodicPosition;
@@ -37,6 +39,8 @@ public class Chord {
         this.tenorNote = tenorNote;
         this.bassNote = bassNote;
     }
+
+//    constructor for adding new Chord object to list in Main class
     public Chord(){}
 
     // maybe int values in all enums are not needed. but for now I leave it there.
@@ -234,7 +238,56 @@ public class Chord {
     public void setBassNote(NoteOfScale bassNote) {
         this.bassNote = bassNote;
     }
+
+
+    @Override
+    public String toString() {
+        return "Chord{" +
+                " \n keyRoot=" + keyRoot +
+                " \n keyScale=" + keyScale +
+                " \n chordDegree=" + chordDegree +
+                " \n melodicPosition=" + melodicPosition +
+                " \n spacing=" + spacing +
+                " \n inversion=" + inversion +
+                " \n chordType=" + chordType +
+                " \n alteration=" + alteration +
+                " \n occurrence=" + occurrence +
+                " \n tickStartTime=" + tickStartTime +
+                " \n tickEndTime=" + tickEndTime +
+                " \n sopranoNote=" + sopranoNote +
+                " \n altoNote=" + altoNote +
+                " \n tenorNote=" + tenorNote +
+                " \n bassNote=" + bassNote +
+                '}' +
+                " \n" +
+                " \n";
+    }
+
+    @Override
+    public Chord clone() throws CloneNotSupportedException {
+        Chord clonedChord = (Chord) super.clone();
+        clonedChord.keyRoot = keyRoot;
+        clonedChord.keyScale = keyScale;
+        clonedChord.chordDegree = chordDegree;
+        clonedChord.melodicPosition = melodicPosition;
+        clonedChord.spacing = spacing;
+        clonedChord.inversion = inversion;
+        clonedChord.chordType = chordType;
+        clonedChord.alteration = alteration;
+        clonedChord.occurrence = occurrence;
+        clonedChord.tickStartTime = tickStartTime;
+        clonedChord.tickEndTime = tickEndTime;
+
+        clonedChord.sopranoNote = sopranoNote.clone();
+        clonedChord.altoNote = altoNote.clone();
+        clonedChord.tenorNote = tenorNote.clone();
+        clonedChord.bassNote = bassNote.clone();
+
+        return clonedChord;
+    }
+
 }
+
 
 
 

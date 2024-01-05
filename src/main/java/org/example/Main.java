@@ -1,79 +1,72 @@
 package org.example;
 
 import org.example.module.Chord;
-import org.example.module.KeyRoot;
-import org.example.module.Scale;
 
+import javax.sound.midi.*;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import javax.sound.midi.*;
+import java.util.ArrayList;
 
-// todo: convert int from keyswitch to Degree enum
 public class Main {
-    static Chord chord;
     public static void main(String[] args) {
 
 
         // create a File object from directory
-        var file =  new File("/Users/homestudio/Music/Chord Track Reaper project/Audio/1_ScaleTonDegree.mid");
+        var file = new File("/Users/homestudio/Music/Chord Track Reaper project/Audio/1_ScaleTonDegree.mid");
         int noteNumber;
-        KeyRoot keyRoot = KeyRoot.C;
-        Scale keyScale = Scale.MAJOR_NATURAL;
+        ArrayList<Chord> listOfChords = new ArrayList<>();
+        listOfChords.add(new Chord());
+        int lastChord = 0;
 
-        try (var fis = new FileInputStream(file);){
+        try (var fis = new FileInputStream(file);) {
             Sequence sequence = MidiSystem.getSequence(fis);
             Track[] tracks = sequence.getTracks();
             Track track = tracks[0];
+
+
             for (int i = 0; i < track.size(); i++) {
+
 
                 MidiEvent event = track.get(i);
                 int status = event.getMessage().getStatus();  // note on = 144 / off = 128/ CC/ all note off 176, 255
+
+
                 MidiMessage midiMessage = event.getMessage();
                 byte[] bytes = midiMessage.getMessage();
-
-                if(status == 144){      // if this is a note On message
-                    chord = new Chord();
-                    noteNumber = bytes[1]; // note number
-
-                    // keyRoot = switch statement; maybe in Chord class
-                    // keyScale = switch statement; maybe in Chord class
-
-                    if(noteNumber < 23 || noteNumber > 107) {
-                        chord.setTickStartTime(event.getTick()); // set time position of a message. one quarter not contains 960 ticks
-                        chord.applyKeySwitch(bytes[1]);
-                    } else {
-
-                    }
+                byte b = bytes[1];
+                boolean isKeySwitch = b == 12 || b == 14 || b == 16 || b == 17 || b == 19 || b == 21 || b == 23;
+                lastChord = listOfChords.size() - 1;
 
 
+                if (status == 144) {      // if this is a note On channel 1 message
+                    listOfChords.get(lastChord).setTickStartTime(event.getTick());
+                    listOfChords.get(lastChord).applyKeySwitch(b);
+                } else if (status == 128 && isKeySwitch) {      // if this is a note Off message of a Chord degree KeySwitch
+                    listOfChords.get(lastChord).setTickEndTime(event.getTick());
 
 
-                } else if (status == 128) {      // if this is a note Off message
-                    byte noteOffNumber = bytes[1]; // note number
-                    chord.setTickEndTime(event.getTick()); // set time position of a message. one quarter not contains 960 ticks
+                    //add new Chord to the list:
+
+                    Chord newChord = listOfChords.get(lastChord).clone();
+
+                    listOfChords.add(newChord);
+
                 }
-//                System.out.println("Status " + event.getMessage().getStatus());
-
-//                System.out.println(event.getTick()); // print event position in time:
-                // print the resolution of the sequence:
-//                System.out.println(sequence.getResolution()); // 960
-                // print note offsets
-
-
-
-
             }
-        } catch (FileNotFoundException | InvalidMidiDataException e) {
+            listOfChords.remove(lastChord); // todo: too stupidly delete last added Chord form list at the end
+        } catch (InvalidMidiDataException | IOException e) {
             throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (CloneNotSupportedException e){
         }
+        System.out.println("listOfChords size is: " + listOfChords);
+
     }
 }
 
 
+// print the resolution of the sequence:
+//                System.out.println(sequence.getResolution()); // 960
 /*
 
 The MIDI channel of an event in javax.sound.midi can be defined by retrieving the status byte of the MIDI message and extracting the channel number. The status byte is the first byte of the MIDI message and is used to identify the type of message and the channel to which it belongs.
