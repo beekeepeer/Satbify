@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,7 +16,7 @@ public class Main {
         // create a File object from directory
         var file = new File("/Users/homestudio/Music/Chord Track Reaper project/Audio/1_ScaleTonDegree.mid");
         int noteNumber;
-        ArrayList<Chord> listOfChords = new ArrayList<>();
+        List<Chord> listOfChords = new ArrayList<>();
         listOfChords.add(new Chord());
         int lastChord = 0;
 
@@ -35,6 +36,7 @@ public class Main {
                 MidiMessage midiMessage = event.getMessage();
                 byte[] bytes = midiMessage.getMessage();
                 byte b = bytes[1];
+                int channel = 1 + (midiMessage.getStatus() & 0x0F); // maybe redundant
                 boolean isKeySwitch = b == 12 || b == 14 || b == 16 || b == 17 || b == 19 || b == 21 || b == 23;
                 lastChord = listOfChords.size() - 1;
 
@@ -45,21 +47,76 @@ public class Main {
                 } else if (status == 128 && isKeySwitch) {      // if this is a note Off message of a Chord degree KeySwitch
                     listOfChords.get(lastChord).setTickEndTime(event.getTick());
 
-
                     //add new Chord to the list:
-
                     Chord newChord = listOfChords.get(lastChord).clone();
-
                     listOfChords.add(newChord);
-
                 }
+
+
+
+
+
+
+                // apply provided explicit midi notes to Notes fields of Chord objects:
+                if(channel<=4){
+                    // if note is out of scale - build logic for changing the alteration field in current Chord object
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
-            listOfChords.remove(lastChord); // todo: too stupidly delete last added Chord form list at the end
+            listOfChords.remove(lastChord); // todo: too stupidly delete last added Chord form list at the end, without condition
+
         } catch (InvalidMidiDataException | IOException e) {
             throw new RuntimeException(e);
         } catch (CloneNotSupportedException e){
+            System.out.println(" cloning Chord Exception ");
         }
-        System.out.println("listOfChords size is: " + listOfChords);
+
+
+
+
+
+
+
+
+
+        // Connect chords in the listOfChords - apply KeySwitches to Notes fields:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // System.out.println("listOfChords size is: " + listOfChords);
+
+
+
+
+
+        // export properly connected list of Chords to midi file in 4 midi channels
 
     }
 }
