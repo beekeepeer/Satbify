@@ -57,7 +57,7 @@ public class Main {
 
 
 
-                // apply provided explicit midi notes to Notes fields of Chord objects:
+                // todo: apply provided explicit midi notes to Notes fields of Chord objects:
                 if(channel<=4){
                     // if note is out of scale - build logic for changing the alteration field in current Chord object
                 }
@@ -93,7 +93,7 @@ public class Main {
 
 
 
-        // Connect chords in the listOfChords - apply KeySwitches to Notes fields:
+        //  todo: Connect chords in the listOfChords - apply KeySwitches to Notes fields:
 
 
 
@@ -110,13 +110,13 @@ public class Main {
 
 
 
-        // System.out.println("listOfChords size is: " + listOfChords);
+        // todo: System.out.println("listOfChords size is: " + listOfChords);
 
 
 
 
 
-        // export properly connected list of Chords to midi file in 4 midi channels
+        // todo: export properly connected list of Chords to midi file in 4 midi channels
 
     }
 }
