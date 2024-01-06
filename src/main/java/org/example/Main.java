@@ -12,7 +12,6 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
 
-
         // create a File object from directory
         var file = new File("/Users/homestudio/Music/Chord Track Reaper project/Audio/1_ScaleTonDegree.mid");
         int noteNumber;
@@ -84,6 +83,7 @@ public class Main {
         } catch (CloneNotSupportedException e){
             System.out.println(" cloning Chord Exception ");
         }
+        System.out.println("listOfChords size is: " + listOfChords);
 
 
 
@@ -108,9 +108,6 @@ public class Main {
 
 
 
-
-
-        // todo: System.out.println("listOfChords size is: " + listOfChords);
 
 
 
