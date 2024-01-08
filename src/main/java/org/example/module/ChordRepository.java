@@ -41,7 +41,7 @@ public class ChordRepository {
         chordsRepositoryList.add(new Chord(MelodicPosition.V, Spacing.OPEN, Inversion.FIRST_INVERSION, ChordType.TRIAD, Alteration.NONE, Occurrence.COMMON, new NoteOfScale(Degree.V, 5), new NoteOfScale(Degree.V, 5), new NoteOfScale(Degree.I, 5), new NoteOfScale(Degree.III, 4)));
         chordsRepositoryList.add(new Chord(MelodicPosition.V, Spacing.OPEN, Inversion.FIRST_INVERSION, ChordType.TRIAD, Alteration.NONE, Occurrence.COMMON, new NoteOfScale(Degree.V, 6), new NoteOfScale(Degree.V, 5), new NoteOfScale(Degree.I, 5), new NoteOfScale(Degree.III, 4)));
 
-        // Квартсекстаккорд
+        // Квартсекстаккорды. Скорее всего их будет очень мало. Например проходящие и кадансовые.
 
         // Seventh Chord and NonaChord
     }
