@@ -10,7 +10,7 @@ public class NoteOfScale implements Cloneable {
     int octave;
 
     public String toString(){
-        return " Degree is " + degree + ", Octave is " + octave + ". ";
+        return "Degree is " + degree + ", Octave is " + octave + " ";
     }
 
     public NoteOfScale(Degree degree, int octave) {
@@ -25,6 +25,14 @@ public class NoteOfScale implements Cloneable {
         clonedNote.octave = this.octave;
 
         return clonedNote;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof NoteOfScale) {
+            NoteOfScale note = (NoteOfScale) obj;
+            return this.degree == note.degree && this.octave == note.octave;
+        }
+        return false;
     }
 
 }

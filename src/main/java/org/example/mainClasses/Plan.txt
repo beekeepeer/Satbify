@@ -9,6 +9,7 @@ input midi should contain:
     7. chord type (3, 7, 9)
     8. alteration ?
     9. member of musical peace (period, sentence, cadence)
+    10. add keyswitchis to chose preference of common note to stay in same voice.
 
 
 

@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.module.Chord;
+import org.example.module.ChordRepository;
 
 import javax.sound.midi.*;
 import java.io.File;
@@ -18,6 +19,7 @@ public class Main {
         List<Chord> listOfChords = new ArrayList<>();
         listOfChords.add(new Chord());
         int lastChord = 0;
+   
 
         try (var fis = new FileInputStream(file);) {
             Sequence sequence = MidiSystem.getSequence(fis);
@@ -34,16 +36,17 @@ public class Main {
 
                 MidiMessage midiMessage = event.getMessage();
                 byte[] bytes = midiMessage.getMessage();
-                byte b = bytes[1];
-                int channel = 1 + (midiMessage.getStatus() & 0x0F); // maybe redundant
-                boolean isKeySwitch = b == 12 || b == 14 || b == 16 || b == 17 || b == 19 || b == 21 || b == 23;
-                lastChord = listOfChords.size() - 1;
+                byte b = bytes[1]; // second byte value of i'th midi message = note number.
+                int channel = 1 + (midiMessage.getStatus() & 0x0F);
+                boolean isDegreeKeySwitch = b == 12 || b == 14 || b == 16 || b == 17 || b == 19 || b == 21 || b == 23;
+                boolean isGivenNoteInVoice =  channel < 5; // TODO: add note range from Soprano to Bass. 
+                lastChord = listOfChords.size() - 1; // why element of list, why not the object? I do not know... it works.
 
 
-                if (status == 144) {      // if this is a note On channel 1 message
+                if (status == 144) {      // if this is a note On channel 1 message. For all key
                     listOfChords.get(lastChord).setTickStartTime(event.getTick());
                     listOfChords.get(lastChord).applyKeySwitch(b);
-                } else if (status == 128 && isKeySwitch) {      // if this is a note Off message of a Chord degree KeySwitch
+                } else if (status == 128 && isDegreeKeySwitch) {      // if this is a note Off message of a Chord degree KeySwitch
                     listOfChords.get(lastChord).setTickEndTime(event.getTick());
 
                     //add new Chord to the list:
@@ -56,7 +59,7 @@ public class Main {
 
 
 
-                // todo: apply provided explicit midi notes to Notes fields of Chord objects:
+                // TODO: apply provided explicit midi notes to Notes fields of Chord objects:
                 if(channel<=4){
                     // if note is out of scale - build logic for changing the alteration field in current Chord object
                 }
@@ -76,14 +79,17 @@ public class Main {
 
 
             }
-            listOfChords.remove(lastChord); // todo: too stupidly delete last added Chord form list at the end, without condition
+            listOfChords.remove(lastChord); // TODO: too stupidly delete last added Chord form list at the end, without condition
 
         } catch (InvalidMidiDataException | IOException e) {
             throw new RuntimeException(e);
         } catch (CloneNotSupportedException e){
             System.out.println(" cloning Chord Exception ");
+        } catch (ArithmeticException eAr){
+            System.out.println(" Arithmetic Exception ");
         }
-        System.out.println("listOfChords size is: " + listOfChords);
+        
+        System.out.println("listOfChords : " + listOfChords);
 
 
 
@@ -93,7 +99,7 @@ public class Main {
 
 
 
-        //  todo: Connect chords in the listOfChords - apply KeySwitches to Notes fields:
+        //  TODO: Connect chords in the listOfChords - apply KeySwitches to Notes fields:
 
 
 
@@ -113,7 +119,7 @@ public class Main {
 
 
 
-        // todo: export properly connected list of Chords to midi file in 4 midi channels
+        // TODO: export properly connected list of Chords to midi file in 4 midi channels
 
     }
 }
@@ -144,3 +150,4 @@ noteOn.setMessage(ShortMessage.NOTE_ON, channelNumber, noteNumber, velocity);
 Use code with caution. Learn more
 In this example, the noteOn message is created with the specified channel number. The channel number is passed as an argument to the setMessage() method.
  */
+      

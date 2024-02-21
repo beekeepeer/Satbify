@@ -1,6 +1,6 @@
 package org.example.module;
 
-import javax.sound.midi.MidiEvent;
+// import javax.sound.midi.MidiEvent;
 
 // The chord mutable POJO
 public class Chord implements Cloneable {
@@ -14,7 +14,7 @@ public class Chord implements Cloneable {
     private Inversion inversion = Inversion.ROOT_POSITION;
     private ChordType chordType = ChordType.TRIAD;
     private Alteration alteration = Alteration.NONE;             // for additional features
-    private Occurrence occurrence;
+    private Occurrence occurrence = Occurrence.COMMON;          // for additional features
 
 
     private long tickStartTime;
@@ -95,11 +95,10 @@ public class Chord implements Cloneable {
             case 122: inversion = Inversion.SECOND_INVERSION;break;
             case 123: inversion = Inversion.THIRD_INVERSION; break;
 
-            case 124: spacing = Spacing.OPEN;    break;
-            case 125: spacing = Spacing.CLOSE;   break;
+            case 124: spacing = Spacing.CLOSE;    break;
+            case 125: spacing = Spacing.OPEN;   break;
             case 126: spacing = Spacing.MIXED_1; break;
             case 127: spacing = Spacing.MIXED_2; break;
-
         }
 
     }
@@ -240,24 +239,49 @@ public class Chord implements Cloneable {
     }
 
 
+    // emplement equals method
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Chord chord = (Chord) o;
+        return  keyRoot == chord.keyRoot &&
+                keyScale == chord.keyScale &&
+                chordDegree == chord.chordDegree &&
+                melodicPosition == chord.melodicPosition &&
+                spacing == chord.spacing &&
+                inversion == chord.inversion &&
+                chordType == chord.chordType &&
+                alteration == chord.alteration &&
+                occurrence == chord.occurrence &&
+                tickStartTime == chord.tickStartTime &&
+                tickEndTime == chord.tickEndTime &&
+                sopranoNote.equals(chord.sopranoNote) &&
+                altoNote.equals(chord.altoNote) &&
+                tenorNote.equals(chord.tenorNote) &&
+                bassNote.equals(chord.bassNote);
+    }
+          
+
+
     @Override
     public String toString() {
         return "Chord{" +
-                " \n keyRoot=" + keyRoot +
-                " \n keyScale=" + keyScale +
-                " \n chordDegree=" + chordDegree +
-                " \n melodicPosition=" + melodicPosition +
-                " \n spacing=" + spacing +
-                " \n inversion=" + inversion +
-                " \n chordType=" + chordType +
-                " \n alteration=" + alteration +
-                " \n occurrence=" + occurrence +
-                " \n tickStartTime=" + tickStartTime +
-                " \n tickEndTime=" + tickEndTime +
-                " \n sopranoNote=" + sopranoNote +
-                " \n altoNote=" + altoNote +
-                " \n tenorNote=" + tenorNote +
-                " \n bassNote=" + bassNote +
+                " \n keyRoot =         " + keyRoot +
+                " \n keyScale =        " + keyScale +
+                " \n chordDegree =     " + chordDegree +
+                " \n melodicPosition = " + melodicPosition +
+                " \n spacing =         " + spacing +
+                " \n inversion =       " + inversion +
+                " \n chordType =       " + chordType +
+                " \n alteration =      " + alteration +
+                " \n occurrence =      " + occurrence +
+                " \n tickStartTime =   " + tickStartTime +
+                " \n tickEndTime =     " + tickEndTime +
+                " \n sopranoNote =     " + sopranoNote +
+                " \n altoNote =        " + altoNote +
+                " \n tenorNote =       " + tenorNote +
+                " \n bassNote =        " + bassNote +
                 '}' +
                 " \n" +
                 " \n";

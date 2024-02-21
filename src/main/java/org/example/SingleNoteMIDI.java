@@ -13,7 +13,8 @@ import java.util.ServiceLoader;
 public class SingleNoteMIDI {
 
     public static void main(String[] args) {
-        try {
+        File file = new File("myMidiFile.mid");
+        try (FileOutputStream fos = new FileOutputStream(file);){
             Sequence sequence = new Sequence(Sequence.PPQ, 480, 1);
             Track[] tracks = sequence.getTracks();
             Track track  = tracks[0];
@@ -31,8 +32,6 @@ public class SingleNoteMIDI {
 
 
             // save a MIDI file
-            File file = new File("myMidiFile.mid");
-            FileOutputStream fos = new FileOutputStream(file);
             var serviceLoader = ServiceLoader.load(MidiFileWriter.class).findFirst().get();
             serviceLoader.write(sequence, 1, file);
 
