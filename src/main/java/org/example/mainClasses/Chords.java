@@ -1,30 +1,48 @@
 package org.example.mainClasses;
 
 import org.example.module.Chord;
-import org.example.module.ChordRepository;
+import static org.example.module.ChordRepository.chordsRepositoryList;
 import org.example.module.Scale;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 // This is a helper class with static methods on Chord objects
 
 public class Chords {
-    public static ArrayList<ArrayList<Chord>> ConnectChords(ArrayList<Chord> in) {
+    public static ArrayList<ArrayList<Chord>> connectChords(List<Chord> inList) {
 
-        ArrayList<ArrayList<Chord>> result = new ArrayList<>(in.size());
+        ArrayList<Stream<Chord>> result = new ArrayList<>(inList.size());
+        
+        // iterate through inList
+        for (int i = 0; i<inList.size(); i++) {
+            var chord = inList.get(i);
 
-        // loop to chose suitable chords from Repository
-        for (int i = 0; i < in.size() - 1; i++) {
-            for (int j = 0; j < ChordRepository.chordsRepositoryList.size(); j++) {
-                // compare to find suitable Chords
-                
-            }
-        }
+            Stream<Chord> temp = chordsRepositoryList.stream().
+                    filter(x -> x.getKeyRoot() == chord.getKeyRoot()).
+                    filter(x -> x.getChordDegree() == chord.getChordDegree()).
+                    filter(x -> x.getMelodicPosition() == chord.getMelodicPosition()).
+                    filter(x -> x.getSpacing() == chord.getSpacing()).
+                    filter(x -> x.getInversion() == chord.getInversion()).
+                    filter(x -> x.getType() == chord.getType()).
+                    filter(x -> x.getAlteration() == chord.getAlteration()).
+                    filter(x -> x.getOccurrence() == chord.getOccurrence()).
+                    map(a -> {a.setTickStartTime(chord.getTickStartTime()); return a;}).
+                    map(a -> {a.setTickEndTime(chord.getTickEndTime()); return a;}).
+                    map(a -> {a.setKeyRoot(chord.getKeyRoot()); return a;}).
+                    map(a -> {a.setKeyScale(chord.getKeyScale()); return a;}).
+                    map(a -> {a.setChordDegree(chord.getChordDegree()); return a;});
+
+            result.add(i, temp);
+            temp.forEach(System.out::println);
+        } 
+        
 
         //  loop connects two chords
-        for (int i = 0; i < in.size() - 1; i++) {
-            if (i > in.size()) {
-                if (absentParallels(in.get(i), in.get(i + 1))) {
+        for (int i = 0; i < inList.size() - 1; i++) {
+            if (i > inList.size()) {
+                if (absentParallels(inList.get(i), inList.get(i + 1))) {
 
                 }}
         }

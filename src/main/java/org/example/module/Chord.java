@@ -19,10 +19,10 @@ public class Chord implements Cloneable {
 
     private long tickStartTime;
     private long tickEndTime;
-    private NoteOfScale sopranoNote = new NoteOfScale(Degree.I, 5);
-    private NoteOfScale altoNote = new NoteOfScale(Degree.V, 4);
-    private NoteOfScale tenorNote = new NoteOfScale(Degree.III, 4);
-    private NoteOfScale bassNote = new NoteOfScale(Degree.I, 4);
+    private NoteOfScale sopranoNote;
+    private NoteOfScale altoNote;
+    private NoteOfScale tenorNote;
+    private NoteOfScale bassNote;
 
 
     // constructor for repository creation:
@@ -299,13 +299,13 @@ public class Chord implements Cloneable {
         clonedChord.chordType = chordType;
         clonedChord.alteration = alteration;
         clonedChord.occurrence = occurrence;
-        clonedChord.tickStartTime = tickStartTime;
-        clonedChord.tickEndTime = tickEndTime;
+        // clonedChord.tickStartTime = tickStartTime;
+        // clonedChord.tickEndTime = tickEndTime;
 
-        clonedChord.sopranoNote = sopranoNote.clone();
-        clonedChord.altoNote = altoNote.clone();
-        clonedChord.tenorNote = tenorNote.clone();
-        clonedChord.bassNote = bassNote.clone();
+        // clonedChord.sopranoNote = sopranoNote.clone();
+        // clonedChord.altoNote = altoNote.clone();
+        // clonedChord.tenorNote = tenorNote.clone();
+        // clonedChord.bassNote = bassNote.clone();
 
         return clonedChord;
     }

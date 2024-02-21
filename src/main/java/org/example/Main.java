@@ -1,7 +1,7 @@
 package org.example;
 
 import org.example.module.Chord;
-import org.example.module.ChordRepository;
+import static org.example.mainClasses.Chords.*;
 
 import javax.sound.midi.*;
 import java.io.File;
@@ -80,6 +80,7 @@ public class Main {
 
             }
             listOfChords.remove(lastChord); // TODO: too stupidly delete last added Chord form list at the end, without condition
+            connectChords(listOfChords);
 
         } catch (InvalidMidiDataException | IOException e) {
             throw new RuntimeException(e);
@@ -89,7 +90,7 @@ public class Main {
             System.out.println(" Arithmetic Exception ");
         }
         
-        System.out.println("listOfChords : " + listOfChords);
+        // System.out.println("listOfChords : " + listOfChords);
 
 
 
