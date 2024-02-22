@@ -20,7 +20,6 @@ public class Chords {
             var chord = inList.get(i);
 
             Stream<Chord> temp = chordsRepositoryList.stream().
-                    filter(x -> x.getKeyRoot() == chord.getKeyRoot()).
                     filter(x -> x.getChordDegree() == chord.getChordDegree()).
                     filter(x -> x.getMelodicPosition() == chord.getMelodicPosition()).
                     filter(x -> x.getSpacing() == chord.getSpacing()).
@@ -28,14 +27,16 @@ public class Chords {
                     filter(x -> x.getType() == chord.getType()).
                     filter(x -> x.getAlteration() == chord.getAlteration()).
                     filter(x -> x.getOccurrence() == chord.getOccurrence()).
+                    filter(x -> x.getKeyScale() == chord.getKeyScale()).
                     map(a -> {a.setTickStartTime(chord.getTickStartTime()); return a;}).
                     map(a -> {a.setTickEndTime(chord.getTickEndTime()); return a;}).
-                    map(a -> {a.setKeyRoot(chord.getKeyRoot()); return a;}).
-                    map(a -> {a.setKeyScale(chord.getKeyScale()); return a;}).
-                    map(a -> {a.setChordDegree(chord.getChordDegree()); return a;});
+                    map(a -> {a.setKeyRoot(chord.getKeyRoot()); return a;});
 
             result.add(i, temp);
-            temp.forEach(System.out::println);
+            // temp.forEach(System.out::println);
+
+            // use Optional for dealing with null values. Enums do not have null values.
+            
         } 
         
 

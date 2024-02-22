@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
@@ -35,7 +36,7 @@ public class Main {
 
 
                 MidiMessage midiMessage = event.getMessage();
-                byte[] bytes = midiMessage.getMessage();
+                byte[] bytes = midiMessage.getMessage(); // System.out.println(Arrays.toString(bytes));
                 byte b = bytes[1]; // second byte value of i'th midi message = note number.
                 int channel = 1 + (midiMessage.getStatus() & 0x0F);
                 boolean isDegreeKeySwitch = b == 12 || b == 14 || b == 16 || b == 17 || b == 19 || b == 21 || b == 23;
@@ -47,7 +48,7 @@ public class Main {
                     listOfChords.get(lastChord).setTickStartTime(event.getTick());
                     listOfChords.get(lastChord).applyKeySwitch(b);
                 } else if (status == 128 && isDegreeKeySwitch) {      // if this is a note Off message of a Chord degree KeySwitch
-                    listOfChords.get(lastChord).setTickEndTime(event.getTick());
+                    listOfChords.get(lastChord).setTickEndTime(event.getTick()); // TODO: end time only for the last chord in the sequence
 
                     //add new Chord to the list:
                     Chord newChord = listOfChords.get(lastChord).clone();

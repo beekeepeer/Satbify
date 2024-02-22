@@ -6,15 +6,15 @@ package org.example.module;
 public class Chord implements Cloneable {
 //    int id;
 
-    public KeyRoot keyRoot = KeyRoot.C;
-    public Scale keyScale = Scale.MAJOR_NATURAL;
-    private Degree chordDegree = Degree.I;
-    private MelodicPosition melodicPosition = MelodicPosition.I;
-    private Spacing spacing = Spacing.CLOSE;
-    private Inversion inversion = Inversion.ROOT_POSITION;
-    private ChordType chordType = ChordType.TRIAD;
-    private Alteration alteration = Alteration.NONE;             // for additional features
-    private Occurrence occurrence = Occurrence.COMMON;          // for additional features
+    public KeyRoot keyRoot;
+    public Scale keyScale;
+    private Degree chordDegree;
+    private MelodicPosition melodicPosition;
+    private Spacing spacing;
+    private Inversion inversion;
+    private ChordType chordType;
+    private Alteration alteration;             // for additional features
+    private Occurrence occurrence;          // for additional features
 
 
     private long tickStartTime;
@@ -299,6 +299,8 @@ public class Chord implements Cloneable {
         clonedChord.chordType = chordType;
         clonedChord.alteration = alteration;
         clonedChord.occurrence = occurrence;
+
+
         // clonedChord.tickStartTime = tickStartTime;
         // clonedChord.tickEndTime = tickEndTime;
 
