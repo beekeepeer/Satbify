@@ -1,11 +1,21 @@
 package org.example.mainClasses;
 
+import org.example.module.Alteration;
 import org.example.module.Chord;
+import org.example.module.ChordType;
+import org.example.module.Degree;
+import org.example.module.Inversion;
+import org.example.module.MelodicPosition;
+import org.example.module.Occurrence;
+
 import static org.example.module.ChordRepository.chordsRepositoryList;
 import org.example.module.Scale;
+import org.example.module.Spacing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 // This is a helper class with static methods on Chord objects
@@ -13,45 +23,72 @@ import java.util.stream.Stream;
 public class Chords {
     public static ArrayList<ArrayList<Chord>> connectChords(List<Chord> inList) {
 
-        ArrayList<Stream<Chord>> result = new ArrayList<>(inList.size());
+        ArrayList<ArrayList<Chord>> ToConnect = new ArrayList<>(inList.size());
         
         // iterate through inList
+        // TODO  use Optional for dealing with null values.
         for (int i = 0; i<inList.size(); i++) {
             var chord = inList.get(i);
 
-            Stream<Chord> temp = chordsRepositoryList.stream().
-                    filter(x -> x.getChordDegree() == chord.getChordDegree()).
-                    filter(x -> x.getMelodicPosition() == chord.getMelodicPosition()).
-                    filter(x -> x.getSpacing() == chord.getSpacing()).
-                    filter(x -> x.getInversion() == chord.getInversion()).
-                    filter(x -> x.getType() == chord.getType()).
-                    filter(x -> x.getAlteration() == chord.getAlteration()).
-                    filter(x -> x.getOccurrence() == chord.getOccurrence()).
-                    filter(x -> x.getKeyScale() == chord.getKeyScale()).
-                    map(a -> {a.setTickStartTime(chord.getTickStartTime()); return a;}).
-                    map(a -> {a.setTickEndTime(chord.getTickEndTime()); return a;}).
-                    map(a -> {a.setKeyRoot(chord.getKeyRoot()); return a;});
+            Stream<Chord> temp = chordsRepositoryList.stream();
 
-            result.add(i, temp);
-            // temp.forEach(System.out::println);
+            if (chord.getMelodicPosition() != null)
+                temp = temp.filter(x -> x.getMelodicPosition() == chord.getMelodicPosition());
+            if (chord.getSpacing() != null)
+                temp = temp.filter(x -> x.getSpacing() == chord.getSpacing());
+            if (chord.getInversion() != null)
+                temp = temp.filter(x -> x.getInversion() == chord.getInversion());
+            if (chord.getType() != null)
+                temp = temp.filter(x -> x.getType() == chord.getType());
+            if (chord.getAlteration() != null)
+                temp = temp.filter(x -> x.getAlteration() == chord.getAlteration());
+            if (chord.getOccurrence() != null)
+                temp = temp.filter(x -> x.getOccurrence() == chord.getOccurrence());
+                    
+            temp = temp.map(a -> {a.setTickStartTime(chord.getTickStartTime()); return a;}).
+            map(a -> {a.setTickEndTime(chord.getTickEndTime()); return a;}).
+            map(a -> {a.setKeyScale(chord.getKeyScale()); return a;}).
+            map(a -> {a.setChordDegree(chord.getChordDegree()); return a;}).
+            map(a -> {a.setKeyRoot(chord.getKeyRoot()); return a;});
 
-            // use Optional for dealing with null values. Enums do not have null values.
-            
+            ToConnect.add(i, temp.collect(Collectors.toCollection(ArrayList::new)));    
         } 
+        // ToConnect.forEach(System.out::println);
         
+        // each list in this collection is a connected sequence following the rules.
+        // size is not known ahead of time.
+        ArrayList<ArrayList<Chord>> result = new ArrayList<>();
 
-        //  loop connects two chords
-        for (int i = 0; i < inList.size() - 1; i++) {
-            if (i > inList.size()) {
-                if (absentParallels(inList.get(i), inList.get(i + 1))) {
+        //  the loop connects two chords if they do not contain forbidden moves.
+        // use logic of break the loop for "depth first" instead of recursion
+        int TimePositionIndex = 0, iLeft = 0, iRight = 1;
+        int l = ToConnect.size();
+        result.get(0).add(ToConnect.get(0).get(0));
+        
+        outer: while (TimePositionIndex < l) {
+            innerLeft: while (iLeft < ToConnect.get(TimePositionIndex).size()) {
+                if (testAllRules(ToConnect.get(TimePositionIndex).get(iLeft),
+                                 ToConnect.get(TimePositionIndex + 1).get(iRight))) {
+                                    if (TimePositionIndex == 0) {//, add this first chord and second
+                                        result.add(new ArrayList<Chord>(l));
+                                        result.get(0).add(0, ToConnect.get(TimePositionIndex).get(iLeft));
+                                        result.get(0).add(1, ToConnect.get(TimePositionIndex + 1).get(iRight));
+                                    }
+                                    // else, add only the Chord with index (TimePositionIndex+1)
+                                    TimePositionIndex++;
+                                    
+                    } else {
+                        iLeft++;
+                        iRight++;
+                    }
 
-                }}
+            }
         }
 
-        return null;
+        return result;
     }
 
-    private static boolean absentParallels(Chord a, Chord b) {
+    private static boolean testAllRules(Chord a, Chord b) {
         if (a.equals(b))
             return true;
 

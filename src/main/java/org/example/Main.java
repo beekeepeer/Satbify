@@ -81,6 +81,10 @@ public class Main {
 
             }
             listOfChords.remove(lastChord); // TODO: too stupidly delete last added Chord form list at the end, without condition
+            
+            // System.out.println(listOfChords);
+
+
             connectChords(listOfChords);
 
         } catch (InvalidMidiDataException | IOException e) {
