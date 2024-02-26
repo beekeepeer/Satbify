@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.mainClasses.Chords;
 import org.example.module.Chord;
 import static org.example.mainClasses.Chords.*;
 
@@ -85,7 +86,8 @@ public class Main {
             // System.out.println(listOfChords);
 
 
-            connectChords(listOfChords);
+            // connectChords(listOfChords);
+            Chords.toAbsoluteChord(listOfChords.get(0));
 
         } catch (InvalidMidiDataException | IOException e) {
             throw new RuntimeException(e);

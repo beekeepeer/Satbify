@@ -1,29 +1,23 @@
 package org.example.mainClasses;
 
-import org.example.module.Alteration;
-import org.example.module.Chord;
-import org.example.module.ChordType;
-import org.example.module.Degree;
-import org.example.module.Inversion;
-import org.example.module.MelodicPosition;
-import org.example.module.Occurrence;
+import org.example.module.*;
 
 import static org.example.module.ChordRepository.chordsRepositoryList;
-import org.example.module.Scale;
-import org.example.module.Spacing;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 // This is a helper class with static methods on Chord objects
+// connectChords() should change octaves of bass and chords
+// toAbsoluteNote() should only apply key and scale.
 
 public class Chords {
-    public static ArrayList<ArrayList<Chord>> connectChords(List<Chord> inList) {
+    public static ArrayList<Chord> connectChords(List<Chord> inList) {
 
-        ArrayList<ArrayList<Chord>> ToConnect = new ArrayList<>(inList.size());
+        ArrayList<ArrayList<Chord>> toConnect = new ArrayList<>(inList.size());
         
         // iterate through inList
         // TODO  use Optional for dealing with null values.
@@ -51,101 +45,91 @@ public class Chords {
             map(a -> {a.setChordDegree(chord.getChordDegree()); return a;}).
             map(a -> {a.setKeyRoot(chord.getKeyRoot()); return a;});
 
-            ToConnect.add(i, temp.collect(Collectors.toCollection(ArrayList::new)));    
+            toConnect.add(i, temp.collect(Collectors.toCollection(ArrayList::new)));    
         } 
-        // ToConnect.forEach(System.out::println);
+        // toConnect.forEach(System.out::println);
         
         // each list in this collection is a connected sequence following the rules.
-        // size is not known ahead of time.
-        ArrayList<ArrayList<Chord>> result = new ArrayList<>();
-
-        //  the loop connects two chords if they do not contain forbidden moves.
-        // use logic of break the loop for "depth first" instead of recursion
-        int TimePositionIndex = 0, iLeft = 0, iRight = 1;
-        int l = ToConnect.size();
-        result.get(0).add(ToConnect.get(0).get(0));
-        
-        outer: while (TimePositionIndex < l) {
-            innerLeft: while (iLeft < ToConnect.get(TimePositionIndex).size()) {
-                if (testAllRules(ToConnect.get(TimePositionIndex).get(iLeft),
-                                 ToConnect.get(TimePositionIndex + 1).get(iRight))) {
-                                    if (TimePositionIndex == 0) {//, add this first chord and second
-                                        result.add(new ArrayList<Chord>(l));
-                                        result.get(0).add(0, ToConnect.get(TimePositionIndex).get(iLeft));
-                                        result.get(0).add(1, ToConnect.get(TimePositionIndex + 1).get(iRight));
-                                    }
-                                    // else, add only the Chord with index (TimePositionIndex+1)
-                                    TimePositionIndex++;
-                                    
-                    } else {
-                        iLeft++;
-                        iRight++;
+        // there is only one version of sequence out.
+        ArrayList<Chord> result = new ArrayList<>();
+            timePosition: for (int l = 0; l < toConnect.size(); l++) {
+                leftChord: for (int x = 0; x < toConnect.get(l).size(); x++) {
+                    rightChord: for (int y = 0; y < toConnect.get(l+1).size(); y++) {
+                        if(testAllRules(result.get(x), toConnect.get(l+1).get(y))){
+                            if (result.size() == 0) result.add(toConnect.get(l).get(x));
+                            result.add(toConnect.get(l+1).get(y));
+                            continue timePosition;
+                        } else {
+                            continue rightChord;
+                        }
                     }
-
+                }
             }
-        }
-
         return result;
     }
-
+// before running this method, toAbsoluteNote() should be done
     private static boolean testAllRules(Chord a, Chord b) {
+        // first run a method to toAbsoluteNote notes.
         if (a.equals(b))
             return true;
 
         return false;
     }
 
-    /*
-     * logic:
-     * check for parallels and other forbidden moves.
-     * last operation - transpose chosen chords in C to the "keyRoot"
-     */
+    public static void toAbsoluteChord(Chord chord) {
 
-    // add methods to cast int to enums using switch statement
+        int s = toAbsoluteNote(chord.getKeyScale(), chord.getChordDegree(), chord.getSopranoNote());
+        int a = toAbsoluteNote(chord.getKeyScale(), chord.getChordDegree(), chord.getAltoNote());
+        int t = toAbsoluteNote(chord.getKeyScale(), chord.getChordDegree(), chord.getTenorNote());
+        int b = toAbsoluteNote(chord.getKeyScale(), chord.getChordDegree(), chord.getBassNote());
 
-    /*
-     * TODO:- Отложить гармонизацию голосов на потом. Сейчас просто соеденять
-     * указанные аккорды.
-     * - Все указанные в учебнике ВИДЫ СОЕДЕНЕНИЙ долджны быть
-     * организованы в виде методов в этом вспомогательном классе,
-     * а не в виде enum как в других случаях.
-     * - Также должно быть учтено всё что связано с понятием "Приготовление"
-     * - Additional methods for each alteration. Do not take an altered chord.
-     * - inside a connection method, add an option to lower bass one octave lower.
-     * it will reduce the repository twice. If between tenor and bass is exact
-     * octave -
-     * raise bass octave higher in the repository.
-     * - add an operation to change octave of the whole chord if the previous chord
-     * is
-     * significantly far from current or next by majority of voices.
-     * 
-     */
+         // TODO: check it... I do not like this logic. It is not clear for me, and it is not predictable, I ges.
+        if(b > t) t += 12;
+        if(t > a) a += 12;
+        if(a > s) s += 12;
 
-    /*
-     * here is how to cast int to enum:
-     * 
-     * public enum MyEnum {
-     * EnumValue1,
-     * EnumValue2;
-     * 
-     * public static MyEnum fromInteger(int x) {
-     * switch(x) {
-     * case 0:
-     * return EnumValue1;
-     * case 1:
-     * return EnumValue2;
-     * }
-     * return null;
-     * }
-     * }
-     */
-    public static int relativizeNote(Scale scale, int chordDegree, int octave) {
+        switch (chord.keyRoot) { // TODO: Write this switch in a separate method for using in connection logic
+            case C -> {}
+            case C_Sharp -> {s+=1; a+=1; t+=1; b+=1;}
+            case D -> {s+=2; a+=2; t+=2; b+=2;}
+            case D_Sharp -> {s+=3; a+=3; t+=3; b+=3;}
+            case E -> {s+=4; a+=4; t+=4; b+=4;}
+            case F -> {s+=5; a+=5; t+=5; b+=5;}
+            case F_Sharp -> {s+=6; a+=6; t+=6; b+=6;}
+            case G -> {s+=7; a+=7; t+=7; b+=7;}
+            case G_Sharp -> {s+=8; a+=8; t+=8; b+=8;}
+            case A -> {s+=9; a+=9; t+=9; b+=9;}
+            case A_Sharp -> {s+=10; a+=10; t+=10; b+=10;}
+            case B -> {s-=1; a-=1; t-=1; b-=1;}         // this is the oly case where it is too high for human voices
+        }
 
+        try {
+            chord.setSoprano(s);
+            chord.setAlto(a);
+            chord.setTenor(t);
+            chord.setBass(b);
+        } catch (NoteOutOfRangeException e) {
+            e.printStackTrace();
+        }
+        System.out.println(chord);
+    }
+
+    private static int toAbsoluteNote(Scale scale, Degree chordDegree, NoteOfScale note) {
+        
+        Degree noteDegree = note.getDegree();
+        noteDegree = toNoteDegreeOfScale(chordDegree, noteDegree);
+        int octave = toAbsoluteOctave(chordDegree, noteDegree, note.getOctave());
+        // if(chordDegree != Degree.I && note.getDegree() == Degree.I) octave++;
+        // System.out.println("note degree is " + noteDegree);
+
+        // first to key C
         int[] I = new int[] { 24, 36, 48, 60, 72, 84, 96 };
+        int[] IIb = new int[] { 25, 37, 49, 61, 73, 85, 97 };
         int[] II = new int[] { 26, 38, 50, 62, 74, 86, 98 };
         int[] IIIb = new int[] { 27, 39, 51, 63, 75, 87, 99 };
         int[] III = new int[] { 28, 40, 52, 64, 76, 88, 100 };
         int[] IV = new int[] { 29, 41, 53, 65, 77, 89, 101 };
+        int[] Vb = new int[] { 30, 42, 54, 66, 78, 90, 102 };
         int[] V = new int[] { 31, 43, 55, 67, 79, 91, 103 };
         int[] VIb = new int[] { 32, 44, 56, 68, 80, 92, 104 };
         int[] VI = new int[] { 33, 45, 57, 69, 81, 93, 105 };
@@ -154,59 +138,85 @@ public class Chords {
 
         int[] outputNotesArray = new int[7];
 
-        if (scale.ordinal() == 13) { // major natural
-            outputNotesArray = switch (chordDegree) {
-                default -> I;
-                case 14 -> II;
-                case 16 -> III;
-                case 17 -> IV;
-                case 19 -> V;
-                case 21 -> VI;
-                case 23 -> VII;
+        if (scale == Scale.MAJOR_NATURAL) {
+            outputNotesArray = switch (noteDegree) {
+                case I -> I;
+                case II -> II;
+                case III -> III;
+                case IV -> IV;
+                case V -> V;
+                case VI -> VI;
+                case VII -> VII;
             };
-        } else if (scale.ordinal() == 15) { // major harmonic
-            outputNotesArray = switch (chordDegree) {
-                default -> I;
-                case 14 -> II;
-                case 16 -> III;
-                case 17 -> IV;
-                case 19 -> V;
-                case 21 -> VIb;
-                case 23 -> VII;
+        } else if (scale == Scale.MAJOR_HARMONIC) {
+            outputNotesArray = switch (noteDegree) {
+                case I -> I;
+                case II -> II;
+                case III -> III;
+                case IV -> IV;
+                case V -> V;
+                case VI -> VIb;
+                case VII -> VII;
             };
-        } else if (scale.ordinal() == 18) { // minor natural
-            outputNotesArray = switch (chordDegree) {
-                default -> I;
-                case 14 -> II;
-                case 16 -> IIIb;
-                case 17 -> IV;
-                case 19 -> V;
-                case 21 -> VIb;
-                case 23 -> VIIb;
+        } else if (scale == Scale.MINOR_NATURAL) {
+            outputNotesArray = switch (noteDegree) {
+                case I -> I;
+                case II -> II;
+                case III -> IIIb;
+                case IV -> IV;
+                case V -> V;
+                case VI -> VIb;
+                case VII -> VIIb;
             };
-        } else if (scale.ordinal() == 20) { // minor harmonic
-            outputNotesArray = switch (chordDegree) {
-                default -> I;
-                case 14 -> II;
-                case 16 -> IIIb;
-                case 17 -> IV;
-                case 19 -> V;
-                case 21 -> VIb;
-                case 23 -> VII;
+        } else if (scale == Scale.MINOR_HARMONIC) {
+            outputNotesArray = switch (noteDegree) {
+                case I -> I;
+                case II -> II;
+                case III -> IIIb;
+                case IV -> IV;
+                case V -> V;
+                case VI -> VIb;
+                case VII -> VII;
             };
-        } else if (scale.ordinal() == 22) { // ascending minor melodic. descending should be natural.
-            outputNotesArray = switch (chordDegree) {
-                default -> I;
-                case 14 -> II;
-                case 16 -> IIIb;
-                case 17 -> IV;
-                case 19 -> V;
-                case 21 -> VI;
-                case 23 -> VII;
+        } else if (scale == Scale.MINOR_MELODIC) { // ascending minor melodic. descending should be natural.
+            outputNotesArray = switch (noteDegree) {
+                case I -> I;
+                case II -> II;
+                case III -> IIIb;
+                case IV -> IV;
+                case V -> V;
+                case VI -> VI;
+                case VII -> VII;
             };
         }
 
-        // returns the specific note on MIDI message as int from string argument
-        return outputNotesArray[octave] + scale.ordinal();
+        // returns the specific note on MIDI message as int
+        return outputNotesArray[octave-2];
+    }
+
+    
+    private static Degree toNoteDegreeOfScale(Degree chordDegree, Degree noteDegree) {
+        int i = noteDegree.ordinal();
+        
+        return switch (chordDegree) {
+            case I -> Degree.values()[i % 7];
+            case II -> Degree.values()[(i + 1) % 7]; 
+            case III -> Degree.values()[(i + 2) % 7];
+            case IV -> Degree.values()[(i + 3) % 7];
+            case V -> Degree.values()[(i + 4) % 7];
+            case VI -> Degree.values()[(i + 5) % 7];
+            case VII -> Degree.values()[(i + 6) % 7];
+        };
+    }
+
+
+    private static int toAbsoluteOctave(Degree chordDegree, Degree noteDegree, int octave) {
+        // System.out.println("from toAbsoluteOctave() chordDegree is: "+ chordDegree);
+        // System.out.println("from toAbsoluteOctave() noteDegree is: "+ noteDegree);
+        // System.out.println("from toAbsoluteOctave() Octave is: "+ octave);
+        // if (chordDegree.ordinal() > noteDegree.ordinal())
+        //     return octave;
+        // else 
+        return octave;
     }
 }

@@ -1,6 +1,8 @@
 package org.example.module;
 
 // import javax.sound.midi.MidiEvent;
+// NoteOutOfRangeException
+import org.example.mainClasses.NoteOutOfRangeException;
 
 // The chord mutable POJO
 public class Chord implements Cloneable {
@@ -19,10 +21,18 @@ public class Chord implements Cloneable {
 
     private long tickStartTime;
     private long tickEndTime;
-    private NoteOfScale sopranoNote;
-    private NoteOfScale altoNote;
-    private NoteOfScale tenorNote;
-    private NoteOfScale bassNote;
+
+    private NoteOfScale sopranoNote = new NoteOfScale(Degree.I, 5);
+    private NoteOfScale altoNote = new NoteOfScale(Degree.V, 4);
+    private NoteOfScale tenorNote = new NoteOfScale(Degree.III, 4);
+    private NoteOfScale bassNote = new NoteOfScale(Degree.I, 4);
+
+    private int soprano;
+    private int alto;
+    private int tenor;
+    private int bass;
+
+
 
 
     // constructor for repository creation:
@@ -58,6 +68,7 @@ public class Chord implements Cloneable {
             case 8: keyRoot = KeyRoot.G_Sharp; break;
             case 9: keyRoot = KeyRoot.A;       break;
             case 10: keyRoot = KeyRoot.A_Sharp;break;
+            case 11: keyRoot = KeyRoot.B;      break;
 
             // Degree and scale:
             case 12: chordDegree = Degree.I;         break;
@@ -238,8 +249,48 @@ public class Chord implements Cloneable {
         this.bassNote = bassNote;
     }
 
+    public int getSoprano() {
+        return soprano;
+    }
 
-    // emplement equals method
+    public void setSoprano(int soprano) throws NoteOutOfRangeException {
+        if(soprano > 28 && soprano < 82) 
+        this.soprano = soprano;
+        else throw new NoteOutOfRangeException("The note is out of range of human voices");
+    }
+
+    public int getAlto() {
+        return alto;
+    }
+
+    public void setAlto(int alto) throws NoteOutOfRangeException {
+        if(alto > 28 && alto < 82) 
+        this.alto = alto;
+        else throw new NoteOutOfRangeException("The note is out of range of human voices");
+    }
+
+    public int getTenor() {
+        return tenor;
+    }
+
+    public void setTenor(int tenor) throws NoteOutOfRangeException {
+        if(tenor > 28 && tenor < 82) 
+        this.tenor = tenor;
+        else throw new NoteOutOfRangeException("The note is out of range of human voices");
+    }
+
+    public int getBass() {
+        return bass;
+    }
+
+    public void setBass(int bass) throws NoteOutOfRangeException {
+        if(bass > 28 && bass < 82) 
+        this.bass = bass;
+        else throw new NoteOutOfRangeException("The note is out of range of human voices");
+    }
+
+
+    // implement equals method
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -282,6 +333,10 @@ public class Chord implements Cloneable {
                 " \n altoNote =        " + altoNote +
                 " \n tenorNote =       " + tenorNote +
                 " \n bassNote =        " + bassNote +
+                " \n soprano =         " + soprano +
+                " \n alto =            " + alto +
+                " \n tenor =           " + tenor +
+                " \n bass =            " + bass +
                 '}' +
                 " \n" +
                 " \n";

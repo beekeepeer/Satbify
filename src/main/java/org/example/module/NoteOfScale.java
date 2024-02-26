@@ -6,8 +6,24 @@ the node consists of a degree (I,V...) and an octave (-3, -2, -1, 0, 1, 2, 3) th
 it should work with Scale class and be used to build the ChordRepository.
  */
 public class NoteOfScale implements Cloneable {
-    Degree degree;
-    int octave;
+    private Degree degree;
+    private int octave;
+
+    public Degree getDegree() {
+        return degree;
+    }
+
+    public void setDegree(Degree degree) {
+        this.degree = degree;
+    }
+
+    public int getOctave() {
+        return octave;
+    }
+
+    public void setOctave(int octave) {
+        this.octave = octave;
+    }
 
     public String toString(){
         return "Degree is " + degree + ", Octave is " + octave + " ";
