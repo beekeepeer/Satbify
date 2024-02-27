@@ -1,6 +1,6 @@
 package org.example.module;
 
-public enum KeyRoot {
+public enum Key {
     C(0),
     C_Sharp(1),
     D(2),
@@ -14,6 +14,6 @@ public enum KeyRoot {
     A_Sharp(10),
     B(11);
 
-    KeyRoot(int keyRoot) {
+    Key(int key) {
     }
 }

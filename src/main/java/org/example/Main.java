@@ -1,6 +1,5 @@
 package org.example;
 
-import org.example.mainClasses.Chords;
 import org.example.module.Chord;
 import static org.example.mainClasses.Chords.*;
 
@@ -9,7 +8,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Main {
@@ -86,13 +84,11 @@ public class Main {
             // System.out.println(listOfChords);
 
 
-            // connectChords(listOfChords);
-            Chords.toAbsoluteChord(listOfChords.get(0));
+            connectChords(listOfChords).forEach(System.out::println);
+            // Chords.toAbsoluteChord(listOfChords.get(0));
 
         } catch (InvalidMidiDataException | IOException e) {
             throw new RuntimeException(e);
-        } catch (CloneNotSupportedException e){
-            System.out.println(" cloning Chord Exception ");
         } catch (ArithmeticException eAr){
             System.out.println(" Arithmetic Exception ");
         }

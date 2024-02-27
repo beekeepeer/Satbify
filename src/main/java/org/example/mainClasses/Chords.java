@@ -5,7 +5,6 @@ import org.example.module.*;
 import static org.example.module.ChordRepository.chordsRepositoryList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,14 +16,11 @@ import java.util.stream.Stream;
 public class Chords {
     public static ArrayList<Chord> connectChords(List<Chord> inList) {
 
-        ArrayList<ArrayList<Chord>> toConnect = new ArrayList<>(inList.size());
+        ArrayList<List<Chord>> toConnect = new ArrayList<>(inList.size());
         
-        // iterate through inList
-        // TODO  use Optional for dealing with null values.
-        for (int i = 0; i<inList.size(); i++) {
+        for (int i = 0; i < inList.size(); i++) {
             var chord = inList.get(i);
-
-            Stream<Chord> temp = chordsRepositoryList.stream();
+            Stream<Chord> temp = chordsRepositoryList.stream().parallel();
 
             if (chord.getMelodicPosition() != null)
                 temp = temp.filter(x -> x.getMelodicPosition() == chord.getMelodicPosition());
@@ -39,41 +35,60 @@ public class Chords {
             if (chord.getOccurrence() != null)
                 temp = temp.filter(x -> x.getOccurrence() == chord.getOccurrence());
                     
-            temp = temp.map(a -> {a.setTickStartTime(chord.getTickStartTime()); return a;}).
+            toConnect.add(temp.
+            map(Chord::clone).
+            map(a -> {a.setTickStartTime(chord.getTickStartTime()); return a;}).
             map(a -> {a.setTickEndTime(chord.getTickEndTime()); return a;}).
             map(a -> {a.setKeyScale(chord.getKeyScale()); return a;}).
             map(a -> {a.setChordDegree(chord.getChordDegree()); return a;}).
-            map(a -> {a.setKeyRoot(chord.getKeyRoot()); return a;});
-
-            toConnect.add(i, temp.collect(Collectors.toCollection(ArrayList::new)));    
-        } 
-        // toConnect.forEach(System.out::println);
+            map(a -> {a.setKeyRoot(chord.getKeyRoot()); return a;}).
+            map(a -> {toAbsoluteChord(a); return a;}).
+            collect(Collectors.toList()));
+        }
         
-        // each list in this collection is a connected sequence following the rules.
-        // there is only one version of sequence out.
-        ArrayList<Chord> result = new ArrayList<>();
-            timePosition: for (int l = 0; l < toConnect.size(); l++) {
-                leftChord: for (int x = 0; x < toConnect.get(l).size(); x++) {
-                    rightChord: for (int y = 0; y < toConnect.get(l+1).size(); y++) {
-                        if(testAllRules(result.get(x), toConnect.get(l+1).get(y))){
-                            if (result.size() == 0) result.add(toConnect.get(l).get(x));
-                            result.add(toConnect.get(l+1).get(y));
-                            continue timePosition;
-                        } else {
-                            continue rightChord;
-                        }
+        System.out.println(toConnect.size());
+        System.out.println(toConnect.get(0).get(0).getSoprano());
+        System.out.println(toConnect.get(0).get(0).getAlto());
+        System.out.println(toConnect.get(0).get(0).getTenor());
+        System.out.println(toConnect.get(0).get(0).getBass());
+        
+    
+
+/* 
+        for (int i = 1; i < toConnect.size(); i++) {
+            for (int x = 0; x < toConnect.get(i-1).size(); x++) {
+                for (int y = 0; y < toConnect.get(i).size(); y++) {
+
+                    left = toConnect.get(i-1).get(x);
+                    right = toConnect.get(i).get(y);
+
+                    // toAbsoluteChord(left);
+                    // toAbsoluteChord(right);
+
+                    if (testAllRules(left, right)){
+                        if (result.size() == 0) result.add(left);
+                        result.add(i, right);
+                        break; // if i need only one version.
                     }
                 }
             }
-        return result;
+        } */
+        
+        return new ArrayList<>();
     }
-// before running this method, toAbsoluteNote() should be done
-    private static boolean testAllRules(Chord a, Chord b) {
-        // first run a method to toAbsoluteNote notes.
-        if (a.equals(b))
-            return true;
 
-        return false;
+
+
+
+
+
+
+    private static boolean testAllRules(Chord a, Chord b) {
+       
+        // if (false)
+        //     return false;
+
+        return true;
     }
 
     public static void toAbsoluteChord(Chord chord) {
@@ -87,8 +102,9 @@ public class Chords {
         if(b > t) t += 12;
         if(t > a) a += 12;
         if(a > s) s += 12;
+        if(b <= s) s += 12;
 
-        switch (chord.keyRoot) { // TODO: Write this switch in a separate method for using in connection logic
+        switch (chord.keyRoot) { // apply key to chord
             case C -> {}
             case C_Sharp -> {s+=1; a+=1; t+=1; b+=1;}
             case D -> {s+=2; a+=2; t+=2; b+=2;}
@@ -100,7 +116,7 @@ public class Chords {
             case G_Sharp -> {s+=8; a+=8; t+=8; b+=8;}
             case A -> {s+=9; a+=9; t+=9; b+=9;}
             case A_Sharp -> {s+=10; a+=10; t+=10; b+=10;}
-            case B -> {s-=1; a-=1; t-=1; b-=1;}         // this is the oly case where it is too high for human voices
+            case B -> {s-=1; a-=1; t-=1; b-=1;}         // this is the only case too high for human voices
         }
 
         try {
@@ -111,14 +127,14 @@ public class Chords {
         } catch (NoteOutOfRangeException e) {
             e.printStackTrace();
         }
-        System.out.println(chord);
+        // System.out.println(chord);
     }
 
     private static int toAbsoluteNote(Scale scale, Degree chordDegree, NoteOfScale note) {
         
         Degree noteDegree = note.getDegree();
         noteDegree = toNoteDegreeOfScale(chordDegree, noteDegree);
-        int octave = toAbsoluteOctave(chordDegree, noteDegree, note.getOctave());
+        int octave = note.getOctave();
         // if(chordDegree != Degree.I && note.getDegree() == Degree.I) octave++;
         // System.out.println("note degree is " + noteDegree);
 
@@ -191,7 +207,7 @@ public class Chords {
         }
 
         // returns the specific note on MIDI message as int
-        return outputNotesArray[octave-2];
+        return outputNotesArray[octave-3];
     }
 
     
@@ -207,16 +223,5 @@ public class Chords {
             case VI -> Degree.values()[(i + 5) % 7];
             case VII -> Degree.values()[(i + 6) % 7];
         };
-    }
-
-
-    private static int toAbsoluteOctave(Degree chordDegree, Degree noteDegree, int octave) {
-        // System.out.println("from toAbsoluteOctave() chordDegree is: "+ chordDegree);
-        // System.out.println("from toAbsoluteOctave() noteDegree is: "+ noteDegree);
-        // System.out.println("from toAbsoluteOctave() Octave is: "+ octave);
-        // if (chordDegree.ordinal() > noteDegree.ordinal())
-        //     return octave;
-        // else 
-        return octave;
     }
 }

@@ -8,7 +8,7 @@ import org.example.mainClasses.NoteOutOfRangeException;
 public class Chord implements Cloneable {
 //    int id;
 
-    public KeyRoot keyRoot;
+    public Key keyRoot;
     public Scale keyScale;
     private Degree chordDegree;
     private MelodicPosition melodicPosition;
@@ -57,18 +57,18 @@ public class Chord implements Cloneable {
     public void applyKeySwitch(byte KeySwitch){
         switch (KeySwitch){
 
-            case 0: keyRoot = KeyRoot.C;       break;
-            case 1: keyRoot = KeyRoot.C_Sharp; break;
-            case 2: keyRoot = KeyRoot.D;       break;
-            case 3: keyRoot = KeyRoot.D_Sharp; break;
-            case 4: keyRoot = KeyRoot.E;       break;
-            case 5: keyRoot = KeyRoot.F;       break;
-            case 6: keyRoot = KeyRoot.F_Sharp; break;
-            case 7: keyRoot = KeyRoot.G;       break;
-            case 8: keyRoot = KeyRoot.G_Sharp; break;
-            case 9: keyRoot = KeyRoot.A;       break;
-            case 10: keyRoot = KeyRoot.A_Sharp;break;
-            case 11: keyRoot = KeyRoot.B;      break;
+            case 0: keyRoot = Key.C;       break;
+            case 1: keyRoot = Key.C_Sharp; break;
+            case 2: keyRoot = Key.D;       break;
+            case 3: keyRoot = Key.D_Sharp; break;
+            case 4: keyRoot = Key.E;       break;
+            case 5: keyRoot = Key.F;       break;
+            case 6: keyRoot = Key.F_Sharp; break;
+            case 7: keyRoot = Key.G;       break;
+            case 8: keyRoot = Key.G_Sharp; break;
+            case 9: keyRoot = Key.A;       break;
+            case 10: keyRoot = Key.A_Sharp;break;
+            case 11: keyRoot = Key.B;      break;
 
             // Degree and scale:
             case 12: chordDegree = Degree.I;         break;
@@ -118,11 +118,11 @@ public class Chord implements Cloneable {
     // getters and setters
 
 
-    public KeyRoot getKeyRoot() {
+    public Key getKeyRoot() {
         return keyRoot;
     }
 
-    public void setKeyRoot(KeyRoot keyRoot) {
+    public void setKeyRoot(Key keyRoot) {
         // todo set tonality attributes only by static Chords.methods
 
 
@@ -343,8 +343,13 @@ public class Chord implements Cloneable {
     }
 
     @Override
-    public Chord clone() throws CloneNotSupportedException {
-        Chord clonedChord = (Chord) super.clone();
+    public Chord clone() {
+        Chord clonedChord = this;
+        try {
+            clonedChord = (Chord) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
         clonedChord.keyRoot = keyRoot;
         clonedChord.keyScale = keyScale;
         clonedChord.chordDegree = chordDegree;
