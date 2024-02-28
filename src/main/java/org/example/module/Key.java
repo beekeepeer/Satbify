@@ -14,6 +14,13 @@ public enum Key {
     A_Sharp(10),
     B(11);
 
-    Key(int key) {
+    private final int keyNumber;
+    
+    public int getKeyNumber() {
+        return keyNumber;
+    }
+
+    Key(int keyNumber) {
+        this.keyNumber = keyNumber;
     }
 }

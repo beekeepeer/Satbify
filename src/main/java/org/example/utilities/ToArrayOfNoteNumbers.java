@@ -1,4 +1,4 @@
-package Utility;
+package org.example.utilities;
 
 public class ToArrayOfNoteNumbers {
     public static void main(String[] args) {

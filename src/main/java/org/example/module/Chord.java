@@ -1,12 +1,10 @@
 package org.example.module;
 
-// import javax.sound.midi.MidiEvent;
-// NoteOutOfRangeException
 import org.example.mainClasses.NoteOutOfRangeException;
 
-// The chord mutable POJO
+// mutable POJO
 public class Chord implements Cloneable {
-//    int id;
+//    int id;?
 
     public Key keyRoot;
     public Scale keyScale;
@@ -36,7 +34,11 @@ public class Chord implements Cloneable {
 
 
     // constructor for repository creation:
-    public Chord(MelodicPosition melodicPosition, Spacing spacing, Inversion inversion, ChordType chordType, Alteration alteration, Occurrence occurrence, NoteOfScale bassNote, NoteOfScale tenorNote, NoteOfScale altoNote, NoteOfScale sopranoNote) {
+    public Chord(MelodicPosition melodicPosition, Spacing spacing, Inversion inversion, ChordType chordType, Alteration alteration, Occurrence occurrence, 
+    NoteOfScale sopranoNote,
+    NoteOfScale altoNote,
+    NoteOfScale tenorNote,
+    NoteOfScale bassNote) {
 
         this.melodicPosition = melodicPosition;
         this.spacing = spacing;
@@ -253,44 +255,35 @@ public class Chord implements Cloneable {
         return soprano;
     }
 
-    public void setSoprano(int soprano) throws NoteOutOfRangeException {
-        if(soprano > 28 && soprano < 82) 
+    public void setSoprano(int soprano) {
         this.soprano = soprano;
-        else throw new NoteOutOfRangeException("The note is out of range of human voices");
     }
 
     public int getAlto() {
         return alto;
     }
 
-    public void setAlto(int alto) throws NoteOutOfRangeException {
-        if(alto > 28 && alto < 82) 
+    public void setAlto(int alto) {
         this.alto = alto;
-        else throw new NoteOutOfRangeException("The note is out of range of human voices");
     }
 
     public int getTenor() {
         return tenor;
     }
 
-    public void setTenor(int tenor) throws NoteOutOfRangeException {
-        if(tenor > 28 && tenor < 82) 
+    public void setTenor(int tenor){
         this.tenor = tenor;
-        else throw new NoteOutOfRangeException("The note is out of range of human voices");
     }
 
     public int getBass() {
         return bass;
     }
 
-    public void setBass(int bass) throws NoteOutOfRangeException {
-        if(bass > 28 && bass < 82) 
+    public void setBass(int bass) {
         this.bass = bass;
-        else throw new NoteOutOfRangeException("The note is out of range of human voices");
     }
 
 
-    // implement equals method
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -313,8 +306,6 @@ public class Chord implements Cloneable {
                 bassNote.equals(chord.bassNote);
     }
           
-
-
     @Override
     public String toString() {
         return "Chord{" +
