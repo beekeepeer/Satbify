@@ -1,8 +1,10 @@
 package org.example.mainClasses;
 
+
 import org.example.module.*;
 
 import static org.example.module.ChordRepository.chordsRepositoryList;
+import static org.example.mainClasses.Experiments.toAbsoluteNote;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,6 @@ import java.util.stream.Stream;
 
 // This is a helper class with static methods on Chord objects
 // connectChords() should change octaves of bass and chords
-// toAbsoluteNote() should only apply key and scale.
 
 public class Chords {
     public static ArrayList<Chord> connectChords(List<Chord> inList) {
@@ -43,7 +44,7 @@ public class Chords {
             map(a -> {a.setChordDegree(chord.getChordDegree()); return a;}).
             map(a -> {a.setKeyRoot(chord.getKeyRoot()); return a;}).
             map(a -> {toAbsoluteChord(a); return a;}).
-            peek(System.out::print).                   // <-- print them
+            peek(System.out::print).                   // <-- print each
             collect(Collectors.toList()));
             
         }
@@ -74,50 +75,56 @@ public class Chords {
     }
 
     public static void toAbsoluteChord(Chord chord) {
-        var key = chord.getKeyRoot();
-        var chordDegree = chord.getChordDegree();
-        var scale = chord.getKeyScale();
-        var sopranoDegree = chord.getSopranoNote().getDegree();
-        var sopranoOctave = chord.getSopranoNote().getOctave();
-        var altoDegree = chord.getAltoNote().getDegree();
-        var altoOctave = chord.getAltoNote().getOctave();
-        var tenorDegree = chord.getTenorNote().getDegree();
-        var tenorOctave = chord.getTenorNote().getOctave();
-        var bassDegree = chord.getBassNote().getDegree();
-        var bassOctave = chord.getBassNote().getOctave();
+        var key = chord.getKeyRoot();       // is Ok
+        var cd = chord.getChordDegree();    // is Ok
+        var scale = chord.getKeyScale();    // is Ok
+        int s = chord.getSoprano();         // is Ok
+        int a = chord.getAlto();            // is Ok
+        int t = chord.getTenor();           // is Ok
+        int b = chord.getBass();            // is Ok
 
 
-        if (chordDegree != Degree.I){
-        sopranoDegree = toNoteDegreeOfScale(chordDegree, sopranoDegree);
-        altoDegree = toNoteDegreeOfScale(chordDegree, altoDegree);
-        tenorDegree = toNoteDegreeOfScale(chordDegree, tenorDegree);
-        bassDegree = toNoteDegreeOfScale(chordDegree, bassDegree);
-        }
-        System.out.println(sopranoDegree + " "+ altoDegree + " "+ tenorDegree + " "+ bassDegree);
+        // ok:
+        Degree sd = Degree.values()[toDegreeIndex(s)];
+        Degree ad = Degree.values()[toDegreeIndex(a)];
+        Degree td = Degree.values()[toDegreeIndex(t)];
+        Degree bd = Degree.values()[toDegreeIndex(b)];
 
-        int s = sopranoDegree.getKeyNumber() + key.getKeyNumber() + scale.getSteps()[sopranoDegree.ordinal()] + (sopranoOctave * 12) - 12;
-        int a = altoDegree.getKeyNumber() + key.getKeyNumber() + scale.getSteps()[altoDegree.ordinal()] + (altoOctave * 12) - 12;
-        int t = tenorDegree.getKeyNumber() + key.getKeyNumber() + scale.getSteps()[tenorDegree.ordinal()] + (tenorOctave * 12) - 12;
-        int b = bassDegree.getKeyNumber() + key.getKeyNumber() + scale.getSteps()[bassDegree.ordinal()] + (bassOctave * 12) - 12;
 
+        
+        // in C any in scale:
+        // BAGs solved:
+        s = toAbsoluteNote(scale, cd, s, sd);
+        a = toAbsoluteNote(scale, cd, a, ad);
+        t = toAbsoluteNote(scale, cd, t, td);
+        b = toAbsoluteNote(scale, cd, b, bd);
+
+        // ok:
+        s += + key.getKeyNumber();
+        a += + key.getKeyNumber();
+        t += + key.getKeyNumber();
+        b += + key.getKeyNumber();
+
+        // ok:
         chord.setSoprano(s);
         chord.setAlto(a);
         chord.setTenor(t);
         chord.setBass(b);
     }
-    
-    private static Degree toNoteDegreeOfScale(Degree chordDegree, Degree noteDegree) { // TODO delete this method.
-        int i = noteDegree.ordinal();
+
+    private static int toDegreeIndex(int a){ // makes sense only in C major
         
-        return switch (chordDegree) {
-            case I -> Degree.values()[i % 7];
-            case II -> Degree.values()[(i + 1) % 7]; 
-            case III -> Degree.values()[(i + 2) % 7];
-            case IV -> Degree.values()[(i + 3) % 7];
-            case V -> Degree.values()[(i + 4) % 7];
-            case VI -> Degree.values()[(i + 5) % 7];
-            case VII -> Degree.values()[(i + 6) % 7];
+
+        int index = switch(a % 12){
+            default-> -1;
+            case 0 -> 0;
+            case 2 -> 1;
+            case 4 -> 2;
+            case 5 -> 3;
+            case 7 -> 4;
+            case 9 -> 5;
+            case 11 -> 6;
         };
-        
+        return index;
     }
 }

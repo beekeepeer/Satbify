@@ -6,9 +6,9 @@ import org.example.mainClasses.NoteOutOfRangeException;
 public class Chord implements Cloneable {
 //    int id;?
 
-    public Key keyRoot;
-    public Scale keyScale;
-    private Degree chordDegree;
+    public Key keyRoot; // final
+    public Scale keyScale; // final
+    private Degree chordDegree; // final
     private MelodicPosition melodicPosition;
     private Spacing spacing;
     private Inversion inversion;
@@ -20,11 +20,6 @@ public class Chord implements Cloneable {
     private long tickStartTime;
     private long tickEndTime;
 
-    private NoteOfScale sopranoNote = new NoteOfScale(Degree.I, 5);
-    private NoteOfScale altoNote = new NoteOfScale(Degree.V, 4);
-    private NoteOfScale tenorNote = new NoteOfScale(Degree.III, 4);
-    private NoteOfScale bassNote = new NoteOfScale(Degree.I, 4);
-
     private int soprano;
     private int alto;
     private int tenor;
@@ -35,10 +30,10 @@ public class Chord implements Cloneable {
 
     // constructor for repository creation:
     public Chord(MelodicPosition melodicPosition, Spacing spacing, Inversion inversion, ChordType chordType, Alteration alteration, Occurrence occurrence, 
-    NoteOfScale sopranoNote,
-    NoteOfScale altoNote,
-    NoteOfScale tenorNote,
-    NoteOfScale bassNote) {
+    int sopranoNote,
+    int altoNote,
+    int tenorNote,
+    int bassNote) {
 
         this.melodicPosition = melodicPosition;
         this.spacing = spacing;
@@ -46,10 +41,10 @@ public class Chord implements Cloneable {
         this.chordType = chordType;
         this.alteration = alteration;
         this.occurrence = occurrence;
-        this.sopranoNote = sopranoNote;
-        this.altoNote = altoNote;
-        this.tenorNote = tenorNote;
-        this.bassNote = bassNote;
+        this.soprano = sopranoNote;
+        this.alto = altoNote;
+        this.tenor = tenorNote;
+        this.bass = bassNote;
     }
 
 //    constructor for adding new Chord object to list in Main class
@@ -219,37 +214,8 @@ public class Chord implements Cloneable {
         this.tickEndTime = tickEndTime;
     }
 
-    public NoteOfScale getSopranoNote() {
-        return sopranoNote;
-    }
 
-    public void setSopranoNote(NoteOfScale sopranoNote) {
-        this.sopranoNote = sopranoNote;
-    }
 
-    public NoteOfScale getAltoNote() {
-        return altoNote;
-    }
-
-    public void setAltoNote(NoteOfScale altoNote) {
-        this.altoNote = altoNote;
-    }
-
-    public NoteOfScale getTenorNote() {
-        return tenorNote;
-    }
-
-    public void setTenorNote(NoteOfScale tenorNote) {
-        this.tenorNote = tenorNote;
-    }
-
-    public NoteOfScale getBassNote() {
-        return bassNote;
-    }
-
-    public void setBassNote(NoteOfScale bassNote) {
-        this.bassNote = bassNote;
-    }
 
     public int getSoprano() {
         return soprano;
@@ -299,11 +265,7 @@ public class Chord implements Cloneable {
                 alteration == chord.alteration &&
                 occurrence == chord.occurrence &&
                 tickStartTime == chord.tickStartTime &&
-                tickEndTime == chord.tickEndTime &&
-                sopranoNote.equals(chord.sopranoNote) &&
-                altoNote.equals(chord.altoNote) &&
-                tenorNote.equals(chord.tenorNote) &&
-                bassNote.equals(chord.bassNote);
+                tickEndTime == chord.tickEndTime;
     }
           
     @Override
@@ -320,10 +282,6 @@ public class Chord implements Cloneable {
                 " \n occurrence =      " + occurrence +
                 " \n tickStartTime =   " + tickStartTime +
                 " \n tickEndTime =     " + tickEndTime +
-                " \n sopranoNote =     " + sopranoNote +
-                " \n altoNote =        " + altoNote +
-                " \n tenorNote =       " + tenorNote +
-                " \n bassNote =        " + bassNote +
                 " \n soprano =         " + soprano +
                 " \n alto =            " + alto +
                 " \n tenor =           " + tenor +
@@ -351,14 +309,8 @@ public class Chord implements Cloneable {
         clonedChord.alteration = alteration;
         clonedChord.occurrence = occurrence;
 
-
         // clonedChord.tickStartTime = tickStartTime;
         // clonedChord.tickEndTime = tickEndTime;
-
-        // clonedChord.sopranoNote = sopranoNote.clone();
-        // clonedChord.altoNote = altoNote.clone();
-        // clonedChord.tenorNote = tenorNote.clone();
-        // clonedChord.bassNote = bassNote.clone();
 
         return clonedChord;
     }

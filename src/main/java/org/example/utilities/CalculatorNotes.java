@@ -1,6 +1,6 @@
 package org.example.utilities;
 
-import org.example.module.NoteOfScale;
+
 
 public class CalculatorNotes {
 //    public static void main(String[] args) {
