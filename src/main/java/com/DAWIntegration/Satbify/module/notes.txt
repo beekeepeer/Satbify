@@ -1,0 +1,11 @@
+
+  add features:
+  - average pitch send via a direct pitch
+  - add a keySwitch to use average pitch only while average pitch is present under the chord. Yields random result.
+  - add versions fo each chord with a base octave variations
+-same Set a list of chord types available by default, making 7-th and 9-th chords unavailable until specified.
+-same сделать keySwitches inversion, chordType,  чтобы включать и выключать участие этих аккордов и/или non latching.
+  - legato keySwitch.
+  - make the program always running in a background
+- get scale and tonality change events from Reaper directly.
+- limit active area in time selection if set, or all the timeline if not. Reaper script only.
