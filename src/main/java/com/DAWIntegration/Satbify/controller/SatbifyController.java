@@ -9,7 +9,7 @@ import static com.DAWIntegration.Satbify.Chords.harmonise;
 @RestController
 public class SatbifyController {
 
-    @PostMapping("/api/satbify")
+    @PostMapping("/api")
     public String processString(@RequestBody String stringToProcess) {
         // Process the string as needed
         return harmonise(stringToProcess);
