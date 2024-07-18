@@ -4,7 +4,6 @@ import com.DAWIntegration.Satbify.module.Chord;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 
 // Принимать решение о выборе лучшей пары для соединения
@@ -12,79 +11,15 @@ import java.util.List;
 // и в дальнейшем придерживаться этой оценки,для того, чтобы не отклоняться от примерной нормальной высоты всего произведения.
 
 public class ChordConnector {
-//    List<Integer> smoothnessTest = new ArrayList<>();
 
-
-
-//    public List<Chord> connect(List<List<Chord>> listOfListsOfChords) {
-//        int globalSize = listOfListsOfChords.size();
-//        Chord chordL = null, chordR = null;
-//        int timePosition = 1;
-//
-//        List<List<ChordPare>> listOfPares = new ArrayList<List<ChordPare>>(globalSize - 1);
-//
-//        OUTER: while (globalSize > timePosition) {
-//            List<Chord> listL = listOfListsOfChords.get(timePosition - 1);
-//            List<Chord> listR = listOfListsOfChords.get(timePosition);
-//            int indexL = 0, indexR = 0, sizeL = listL.size(), sizeR = listR.size();
-//
-//            INNER: while (sizeL > indexL && sizeR > indexR) {
-//                chordL = listL.get(indexL);
-//                chordR = listR.get(indexR);
-//                adjustOctaves(chordL, standard);
-//                adjustOctaves(chordR, standard);
-//                int currentSmoothness = calculateSmoothness(chordL, chordR);
-//                if (haveParallels(chordL, chordR)) { // negative
-//                    indexR++;
-//                    if(indexR == sizeR) {
-//                        indexR = 0;
-//                        indexL++;
-//                        if(indexL == sizeL) {
-//                            timePosition++;
-//                            continue OUTER;
-//                        }
-//                    }
-//                    continue INNER;
-//                }
-//                if (timePosition > listOfPares.size()) {
-//                    listOfPares.add(new ArrayList<>(sizeL * globalSize));
-//                }
-//                listOfPares.get(timePosition - 1).add(new ChordPare(chordL, chordR, currentSmoothness));
-//
-//                indexR++;
-//                if(indexR == sizeR) {
-//                    indexR = 0;
-//                    indexL++;
-//                    if(indexL == sizeL) {
-//                        timePosition++;
-//                        continue OUTER;
-//                    }
-//                }
-//                continue INNER;
-//            }
-//
-//            timePosition++;
-//        }
-//
-//        listOfPares = listOfPares.stream().map(a -> {Collections.sort(a); return a;}).toList();
-////        listOfPares.forEach(a -> System.out.println(a.size()));
-//        System.out.println(listOfPares);
-//
-//        return choseBestPares(listOfPares);
-//    }
-
-    public ArrayList<Chord> connect(ArrayList<ArrayList<Chord>> in, int standard){
-        in.forEach(x -> x.forEach(y -> adjustOctaves(y, standard)));
+    public ArrayList<Chord> connect(ArrayList<ArrayList<Chord>> in){
+        in.forEach(x -> x.forEach(this::adjustOctaves));
 
         Chord[][] chordArray = in.stream()
                 .map(innerList -> innerList.toArray(new Chord[0]))
                 .toArray(Chord[][]::new);
-
-
         return findBestConnectedChords(chordArray);
     }
-
-
 
 
     public ArrayList<Chord> findBestConnectedChords(Chord[][] arrays) {    // todo: not tested properly!!!
@@ -201,8 +136,10 @@ public class ChordConnector {
         return false;
     }
 
-    private Chord adjustOctaves(Chord chord, double standard){
+    private Chord adjustOctaves(Chord chord){
+
         double highestSoprano = 84, lowestBass = 35;
+        double standard = chord.getStandard();
          // todo: make it non final for harmonizing given notes.
         double averagePitch = ((double) chord.getSoprano()
                 + chord.getAlto()
@@ -212,8 +149,8 @@ public class ChordConnector {
             return chord;
         }
         return (averagePitch < standard) ?
-                adjustOctaves(OctaveUpDown(chord,  true), standard) : // recurse
-                adjustOctaves(OctaveUpDown(chord, false), standard); // recurse
+                adjustOctaves(OctaveUpDown(chord,  true)) : // recurse
+                adjustOctaves(OctaveUpDown(chord, false)); // recurse
 
     }
 
@@ -226,22 +163,7 @@ public class ChordConnector {
         return a;
     }
 
-//    public static void main(String[] args) {
-//        var x = new ChordConnector();
-//        var c1 = new Chord();
-//        var c2 = new Chord();
-//        c1.setSoprano(60);
-//        c1.setAlto(52);
-//        c1.setTenor(48);
-//        c1.setBass(40);
-//
-//        c2.setSoprano(60);
-//        c2.setAlto(55);
-//        c2.setTenor(48);
-//        c2.setBass(40);
-//
-//        System.out.println("adjustToStandard: " + x.calculateSmoothness(c1, c2));
-//    }
+
 }
 
 

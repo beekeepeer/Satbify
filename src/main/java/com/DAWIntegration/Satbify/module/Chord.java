@@ -6,7 +6,6 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 public class Chord{
-    private int id; // delete if not used in ChordConnector.
     private int soprano;
     private int alto;
     private int tenor;
@@ -23,6 +22,9 @@ public class Chord{
     private Spacing spacing;
     private Alteration alteration = Alteration.NONE;
     private Occurrence occurrence;
+    private int standard;
+    private int id;
+
 
     //constructor for ChordRepository
     public Chord(MelodicPosition melodicPosition, Spacing spacing, Inversion inversion, ChordType chordType, Alteration alteration, Occurrence occurrence, int i, int i1, int i2, int i3) {
