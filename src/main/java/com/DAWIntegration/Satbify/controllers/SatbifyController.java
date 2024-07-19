@@ -1,4 +1,4 @@
-package com.DAWIntegration.Satbify.controller;
+package com.DAWIntegration.Satbify.controllers;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,7 +11,6 @@ public class SatbifyController {
 
     @PostMapping("/api")
     public String processString(@RequestBody String stringToProcess) {
-        // Process the string as needed
         return harmonise(stringToProcess);
 
     }
