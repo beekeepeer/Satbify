@@ -1,9 +1,11 @@
 package com.DAWIntegration.Satbify;
 
+import com.DAWIntegration.Satbify.module.Alteration;
 import com.DAWIntegration.Satbify.module.Chord;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 
 // Принимать решение о выборе лучшей пары для соединения
@@ -13,15 +15,15 @@ import java.util.Arrays;
 public class ChordConnector {
 
     public ArrayList<Chord> connect(ArrayList<ArrayList<Chord>> in){
-        in.forEach(x -> x.forEach(this::adjustOctaves));
+        Chord[][] chordArray = in.stream().map(x -> x.stream()
+//                .filter(chord -> (chord.absentFinalNotes() || chord.fitsFinalNote()))
+                .map(this::adjustOctaves)
+                .map(this::setFinalNots)
+                .filter(chord -> chord.getAlteration() != Alteration.DD_Flat_IV)
+                .toArray(Chord[]::new)).toArray(Chord[][]::new);
 
-        Chord[][] chordArray = in.stream()
-                .map(innerList -> innerList.toArray(new Chord[0]))
-                .toArray(Chord[][]::new);
         return findBestConnectedChords(chordArray);
     }
-
-
     public ArrayList<Chord> findBestConnectedChords(Chord[][] arrays) {    // todo: not tested properly!!!
         int n = arrays.length;
         int[][] dp = new int[n][];
@@ -45,6 +47,12 @@ public class ChordConnector {
             for (int j = 0; j < arrays[i].length; j++) {
                 for (int k = 0; k < arrays[i - 1].length; k++) {
                     if (haveParallels(arrays[i - 1][k], arrays[i][j])) continue;    // todo: not tested properly!!!
+//                    if(arrays[i - 1][k].requiresFinalNote()) {
+//                        if (arrays[i - 1][k].containsFinalNote()) {
+//                            System.out.println("Condition is met!");
+//                            arrays[i - 1][k] = setFinalNots(arrays[i - 1][k]);
+//                        } else continue;
+//                    }
                     int connectionCost = calculateSmoothness(arrays[i - 1][k], arrays[i][j]);
 //                    System.out.println("connectionCost: " + connectionCost);
                     if (connectionCost < dp[i][j]) {
@@ -55,7 +63,7 @@ public class ChordConnector {
             }
         }
 
-        // Find the best last object in the last array
+        // Find the best last chord in the last array
         int minIndex = 0;
         int minCost = Integer.MAX_VALUE;
         for (int j = 0; j < arrays[n - 1].length; j++) {
@@ -77,8 +85,6 @@ public class ChordConnector {
 
         return new ArrayList<>(Arrays.asList(result));
     }
-
-
     private int calculateSmoothness(Chord a, Chord b){
         int sd, ad, td, bd, power = 3, result = 0;
         sd = a.getSoprano() - b.getSoprano();
@@ -88,17 +94,17 @@ public class ChordConnector {
 
         if ((sd > 0 && bd > 0)  ||  (sd < 0 && bd < 0))     // decrease probability of parallel s and b
             result += 100;
-        if(Math.abs(bd) > 5)                                // smother bass
+        if(Math.abs(bd) > 6)                                // smother bass
             result += 20;
 
         result = result + (int)((Math.pow(Math.abs(sd), power)
                 + Math.pow(Math.abs(ad), power)
-                + Math.pow(Math.abs(td), power)));
+                + Math.pow(Math.abs(td), power)
+//                + Math.pow(Math.abs(bd), power)
+        ));
 
         return result;
     }
-
-
     private boolean haveParallels(Chord a, Chord b) {
         //differences:
         int sd = a.getSoprano() - b.getSoprano();
@@ -135,7 +141,6 @@ public class ChordConnector {
         }
         return false;
     }
-
     private Chord adjustOctaves(Chord chord){
 
         double highestSoprano = 84, lowestBass = 35;
@@ -153,8 +158,58 @@ public class ChordConnector {
                 adjustOctaves(OctaveUpDown(chord, false)); // recurse
 
     }
+    // harmonizing existing notes. It shifts
+    private Chord setFinalNots(Chord chord) { // todo: test it!!!!
+        var difS = 0;
+        var difA = 0;
+        var difT = 0;
+        var difB = 0;
+        var counter = 0;
+        var difCommon = 0;
+//        boolean sb = false, ab = false, tb = false, bb = false;
 
-    private Chord OctaveUpDown(Chord a, boolean b) {
+        if (chord.getFinalSoprano() != 0) {
+            difS = chord.getFinalSoprano() - chord.getSoprano();
+            counter++;
+        }
+        if (chord.getFinalAlto() != 0) {
+            difA = chord.getFinalAlto() - chord.getAlto();
+            counter++;
+        }
+        if(chord.getFinalTenor() != 0){
+            difT = chord.getFinalTenor() - chord.getTenor();
+            counter++;
+            }
+        if(chord.getFinalBass() != 0) {
+            difB = chord.getFinalBass() - chord.getBass();
+            counter++;
+        }
+
+        var sum = difS + difA + difT + difB;
+
+
+        if (sum != 0) { // if this chord should follow Specified Notes
+            difCommon = sum / counter; // get common difference
+            if (difCommon % 12 == 0) { // if differences can be used to shift by octave, AND are equal.
+                chord.setSoprano(chord.getSoprano() + difCommon);
+                chord.setAlto(chord.getAlto() + difCommon);
+                chord.setTenor(chord.getTenor() + difCommon);
+                chord.setBass(chord.getBass() + difCommon);
+                return chord;
+            } else { // differences are no octaves - this is the wrong Chord!!!
+                chord.setAlteration(Alteration.DD_Flat_IV); // todo: change to a different way of filtering.
+                return chord;
+            }
+        } else { // This Chord should not be touched!!! Return the original.
+            return chord;
+        }
+    }
+
+
+
+
+
+        private Chord OctaveUpDown(Chord a, boolean b) {
         var o = 12;
         a.setSoprano(a.getSoprano() + (b ? o: -o));
         a.setAlto(a.getAlto() + (b ? o: -o));
@@ -165,6 +220,7 @@ public class ChordConnector {
 
 
 }
+
 
 
 

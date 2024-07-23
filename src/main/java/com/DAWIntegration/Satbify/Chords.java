@@ -32,16 +32,27 @@ public abstract class Chords {
             if(trackNumber == 0 && pitch > 50 && pitch < 80){
                 c.setStandard(pitch); // apply standard
             }
-
+            if(trackNumber > 0 && trackNumber < 5) {
+                c = directlyPitchToVoices(trackNumber, pitch, c);
+            }
             if (notes.size() != i && !isDegree(pitch)) {        // if this is a Degree, it should go further to add a new Chord.
                 continue;
-            } else if(trackNumber > 0) {
-//                directlyPitchToVoices(trackNumber, pitch, c); // todo: set notes to harmonize and stay forever.
             }
             clonedFromRepo.add(populateFromRepo(c));
+            c = resetFinalNotes(c);
         }
+        var connected = new ChordConnector().connect(clonedFromRepo);
+        // reset inherited from past operations.
+        c = new Chord();
+        return returnToReaper (connected, legato);
+    }
 
-        return returnToReaper (new ChordConnector().connect(clonedFromRepo), legato);
+    private static Chord resetFinalNotes(Chord c) {
+        c.setFinalSoprano(0);
+        c.setFinalAlto(0);
+        c.setFinalTenor(0);
+        c.setFinalBass(0);
+        return c;
     }
 
     private static ArrayList<Note> parsArgs(String args) {
@@ -119,15 +130,17 @@ public abstract class Chords {
         }
         return c;
     }
-    private static void directlyPitchToVoices(int trackNumber, int pitch, Chord c) {
+    private static Chord directlyPitchToVoices(int trackNumber, int pitch, Chord c) {
         // create new Chord in special constructor inside which set the final value.
         switch (trackNumber) {
-            case 1 -> c.setSoprano(pitch);
-            case 2 -> c.setAlto(pitch);
-            case 3 -> c.setTenor(pitch);
-            case 4 -> c.setBass(pitch);
-            default -> throw new IllegalStateException("Unexpected value of trackNumber: " + trackNumber);
+            case 1 -> c.setFinalSoprano(pitch);
+            case 2 -> c.setFinalAlto(pitch);
+            case 3 -> c.setFinalTenor(pitch);
+            case 4 -> c.setFinalBass(pitch);
+            default -> throw new IllegalStateException("Chords.directlyPitchToVoices: Unexpected value of trackNumber: " + trackNumber);
+
         }
+        return c;
     }
     private static ArrayList<Chord> populateFromRepo(Chord c) {
         return chordsRepositoryList
@@ -140,21 +153,15 @@ public abstract class Chords {
                 .filter(x -> c.getAlteration() == null || x.getAlteration() == c.getAlteration())
                 .filter(x -> c.getOccurrence() == null || x.getOccurrence() == c.getOccurrence())
                 .map(x -> {
-                    x = duplicate(x);
-                    x.setKeyRoot(c.getKeyRoot());
-                    x.setTickStartTime(c.getTickStartTime());
-                    x.setTickEndTime(c.getTickEndTime());
-                    x.setChordDegree(c.getChordDegree());
-                    x.setKeyScale(c.getKeyScale());
-                    x.setStandard(c.getStandard());
+                    x = duplicate(x, c);
                     x = applyRootDegreeScale(x);
                     return x;
                 })
-//                .peek(System.out::println)
-                .flatMap(Chords::addBassVariant)
+
+                .flatMap(Chords::addBassVariant) // todo:  here is the problem!!!!
+//                .peek(chord -> System.out.println(chord.getFinalTenor()))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
-
     private static boolean isDegree(int pitch) {
         return pitch == Degree.I.getKeyNumber() ||
                 pitch == Degree.II.getKeyNumber() ||
@@ -164,34 +171,46 @@ public abstract class Chords {
                 pitch == Degree.VI.getKeyNumber() ||
                 pitch == Degree.VII.getKeyNumber();
     }
-    private static Chord duplicate(Chord original) {
-        return new Chord(
-                original.getSoprano(),
-                original.getAlto(),
-                original.getTenor(),
-                original.getBass(),
-                original.getTickStartTime(),
-                original.getTickEndTime(),
-                original.getKeyRoot(),
-                original.getChordDegree(),
-                original.getKeyScale(),
-                original.getMelodicPosition(),
-                original.getChordType(),
-                original.getInversion(),
-                original.getSpacing(),
-                original.getAlteration(),
-                original.getOccurrence(),
-                original.getStandard(),
+    private static Chord duplicate(Chord fromRepo, Chord c) {
+        var duplicate =  new Chord(
+                fromRepo.getSoprano(),
+                fromRepo.getAlto(),
+                fromRepo.getTenor(),
+                fromRepo.getBass(),
+                c.getFinalSoprano(),
+                c.getFinalAlto(),
+                c.getFinalTenor(),
+                c.getFinalBass(),
+                c.getTickStartTime(),
+                c.getTickEndTime(),
+                c.getKeyRoot(),
+                c.getChordDegree(),
+                c.getKeyScale(),
+                fromRepo.getMelodicPosition(),
+                fromRepo.getChordType(),
+                fromRepo.getInversion(),
+                fromRepo.getSpacing(),
+                fromRepo.getAlteration(),
+                fromRepo.getOccurrence(),
+                c.getStandard(),
                 ++id);
+
+        if (fromRepo != c) { // if this is not the same object. For addBassVariant() only.
+            fromRepo.setFinalSoprano(0);
+            fromRepo.setFinalAlto(0);
+            fromRepo.setFinalTenor(0);
+            fromRepo.setFinalBass(0);
+        }
+        return duplicate;
+
     }
     private static Stream<Chord> addBassVariant(Chord original){
         int t = original.getTenor();
         int b = original.getBass();
         if(t-b < 7){
-            Chord variant = duplicate(original);
+            Chord variant = duplicate(original, original);
             variant.setBass(original.getBass() - 12);
             return Stream.of(original, variant);
-
         } else return Stream.of(original);
     }
     private static Chord applyRootDegreeScale(Chord x) {
@@ -213,16 +232,6 @@ public abstract class Chords {
         int b = raiseToDegree(x.getBass(), x.getChordDegree());
         b = applyScale(x.getKeyScale(), b);
         b += x.getKeyRoot().getKeyNumber();
-
-
-
-
-//        System.out.println(x.getSoprano());
-//        System.out.println(raiseToDegree(x.getSoprano(), x.getChordDegree()));
-//        System.out.println(raiseToDegree(x.getAlto(), x.getChordDegree()));
-//        System.out.println(raiseToDegree(x.getTenor(), x.getChordDegree()));
-//        System.out.println(raiseToDegree(x.getBass(), x.getChordDegree()));
-//        System.out.println();
 
         x.setSoprano(s);
         x.setAlto(a);
@@ -414,6 +423,7 @@ public abstract class Chords {
                     appendNote(out, 4, finalChords.get(i).getBass(), start, end);
                 }
             }
+//            System.out.println(out);
         } catch (Exception e) {
             throw new RuntimeException("   ! \n! ! ! \n! ! ! ! \n! ! ! !The output of This program is EMPTY ! ! ! \n! ! \n ! !\n ! ! ! ");
         }

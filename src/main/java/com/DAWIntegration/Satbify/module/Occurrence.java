@@ -12,5 +12,7 @@ it should receive a value only in the ChordRepository database.
 public enum Occurrence {
     COMMON,
     NOT_COMMON,
-    RARE
+    RARE,
+    VARY_RARE,
+    UNUSABLE
 }

@@ -62,10 +62,66 @@ function send_http_request(url, body)
     return response_body, response_code
 end
 
---local url = "http://localhost:8080/api"
-local url = "https://satbify.up.railway.app/api"
+local url = "http://localhost:8080/api"
+--local url = "https://satbify.up.railway.app/api"
 local response_body, response_code = send_http_request(url, notes_from_reaper)
 -- reaper.ShowConsoleMsg(response_body)
+
+
+
+function deleteNotesFromFirstItemOnTracks(tracks)
+    -- Loop through the specified tracks
+    for _, trackNumber in ipairs(tracks) do
+        -- Get the track by its number (1-based index)
+        local track = reaper.GetTrack(0, trackNumber - 1)
+
+        if track then
+            -- Get the number of items on the track
+            local numItems = reaper.CountTrackMediaItems(track)
+
+            if numItems > 0 then
+                -- Get the first item on the track
+                local item = reaper.GetTrackMediaItem(track, 0)
+
+                if item then
+                    -- Get the take from the first item (assuming the item has only one take)
+                    local take = reaper.GetActiveTake(item)
+
+                    if take and reaper.TakeIsMIDI(take) then
+                        -- Delete all notes in the take
+                        local noteIndex = reaper.MIDI_CountEvts(take)
+                        while noteIndex > 0 do
+                            reaper.MIDI_DeleteNote(take, noteIndex - 1)
+                            noteIndex = noteIndex - 1
+                        end
+
+                        -- Optional: Clean up the MIDI take (remove empty events)
+                        reaper.MIDI_Sort(take)
+                    end
+                end
+            end
+        end
+    end
+end
+
+
+
+function isValidFormat(str)
+    -- Pattern to match the specific format of each line
+    local pattern = "^%d+, %d+, %d+, %d+$"
+
+    -- Loop through each line in the string
+    for line in str:gmatch("[^\r\n]+") do
+        -- Check if the line matches the pattern
+        if not line:match(pattern) then
+            return false
+        end
+    end
+
+    return true
+end
+
+
 
 -- Function to insert a note into Reaper
 function insert_note(track_num, note_num, ppq_start, ppq_end)
@@ -92,20 +148,27 @@ function insert_note(track_num, note_num, ppq_start, ppq_end)
     reaper.UpdateArrange()
 end
 
+
+
 -- Function to parse the HTTP response and insert notes accordingly
 function parse_and_insert_notes(response_body)
-    for line in response_body:gmatch("[^\r\n]+") do
-        local track_num, note_num, ppq_start, ppq_end = line:match("(%d+), (%d+), (%d+), (%d+)")
-        if track_num and note_num and ppq_start and ppq_end then
-            track_num = tonumber(track_num)
-            note_num = tonumber(note_num)
-            ppq_start = tonumber(ppq_start)
-            ppq_end = tonumber(ppq_end)
-            insert_note(track_num, note_num, ppq_start, ppq_end)
-        else
-            reaper.ShowConsoleMsg("Failed to parse line: " .. line .. "\n")
-        end
+    if isValidFormat(response_body) then
+        deleteNotesFromFirstItemOnTracks({2, 3, 4, 5})
     end
+        for line in response_body:gmatch("[^\r\n]+") do
+            local track_num, note_num, ppq_start, ppq_end = line:match("(%d+), (%d+), (%d+), (%d+)")
+            if track_num and note_num and ppq_start and ppq_end then
+                track_num = tonumber(track_num)
+                note_num = tonumber(note_num)
+                ppq_start = tonumber(ppq_start)
+                ppq_end = tonumber(ppq_end)
+                insert_note(track_num, note_num, ppq_start, ppq_end)
+            else
+                reaper.ShowConsoleMsg("Apologies, I can't tackle this just yet... but I'm hitting the books and sharpening my skills. Stay tuned for my upgraded brilliance!" .. "\n")
+            end
+        end
+
+
 end
 
 -- Display the response in the Reaper console and insert notes

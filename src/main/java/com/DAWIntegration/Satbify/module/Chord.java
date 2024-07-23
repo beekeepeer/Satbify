@@ -10,7 +10,7 @@ public class Chord{
     private int alto;
     private int tenor;
     private int bass;
-//    private final int finalSoprano, finalAlto, finalTenor, finalBass;
+    private int finalSoprano, finalAlto, finalTenor, finalBass; // for harmonizing given notes
     private int tickStartTime;
     private int tickEndTime;
     private Key keyRoot = Key.C;
@@ -61,11 +61,21 @@ public class Chord{
                 " \n tenor =           " + tenor +
                 " \n bass =            " + bass +
                 '}' +
-                " \n" +
                 " \n";
     }
 
 
-
-
+    public boolean absentFinalNotes() {
+        return ! (this.finalSoprano != 0 ||
+                this.finalAlto != 0 ||
+                this.finalTenor != 0 ||
+                this.finalBass != 0);
+    }
+    public boolean fitsFinalNote() {
+        System.out.println("this.finalBass" + this.finalBass);
+        return (this.finalSoprano != 0 && this.finalSoprano % 12 == this.getSoprano() % 12)
+                || (this.finalAlto != 0 && this.finalAlto % 12 == this.getAlto() % 12)
+                || (this.finalTenor != 0  && this.finalTenor % 12 == this.getTenor() % 12)
+                || (this.finalBass != 0 && this.finalBass % 12 == this.getBass() % 12);
+    }
 }
