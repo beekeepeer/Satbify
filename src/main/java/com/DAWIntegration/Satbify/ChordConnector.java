@@ -47,14 +47,7 @@ public class ChordConnector {
             for (int j = 0; j < arrays[i].length; j++) {
                 for (int k = 0; k < arrays[i - 1].length; k++) {
                     if (haveParallels(arrays[i - 1][k], arrays[i][j])) continue;    // todo: not tested properly!!!
-//                    if(arrays[i - 1][k].requiresFinalNote()) {
-//                        if (arrays[i - 1][k].containsFinalNote()) {
-//                            System.out.println("Condition is met!");
-//                            arrays[i - 1][k] = setFinalNots(arrays[i - 1][k]);
-//                        } else continue;
-//                    }
                     int connectionCost = calculateSmoothness(arrays[i - 1][k], arrays[i][j]);
-//                    System.out.println("connectionCost: " + connectionCost);
                     if (connectionCost < dp[i][j]) {
                         dp[i][j] = connectionCost;
                         backtrack[i][j] = k;
@@ -93,14 +86,14 @@ public class ChordConnector {
         bd = a.getBass() - b.getBass();
 
         if ((sd > 0 && bd > 0)  ||  (sd < 0 && bd < 0))     // decrease probability of parallel s and b
-            result += 100;
-        if(Math.abs(bd) > 6)                                // smother bass
-            result += 20;
+            result += 200;
+//        if(Math.abs(bd) > 6)                                // smother bass
+//            result += 20;
 
         result = result + (int)((Math.pow(Math.abs(sd), power)
                 + Math.pow(Math.abs(ad), power)
                 + Math.pow(Math.abs(td), power)
-//                + Math.pow(Math.abs(bd), power)
+                + Math.pow(Math.abs(bd), power)
         ));
 
         return result;
@@ -164,44 +157,70 @@ public class ChordConnector {
         var difA = 0;
         var difT = 0;
         var difB = 0;
-        var counter = 0;
         var difCommon = 0;
-//        boolean sb = false, ab = false, tb = false, bb = false;
 
         if (chord.getFinalSoprano() != 0) {
             difS = chord.getFinalSoprano() - chord.getSoprano();
-            counter++;
         }
         if (chord.getFinalAlto() != 0) {
             difA = chord.getFinalAlto() - chord.getAlto();
-            counter++;
         }
         if(chord.getFinalTenor() != 0){
             difT = chord.getFinalTenor() - chord.getTenor();
-            counter++;
             }
         if(chord.getFinalBass() != 0) {
             difB = chord.getFinalBass() - chord.getBass();
-            counter++;
+
         }
 
-        var sum = difS + difA + difT + difB;
+        difCommon = suitableChord(difS, difA, difT, difB);
 
 
-        if (sum != 0) { // if this chord should follow Specified Notes
-            difCommon = sum / counter; // get common difference
+        if (difCommon != 0) { // if this chord should harmonize Specified Notes
             if (difCommon % 12 == 0) { // if differences can be used to shift by octave, AND are equal.
+//                System.out.println("difCommon: " + difCommon);
                 chord.setSoprano(chord.getSoprano() + difCommon);
                 chord.setAlto(chord.getAlto() + difCommon);
                 chord.setTenor(chord.getTenor() + difCommon);
                 chord.setBass(chord.getBass() + difCommon);
+//                System.out.println("chord after: " + chord);
                 return chord;
             } else { // differences are no octaves - this is the wrong Chord!!!
-                chord.setAlteration(Alteration.DD_Flat_IV); // todo: change to a different way of filtering.
+                chord.setAlteration(Alteration.DD_Flat_IV); // todo: it is temporary! change to a different way of filtering.
                 return chord;
             }
         } else { // This Chord should not be touched!!! Return the original.
             return chord;
+        }
+    }
+
+    public static int suitableChord(int difS, int difA, int difT, int difB) {
+        // Count non-zero values
+        int[] values = {difS, difA, difT, difB};
+        int nonZeroCount = 0;
+        int nonZeroValue = 0;
+        boolean allEqual = true;
+
+        for (int value : values) {
+            if (value != 0) {
+                nonZeroCount++;
+                if (nonZeroValue == 0) {
+                    nonZeroValue = value;
+                } else if (value != nonZeroValue) {
+                    allEqual = false;
+                }
+            }
+        }
+
+        // not clever, but clear:
+        if (nonZeroCount == 0) {
+            return 0; // All are zero
+        } else if (nonZeroCount == 1) {
+            return nonZeroValue; // Only one is non-zero
+        } else if (allEqual) {
+            return nonZeroValue; // All non-zero values are equal
+        } else {
+            return 13; // This chord doesn't fit
         }
     }
 

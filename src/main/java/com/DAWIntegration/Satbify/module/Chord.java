@@ -72,7 +72,7 @@ public class Chord{
                 this.finalBass != 0);
     }
     public boolean fitsFinalNote() {
-        System.out.println("this.finalBass" + this.finalBass);
+//        System.out.println("this.finalBass" + this.finalBass);
         return (this.finalSoprano != 0 && this.finalSoprano % 12 == this.getSoprano() % 12)
                 || (this.finalAlto != 0 && this.finalAlto % 12 == this.getAlto() % 12)
                 || (this.finalTenor != 0  && this.finalTenor % 12 == this.getTenor() % 12)

@@ -28,7 +28,7 @@ public abstract class Chords {
             pitch = note.pitch();
             int trackNumber = note.reaperTrack();
             c = applyKeySwitch(pitch, c);
-            if(trackNumber == 0 && pitch == 36) legato = false;
+            if(trackNumber == 0 && pitch == 35) legato = false;
             if(trackNumber == 0 && pitch > 50 && pitch < 80){
                 c.setStandard(pitch); // apply standard
             }

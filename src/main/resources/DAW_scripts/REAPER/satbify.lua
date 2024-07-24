@@ -37,7 +37,7 @@ end
 local notes_from_reaper = read_notes()
 
 
--- Function to send HTTP POST request using curl
+-- send HTTP POST request using curl
 function send_http_request(url, body)
     -- Write the body to a temporary file
     local temp_body_file = os.tmpname()
