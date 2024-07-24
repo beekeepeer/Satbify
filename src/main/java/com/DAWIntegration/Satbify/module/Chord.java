@@ -22,7 +22,7 @@ public class Chord{
     private Spacing spacing;
     private Alteration alteration = Alteration.NONE;
     private Occurrence occurrence;
-    private int standard;
+    private int tessitura;
     private int id;
 
 

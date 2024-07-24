@@ -16,7 +16,7 @@ public abstract class Chords {
         int standard = 68;
         boolean legato = true;
         Chord c = new Chord();
-        c.setStandard(standard);
+        c.setTessitura(standard);
         int pitch;
         List<Note> notes = parsArgs(input);
         ArrayList<ArrayList<Chord>> clonedFromRepo = new ArrayList<>();
@@ -28,9 +28,9 @@ public abstract class Chords {
             pitch = note.pitch();
             int trackNumber = note.reaperTrack();
             c = applyKeySwitch(pitch, c);
-            if(trackNumber == 0 && pitch == 35) legato = false;
+            if(trackNumber == 0 && pitch == 39) legato = false;
             if(trackNumber == 0 && pitch > 50 && pitch < 80){
-                c.setStandard(pitch); // apply standard
+                c.setTessitura(pitch); // apply standard
             }
             if(trackNumber > 0 && trackNumber < 5) {
                 c = directlyPitchToVoices(trackNumber, pitch, c);
@@ -52,9 +52,15 @@ public abstract class Chords {
         c.setFinalAlto(0);
         c.setFinalTenor(0);
         c.setFinalBass(0);
+        Key keyRoot = Key.C;
+        c.setMelodicPosition(null);
+        c.setChordType(ChordType.TRIAD);
+        c.setInversion(null);
+        c.setSpacing(null);
+        c.setAlteration(Alteration.NONE);
+        c.setOccurrence(null);
         return c;
     }
-
     private static ArrayList<Note> parsArgs(String args) {
         //todo: apply all keySwitches before applying them!!!
         ToIntFunction<Note> function = new ToIntFunction<Note>() {
@@ -101,32 +107,34 @@ public abstract class Chords {
             case 22: c.setKeyScale(Scale.MINOR_MELODIC);break;
             case 23: c.setChordDegree(Degree.VII);break;
 
-//            case 30: legato = true; // todo: the keySwitch makes a strange side effect on result. Investigate harmonise().
+//            case 30: legato = true;
 
             // a feature to add
 //            case 108: alteration = null; break;
 //            case 109: alteration = null; break;
 //            case 110: alteration = null; break;
 //            case 111: alteration = null; break;
-            case 112: c.setMelodicPosition(MelodicPosition.I);break;
-            case 113: c.setMelodicPosition(MelodicPosition.III);break;
-            case 114: c.setMelodicPosition(MelodicPosition.V);break;
-            case 115: c.setMelodicPosition(MelodicPosition.VII);break;
-            case 116: c.setMelodicPosition(MelodicPosition.IX);break;
 
-            case 117: c.setChordType(ChordType.TRIAD);break;
-            case 118: c.setChordType(ChordType.SEVENTH_CHORD);break;
-            case 119: c.setChordType(ChordType.NINTH_CHORD);break;
 
-            case 120: c.setInversion(Inversion.ROOT_POSITION);break;
-            case 121: c.setInversion(Inversion.FIRST_INVERSION);break;
-            case 122: c.setInversion(Inversion.SECOND_INVERSION);break;
-            case 123: c.setInversion(Inversion.THIRD_INVERSION);break;
+            case 24: c.setChordType(ChordType.TRIAD);break;
+            case 25: c.setChordType(ChordType.SEVENTH_CHORD);break;
+            case 26: c.setChordType(ChordType.NINTH_CHORD);break;
 
-            case 124: c.setSpacing(Spacing.CLOSE);break;
-            case 125: c.setSpacing(Spacing.OPEN);break;
-            case 126: c.setSpacing(Spacing.MIXED_1);break;
-            case 127: c.setSpacing(Spacing.MIXED_2);break;
+            case 27: c.setInversion(Inversion.ROOT_POSITION);break;
+            case 28: c.setInversion(Inversion.FIRST_INVERSION);break;
+            case 29: c.setInversion(Inversion.SECOND_INVERSION);break;
+            case 30: c.setInversion(Inversion.THIRD_INVERSION);break;
+
+            case 31: c.setMelodicPosition(MelodicPosition.I);break;
+            case 32: c.setMelodicPosition(MelodicPosition.III);break;
+            case 33: c.setMelodicPosition(MelodicPosition.V);break;
+            case 34: c.setMelodicPosition(MelodicPosition.VII);break;
+            case 35: c.setMelodicPosition(MelodicPosition.IX);break;
+
+            case 36: c.setSpacing(Spacing.CLOSE);break;
+            case 37: c.setSpacing(Spacing.OPEN);break;
+            case 38: c.setSpacing(Spacing.MIXED_1);break;
+//            case 127: c.setSpacing(Spacing.MIXED_2);break;
         }
         return c;
     }
@@ -148,7 +156,10 @@ public abstract class Chords {
                 .parallelStream()
                 .filter(x -> c.getMelodicPosition() == null || x.getMelodicPosition() == c.getMelodicPosition())
                 .filter(x -> c.getChordType() == null || x.getChordType() == c.getChordType())
-                .filter(x -> c.getInversion() == null || x.getInversion() == c.getInversion())
+                .filter(x -> (x.getInversion() != Inversion.SECOND_INVERSION
+                        && c.getInversion() == null
+                )
+                        || (x.getInversion() == c.getInversion()))
                 .filter(x -> c.getSpacing() == null || x.getSpacing() == c.getSpacing())
                 .filter(x -> c.getAlteration() == null || x.getAlteration() == c.getAlteration())
                 .filter(x -> c.getOccurrence() == null || x.getOccurrence() == c.getOccurrence())
@@ -192,7 +203,7 @@ public abstract class Chords {
                 fromRepo.getSpacing(),
                 fromRepo.getAlteration(),
                 fromRepo.getOccurrence(),
-                c.getStandard(),
+                c.getTessitura(),
                 ++id);
 
         if (fromRepo != c) { // if this is not the same object. For addBassVariant() only.

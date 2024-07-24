@@ -5,12 +5,7 @@ import com.DAWIntegration.Satbify.module.Chord;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Stream;
 
-
-// Принимать решение о выборе лучшей пары для соединения
-// на основании оценки плавности, и средней велечены предыдущего голоса.
-// и в дальнейшем придерживаться этой оценки,для того, чтобы не отклоняться от примерной нормальной высоты всего произведения.
 
 public class ChordConnector {
 
@@ -137,16 +132,16 @@ public class ChordConnector {
     private Chord adjustOctaves(Chord chord){
 
         double highestSoprano = 84, lowestBass = 35;
-        double standard = chord.getStandard();
+        double tessitura = chord.getTessitura();
          // todo: make it non final for harmonizing given notes.
         double averagePitch = ((double) chord.getSoprano()
                 + chord.getAlto()
                 + chord.getTenor())
                 / 3;
-        if (averagePitch == standard || Math.abs(averagePitch - standard) < 7.0) {
+        if (averagePitch == tessitura || Math.abs(averagePitch - tessitura) < 7.0) {
             return chord;
         }
-        return (averagePitch < standard) ?
+        return (averagePitch < tessitura) ?
                 adjustOctaves(OctaveUpDown(chord,  true)) : // recurse
                 adjustOctaves(OctaveUpDown(chord, false)); // recurse
 

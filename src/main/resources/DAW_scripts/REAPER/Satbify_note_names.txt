@@ -1,0 +1,109 @@
+# MIDI note/CC name map
+107 -
+106 -
+105 -
+104 -
+103 -
+102 -
+101 -
+100 -
+99 -
+98 -
+97 -
+96 -
+95 -
+94 -
+93 -
+92 -
+91 -
+90 -
+89 -
+88 -
+87 -
+86 -
+85 -
+84 -
+83 -
+82 -
+81  - - - Highest soprano
+80 -
+79      Tessitura
+78      Tessitura
+77      Tessitura
+76      Tessitura
+75      Tessitura
+74      Tessitura
+73      Tessitura
+72      Tessitura
+71      Tessitura
+70      Tessitura
+69      Tessitura
+68   default  Tessitura
+67      Tessitura
+66      Tessitura
+65      Tessitura
+64      Tessitura
+63      Tessitura
+62      Tessitura
+61      Tessitura
+60  -Middile C
+59      Tessitura
+58      Tessitura
+57      Tessitura
+56      Tessitura
+55      Tessitura
+54      Tessitura
+53      Tessitura
+52      Tessitura
+51      Tessitura
+50 -
+49 -
+48 -
+47 -
+46 -
+45 -
+44 -
+43 -
+42 -
+41 -
+40 -
+39   non legato
+38              mixed
+37              open
+36              close
+35        Soprano IX
+34        Soprano VII
+33        Soprano V
+32        Soprano III
+31        Soprano I
+30              Bass VII
+29              Bass V
+28              Bass III
+27              Bass I
+26        Ninth
+25        Seventh
+24        Triad
+23 VII
+22      minor melodic
+21 VI
+20      minor harmonic
+19 V
+18      minor natural
+17 IV
+16 III
+15      major harmonic
+14 II
+13      major natural
+12 I
+11 key root B
+10 key root A#
+9 key root A
+8 key root G#
+7 key root G
+6 key root F#
+5 key root F
+4 key root E
+3 key root D#
+2 key root D
+1 key root C#
+0 key root C

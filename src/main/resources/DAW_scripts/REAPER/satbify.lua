@@ -62,7 +62,7 @@ function send_http_request(url, body)
     return response_body, response_code
 end
 
-local url = "http://localhost:8080/api"
+local url = "http://localhost:8080/api" -- testing locally
 --local url = "https://satbify.up.railway.app/api"
 local response_body, response_code = send_http_request(url, notes_from_reaper)
 -- reaper.ShowConsoleMsg(response_body)
@@ -164,7 +164,7 @@ function parse_and_insert_notes(response_body)
                 ppq_end = tonumber(ppq_end)
                 insert_note(track_num, note_num, ppq_start, ppq_end)
             else
-                reaper.ShowConsoleMsg("Apologies, I can't tackle this just yet... but I'm hitting the books and sharpening my skills. Stay tuned for my upgraded brilliance!" .. "\n")
+                reaper.ShowConsoleMsg("I can't tackle this just yet... " .. "\n")
             end
         end
 
