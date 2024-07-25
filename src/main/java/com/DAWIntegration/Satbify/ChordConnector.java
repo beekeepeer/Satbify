@@ -81,14 +81,14 @@ public class ChordConnector {
         bd = a.getBass() - b.getBass();
 
         if ((sd > 0 && bd > 0)  ||  (sd < 0 && bd < 0))     // decrease probability of parallel s and b
-            result += 200;
-//        if(Math.abs(bd) > 6)                                // smother bass
-//            result += 20;
+            result += 150;
+        if(Math.abs(bd) > 6)                                // smother bass
+            result += 20;
 
         result = result + (int)((Math.pow(Math.abs(sd), power)
                 + Math.pow(Math.abs(ad), power)
                 + Math.pow(Math.abs(td), power)
-                + Math.pow(Math.abs(bd), power)
+//                + Math.pow(Math.abs(bd), power)
         ));
 
         return result;
@@ -133,7 +133,6 @@ public class ChordConnector {
 
         double highestSoprano = 84, lowestBass = 35;
         double tessitura = chord.getTessitura();
-         // todo: make it non final for harmonizing given notes.
         double averagePitch = ((double) chord.getSoprano()
                 + chord.getAlto()
                 + chord.getTenor())
@@ -146,14 +145,31 @@ public class ChordConnector {
                 adjustOctaves(OctaveUpDown(chord, false)); // recurse
 
     }
-    // harmonizing existing notes. It shifts
-    private Chord setFinalNots(Chord chord) { // todo: test it!!!!
+
+    // harmonizing existing notes. It shifts tessitura for only one chord.
+    private Chord setFinalNots(Chord chord) {
+        var difCommon = getDifCommon(chord);
+        if (difCommon != 0) { // if this chord should harmonize Specified Notes
+            if (difCommon % 12 == 0) { // if differences can be used to shift by octave, AND are equal.
+                chord.setSoprano(chord.getSoprano() + difCommon);
+                chord.setAlto(chord.getAlto() + difCommon);
+                chord.setTenor(chord.getTenor() + difCommon);
+                chord.setBass(chord.getBass() + difCommon);
+                return chord;
+            } else { // differences are no octaves - this is the wrong Chord!!!
+                chord.setAlteration(Alteration.DD_Flat_IV); // todo: it is temporary! change to a different way of filtering.
+                return chord;
+            }
+        } else { // This Chord should not be touched!!! Return the original.
+            return chord;
+        }
+    }
+
+    private static int getDifCommon(Chord chord) {
         var difS = 0;
         var difA = 0;
         var difT = 0;
         var difB = 0;
-        var difCommon = 0;
-
         if (chord.getFinalSoprano() != 0) {
             difS = chord.getFinalSoprano() - chord.getSoprano();
         }
@@ -165,28 +181,8 @@ public class ChordConnector {
             }
         if(chord.getFinalBass() != 0) {
             difB = chord.getFinalBass() - chord.getBass();
-
         }
-
-        difCommon = suitableChord(difS, difA, difT, difB);
-
-
-        if (difCommon != 0) { // if this chord should harmonize Specified Notes
-            if (difCommon % 12 == 0) { // if differences can be used to shift by octave, AND are equal.
-//                System.out.println("difCommon: " + difCommon);
-                chord.setSoprano(chord.getSoprano() + difCommon);
-                chord.setAlto(chord.getAlto() + difCommon);
-                chord.setTenor(chord.getTenor() + difCommon);
-                chord.setBass(chord.getBass() + difCommon);
-//                System.out.println("chord after: " + chord);
-                return chord;
-            } else { // differences are no octaves - this is the wrong Chord!!!
-                chord.setAlteration(Alteration.DD_Flat_IV); // todo: it is temporary! change to a different way of filtering.
-                return chord;
-            }
-        } else { // This Chord should not be touched!!! Return the original.
-            return chord;
-        }
+        return suitableChord(difS, difA, difT, difB);
     }
 
     public static int suitableChord(int difS, int difA, int difT, int difB) {
@@ -219,20 +215,14 @@ public class ChordConnector {
         }
     }
 
-
-
-
-
-        private Chord OctaveUpDown(Chord a, boolean b) {
+    private Chord OctaveUpDown(Chord a, boolean b) {
         var o = 12;
-        a.setSoprano(a.getSoprano() + (b ? o: -o));
-        a.setAlto(a.getAlto() + (b ? o: -o));
-        a.setTenor(a.getTenor() + (b ? o: -o));
-        a.setBass(a.getBass() + (b ? o: -o));
+        a.setSoprano(a.getSoprano() + (b ? o : -o));
+        a.setAlto(a.getAlto() + (b ? o : -o));
+        a.setTenor(a.getTenor() + (b ? o : -o));
+        a.setBass(a.getBass() + (b ? o : -o));
         return a;
     }
-
-
 }
 
 
