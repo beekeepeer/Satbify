@@ -12,6 +12,7 @@ import static com.DAWIntegration.Satbify.repository.ChordRepository.chordsReposi
 
 public abstract class Chords {
     private static int id;
+    public static boolean smoothBass = false;
     public static String harmonise(String input) {
         int standard = 68;
         boolean legato = true;
@@ -29,6 +30,7 @@ public abstract class Chords {
             int trackNumber = note.reaperTrack();
             c = applyKeySwitch(pitch, c);
             if(trackNumber == 0 && pitch == 39) legato = false;
+            if(trackNumber == 0 && pitch == 40) smoothBass = true;
             if(trackNumber == 0 && pitch > 50 && pitch < 80){
                 c.setTessitura(pitch); // apply standard
             }
@@ -44,6 +46,7 @@ public abstract class Chords {
         var connected = new ChordConnector().connect(clonedFromRepo);
         // reset inherited from past operations.
         c = new Chord();
+        smoothBass = false;
         return returnToReaper (connected, legato);
     }
 

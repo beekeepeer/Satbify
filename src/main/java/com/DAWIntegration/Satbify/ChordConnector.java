@@ -2,6 +2,7 @@ package com.DAWIntegration.Satbify;
 
 import com.DAWIntegration.Satbify.module.Alteration;
 import com.DAWIntegration.Satbify.module.Chord;
+import static com.DAWIntegration.Satbify.Chords.smoothBass;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,14 +83,17 @@ public class ChordConnector {
 
         if ((sd > 0 && bd > 0)  ||  (sd < 0 && bd < 0))     // decrease probability of parallel s and b
             result += 150;
-        if(Math.abs(bd) > 6)                                // smother bass
-            result += 20;
+
 
         result = result + (int)((Math.pow(Math.abs(sd), power)
                 + Math.pow(Math.abs(ad), power)
                 + Math.pow(Math.abs(td), power)
-//                + Math.pow(Math.abs(bd), power)
+
         ));
+        if (smoothBass) {
+            result = (int) (result + Math.pow(Math.abs(bd), power));
+        } else if (Math.abs(bd) > 6)
+            result += 20;
 
         return result;
     }
