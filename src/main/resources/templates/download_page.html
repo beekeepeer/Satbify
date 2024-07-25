@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satbify Versions</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; text-align: center;">
+<header style="background-color: #f4f4f4; padding: 20px; display: flex; justify-content: space-between; align-items: center; padding-left: 15%; padding-right: 15%;">
+    <div style="text-align: left;">
+        <a href="/" style="text-decoration: none; color: black;">
+            <h1 style="margin: 0;">Satbify</h1>
+        </a>
+        <p style="margin: 0;">Beautiful voice-leading effortlessly</p>
+    </div>
+    <div>
+        <a href="https://www.paypal.com/donate/?hosted_button_id=467A6623LHRBW" style="font-size: 1.2em; text-decoration: none; padding: 10px 20px; background-color: #021f62; color: white; border: none; border-radius: 5px;">Donate</a>
+    </div>
+</header>
+<main style="padding: 20px;">
+    <p>This is a preview version and many vital features are not publicly available just yet.</p>
+    <p style="text-align: left; max-width: 800px; margin: 20px auto;">Download v0.01:</p>
+    <div style="display: flex; flex-direction: column; align-items: flex-start; max-width: 800px; margin: 20px auto;">
+        <a href="/download/satbify.lua" style="font-size: 1.2em; text-decoration: none; padding: 10px 20px; background-color: #cccccc; color: black; border: none; border-radius: 5px; margin-bottom: 10px;">Reaper script</a>
+        <a href="/download/satbify_note_names.txt" style="font-size: 1.2em; text-decoration: none; padding: 10px 20px; background-color: #cccccc; color: black; border: none; border-radius: 5px;">Note names</a>
+    </div>
+    <section style="text-align: left; max-width: 800px; margin: 20px auto;">
+        <h3>Internet connection required</h3>
+        <ul>
+            The script for Reaper is quite basic. All processing and data are handled on the server. The script communicates with the main application over the internet, so a reliable internet connection is required.
+        </ul>
+    </section>
+    <section style="text-align: left; max-width: 800px; margin: 20px auto;">
+        <h3>Installation</h3>
+        <ul>
+            <li>In Reaper, click to Options -> Show Reaper resource path in explorer/finder.</li>
+            <li>The "satbify.lua" file should be placed inside the "Scripts" folder.</li>
+            <li>The "satbify_note_names.txt" file should be placed inside the "MIDINoteNames" folder.</li>
+            <li>When moved, in Reaper's Actions list, add the script, and assign any shortcut.</li>
+            <li>Open the MIDI editor, go to File -> Note/CC name -> Load note/CC name from file -> Choose file... -> select "satbify_note_names.txt" file.</li>
+        </ul>
+    </section>
+</main>
+</body>
+</html>

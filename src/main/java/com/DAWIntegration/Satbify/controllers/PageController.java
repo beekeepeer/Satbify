@@ -1,7 +1,14 @@
 package com.DAWIntegration.Satbify.controllers;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.io.IOException;
 
 @Controller
 public class PageController {
@@ -17,13 +24,17 @@ public class PageController {
         return "download_page";
     }
 
-    @GetMapping("/donate")
-    public String displayDonatePage() {
-        return "donate_page";
-    }
-
     @GetMapping("/versions")
     public String displayVersionsPage() {
         return "versions_page";
+    }
+
+    @GetMapping("/download/{filename:.+}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String filename) throws IOException {
+        Resource resource = new ClassPathResource("DAW_scripts/REAPER/" + filename);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + resource.getFilename())
+                .body(resource);
     }
 }
