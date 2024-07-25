@@ -91,9 +91,9 @@
 18      minor natural
 17 IV
 16 III
-15      major harmonic
+15      Major harmonic
 14 II
-13      major natural
+13      Major natural
 12 I
 11 key root B
 10 key root A#
