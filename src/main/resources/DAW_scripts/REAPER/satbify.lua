@@ -1,6 +1,6 @@
 -- beta version 0.01
 -- 2024.07.26
---
+-- by Dmitri Goriuc
 
 
 
@@ -70,8 +70,8 @@ function send_http_request(url, body)
     return response_body, response_code
 end
 
-local url = "http://localhost:8080/api" -- testing locally
---local url = "https://satbify.up.railway.app/api"
+--local url = "http://localhost:8080/api" -- testing locally
+local url = "https://satbify.up.railway.app/api"
 local response_body, response_code = send_http_request(url, notes_from_reaper)
 -- reaper.ShowConsoleMsg(response_body)
 

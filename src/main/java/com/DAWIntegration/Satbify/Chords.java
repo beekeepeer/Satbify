@@ -44,8 +44,8 @@ public abstract class Chords {
             c = resetFinalNotes(c);
         }
         var connected = new ChordConnector().connect(clonedFromRepo);
-        // reset inherited from past operations.
-        c = new Chord();
+        // reset inherited from past operations:
+        c = new Chord(); // chord from previous request is available for garbage collection.
         smoothBass = false;
         return returnToReaper (connected, legato);
     }
@@ -55,7 +55,7 @@ public abstract class Chords {
         c.setFinalAlto(0);
         c.setFinalTenor(0);
         c.setFinalBass(0);
-        Key keyRoot = Key.C;
+//        Key keyRoot = Key.C;
         c.setMelodicPosition(null);
         c.setChordType(ChordType.TRIAD);
         c.setInversion(null);
@@ -65,7 +65,6 @@ public abstract class Chords {
         return c;
     }
     private static ArrayList<Note> parsArgs(String args) {
-        //todo: apply all keySwitches before applying them!!!
         ToIntFunction<Note> function = new ToIntFunction<Note>() {
             @Override
             public int applyAsInt(Note note) {
