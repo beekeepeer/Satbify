@@ -47,19 +47,57 @@ local notes_from_reaper = read_notes()
 
 -- send HTTP POST request using curl
 function send_http_request(url, body)
+    -- Determine the operating system
+    local os_type
+    if os.getenv("HOME") then
+        local uname = io.popen("uname"):read("*l")
+        if uname == "Darwin" then
+            os_type = "Mac"
+        else
+            os_type = "Linux"
+        end
+    elseif os.getenv("HOMEDRIVE") then
+        os_type = "Windows"
+    else
+        error("Unsupported operating system")
+    end
+
+    -- Function to create a temporary file
+    local function create_temp_file()
+        local temp_file
+        if os_type == "Windows" then
+            temp_file = os.getenv("TEMP") .. "\\" .. os.tmpname():match("[^\\]+$")
+        else
+            temp_file = os.tmpname()
+        end
+        return temp_file
+    end
+
     -- Write the body to a temporary file
-    local temp_body_file = os.tmpname()
+    local temp_body_file = create_temp_file()
     local file = io.open(temp_body_file, "w")
+    if not file then
+        error("Failed to create temporary file for request body")
+    end
     file:write(body)
     file:close()
 
     -- Use curl to send the HTTP request and capture the response
-    local temp_response_file = os.tmpname()
-    local command = string.format('curl -s -o %s -w "%%{http_code}" -X POST -H "Content-Type: application/json" --data-binary @"%s" "%s"', temp_response_file, temp_body_file, url)
+    local temp_response_file = create_temp_file()
+    local command
+    if os_type == "Mac" or os_type == "Linux" then
+        command = string.format('curl -s -o %s -w "%%{http_code}" -X POST -H "Content-Type: application/json" --data-binary @"%s" "%s"', temp_response_file, temp_body_file, url)
+    elseif os_type == "Windows" then
+        command = string.format('curl -s -o %s -w "%%{http_code}" -X POST -H "Content-Type: application/json" --data-binary @%s %s', temp_response_file, temp_body_file:gsub("\\", "/"), url)
+    end
+
     local response_code = os.execute(command)
 
     -- Read the response from the temporary file
     file = io.open(temp_response_file, "r")
+    if not file then
+        error("Windows is not supported for the next few days.")
+    end
     local response_body = file:read("*all")
     file:close()
 
@@ -69,6 +107,7 @@ function send_http_request(url, body)
 
     return response_body, response_code
 end
+
 
 --local url = "http://localhost:8080/api" -- testing locally
 local url = "https://satbify.up.railway.app/api"
