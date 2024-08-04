@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satbify</title>
+    <style>
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            width: 100%; /* Ensures the video container is as wide as its parent */
+            background: #000;
+            margin: 20px 0;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .content-section {
+            text-align: left;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; text-align: center;">
+<header style="background-color: #f4f4f4; padding: 20px; display: flex; justify-content: space-between; align-items: center; padding-left: 15%; padding-right: 15%;">
+    <div style="text-align: left;">
+        <h1 style="margin: 0;">Satbify</h1>
+        <p style="margin: 0;">Beautiful voice-leading effortlessly</p>
+    </div>
+    <div>
+        <a href="download" style="font-size: 1.2em; text-decoration: none; padding: 10px 20px; background-color: #cccccc; color: black; border: none; border-radius: 5px;">Download</a>
+    </div>
+</header>
+<main style="padding: 20px;">
+    <section class="content-section">
+        <h2>What is Satbify?</h2>
+        <p>Satbify redefines the concept of a "chord track". It makes you compose better straight away, offering an intuitive way to manipulate chords, scales, and tonalities by simply adding key-switches in the MIDI editor. Once these key-switches are in place, Satbify creates four separate parts following the traditions of voice-leading rules.</p>
+        <p>Each voice is placed on a separate track, making it effortless to route to individual virtual instruments or incorporate into your arrangement as distinct voices. This functionality enables creative experimentation with fresh harmonies, modulations, and voicings, all in an automated and efficient manner.</p>
+        <p>Satbify is designed to be both fast and flexible. For users well-versed in music theory, it automates the routine aspects of composition. For beginners, it provides a learning tool, encouraging experimentation, listening, and rapid skill development. By bringing professional harmonisation techniques to your fingertips, Satbify opens up new expressive possibilities for every musician.</p>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/IDbd3HZmEW0" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </section>
+</main>
+</body>
+</html>

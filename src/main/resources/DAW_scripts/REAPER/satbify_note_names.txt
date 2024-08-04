@@ -1,0 +1,109 @@
+# MIDI note/CC name map
+107 -
+106 -
+105 -
+104 -
+103 -
+102 -
+101 -
+100 -
+99 -
+98 -
+97 -
+96 -
+95 -
+94 -
+93 -
+92 -
+91 -
+90 -
+89 -
+88 -
+87 -
+86 -
+85 -
+84 -
+83 -
+82 -
+81 -
+80 -
+79      Register
+78      Register
+77      Register
+76      Register
+75      Register
+74      Register
+73      Register
+72      Register
+71      Register
+70      Register
+69      Register
+68   default  Register
+67      Register
+66      Register
+65      Register
+64      Register
+63      Register
+62      Register
+61      Register
+60      Register
+59      Register
+58      Register
+57      Register
+56      Register
+55      Register
+54      Register
+53      Register
+52      Register
+51      Register
+50 -
+49 -
+48 -
+47 -
+46 -
+45 -
+44 -
+43 -
+42 -
+41 -
+40   smooth bass
+39   non legato
+38              mixed
+37              open
+36              close
+35        soprano IX
+34        soprano VII
+33        soprano V
+32        soprano III
+31        soprano I
+30              bass VII
+29              bass V
+28              bass III
+27              bass I
+26        ninth
+25        seventh
+24        triad
+23 VII
+22      minor melodic
+21 VI
+20      minor harmonic
+19 V
+18      minor natural
+17 IV
+16 III
+15      Major harmonic
+14 II
+13      Major natural
+12 I
+11 key root B
+10 key root A#
+9 key root A
+8 key root G#
+7 key root G
+6 key root F#
+5 key root F
+4 key root E
+3 key root D#
+2 key root D
+1 key root C#
+0 key root C
