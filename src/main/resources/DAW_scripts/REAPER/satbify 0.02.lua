@@ -53,7 +53,7 @@ function send_http_request(url, body)
 
     -- Use curl to send the HTTP request and capture the response directly
     local command = string.format('curl -s -w "%%{http_code}" -X POST -H "Content-Type: application/json" -d "%s" "%s"', escaped_body, url)
-    --windows  --insecure:
+    --windows are not familiar with used new SSL/TLS certificate verification:
     local handle = io.popen(command .. " --insecure")
     --reaper.ShowConsoleMsg(command)
     local result = handle:read("*all")
