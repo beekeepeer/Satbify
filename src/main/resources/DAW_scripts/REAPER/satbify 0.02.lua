@@ -84,6 +84,7 @@ end
 function read_notes(tracks)
     local notes = ""
     local satbify_takes = {} -- return this array
+    local track_index = 0
     local sel_item_before = reaper.GetSelectedMediaItem(0, 0)
     -- unselect all items:
     local num_items = reaper.CountMediaItems(0) -- Get the number of items in the current project
@@ -96,6 +97,17 @@ function read_notes(tracks)
     if (time_sel_end - time_sel_start) > 0 then
         -- Iterate through each track in the table
         for track_name, track in pairs(tracks) do
+            if track_name == "main_satbify" then
+                track_index = 0
+            elseif track_name == "soprano_satbify" then
+                track_index = 1
+            elseif track_name == "alto_satbify" then
+                track_index = 2
+            elseif track_name == "tenor_satbify" then
+                track_index = 3
+            elseif track_name == "bass_satbify" then
+                track_index = 4
+            end
             local track_nubmer = reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER")
             local item_count = reaper.CountTrackMediaItems(track)
             local has_item_in_selection = false
@@ -111,7 +123,7 @@ function read_notes(tracks)
                     reaper.SetMediaItemSelected(item, false)
                     has_item_in_selection = true
                     reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(item), "P_NAME", track_name, true)
-                    table.insert(satbify_takes, reaper.GetActiveTake(item))
+                    table.insert(satbify_takes, {reaper.GetActiveTake(item), track_index})
                     -- if Item starts outside the time selection but ends inside
                 elseif item_start < time_sel_start and item_end > time_sel_start and item_end < time_sel_end then
                     reaper.SetMediaItemSelected(item, true)
@@ -119,7 +131,7 @@ function read_notes(tracks)
                     reaper.SetMediaItemSelected(item, false)
                     has_item_in_selection = true
                     reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(item), "P_NAME", track_name, true)
-                    table.insert(satbify_takes, reaper.GetActiveTake(item))
+                    table.insert(satbify_takes, {reaper.GetActiveTake(item), track_index})
                     -- if Item starts and ends in time selection
                 elseif item_start > time_sel_start and item_end < time_sel_end then
                     reaper.SetMediaItemSelected(item, true)
@@ -128,12 +140,12 @@ function read_notes(tracks)
                     reaper.SetMediaItemSelected(item, false)
                     has_item_in_selection = true
                     reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(item), "P_NAME", track_name, true)
-                    table.insert(satbify_takes, reaper.GetActiveTake(item))
+                    table.insert(satbify_takes, {reaper.GetActiveTake(item), track_index})
                     -- if Item already covers the entire time selection
                 elseif item_start <= time_sel_start and item_end >= time_sel_end then
                     has_item_in_selection = true
                     reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(item), "P_NAME", track_name, true)
-                    table.insert(satbify_takes, reaper.GetActiveTake(item))
+                    table.insert(satbify_takes, {reaper.GetActiveTake(item), track_index})
                 end
             end
             -- if No item exists in the time selection, create a new MIDI item
@@ -141,7 +153,7 @@ function read_notes(tracks)
                 local new_item = reaper.CreateNewMIDIItemInProj(track, time_sel_start, time_sel_end, false)
                 reaper.UpdateItemInProject(new_item)
                 reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(new_item), "P_NAME", track_name, true)
-                table.insert(satbify_takes, reaper.GetActiveTake(new_item))
+                table.insert(satbify_takes, {reaper.GetActiveTake(new_item), track_index})
             end
         end
     else
@@ -154,11 +166,14 @@ function read_notes(tracks)
     local time_sel_start, time_sel_end = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
 
     -- Iterate through each take in the satbify_takes array
-    for _, take in ipairs(satbify_takes) do
+    --for _, take, track_num in ipairs(satbify_takes) do
+    for i, take_info in ipairs(satbify_takes) do
+            local take = take_info[1] -- The take object
+            local track_num = take_info[2] -- The track index
         -- Get the track of the take
         local track = reaper.GetMediaItemTake_Track(take)
         -- Get the track number todo: make 1-based on backend
-        local track_num = reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER") -1
+        --local track_num = reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER") -1
 
         -- Get the number of MIDI notes in the take
         local _, note_count = reaper.MIDI_CountEvts(take)
@@ -178,11 +193,12 @@ function read_notes(tracks)
             end
         end
     end
-    return notes
+    --print(notes)
+    return notes, satbify_takes
 end
 
 local tracks = find_tracks()
-local notes_from_reaper = read_notes(tracks)
+local notes_from_reaper, satbify_takes = read_notes(tracks)
 
 
 
@@ -212,8 +228,10 @@ local url = "https://satbify.up.railway.app/api"
 local response_body, response_code = send_http_request(url, notes_from_reaper)
 -- reaper.ShowConsoleMsg(response_body)
 
-goto exit;
+--goto exit;
+--
 -- todo make a option to ignore notes on voices tracks
+-- todo: returne from backend to the same takes from satbify_takes table
 
 function deleteNotesFromFirstItemOnTracks(tracks)
     -- Loop through the specified tracks
