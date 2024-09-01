@@ -2,6 +2,9 @@
 -- 2024.08.04
 -- by Dmitri Goriuc
 
+-- todo: glue many items on one track in time selection
+-- todo: make a option to ignore notes on voices tracks
+
 
 function print(str)
     reaper.ShowConsoleMsg(str .. "\n")
@@ -11,6 +14,7 @@ end
 
 local proj = reaper.EnumProjects(-1, "") -- -1 means the currently active project
 local flagExit = false
+local sel_item_before
 
 -- Function to organize tracks for satbify
 function find_tracks()
@@ -85,18 +89,12 @@ function find_tracks()
     return satbify_tracks
 end
 
-
-
-
-
-
-
 function read_notes(tracks)
     local notes = ""
     local satbify_takes = {} -- return this array
     local mainTimeOffset
     local track_index = 0
-    local sel_item_before = reaper.GetSelectedMediaItem(0, 0)
+    sel_item_before = reaper.GetSelectedMediaItem(0, 0)
     -- unselect all items:
     local num_items = reaper.CountMediaItems(0) -- Get the number of items in the current project
     for i = 0, num_items - 1 do
@@ -183,9 +181,6 @@ function read_notes(tracks)
         flagExit = true
     end
     -- restore item selection
-    if sel_item_before then
-        reaper.SetMediaItemSelected(sel_item_before, true)
-    end
     local time_sel_start, time_sel_end = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
 
     -- Iterate through each take in the satbify_takes array
@@ -202,7 +197,7 @@ function read_notes(tracks)
             local note_end_time = reaper.MIDI_GetProjTimeFromPPQPos(take, endppqpos)
 
             -- Only process the note if it's not muted and within the time selection
-            if not muted and note_start_time >= time_sel_start and note_start_time <= time_sel_end then
+            if not muted and note_start_time >= time_sel_start - 0.01 and note_start_time <= time_sel_end  - 0.01 then
                 -- Add note information to the string 'notes' in the required format
                 notes = notes .. string.format("%d,%d,%d,%d-", track_num, pitch, startppqpos, endppqpos)
             end
@@ -245,12 +240,6 @@ local  response_code
 if not flagExit then
     response_body, response_code = send_http_request(url, notes_from_reaper)
 end
--- reaper.ShowConsoleMsg(response_body)
-
-
---
--- todo make a option to ignore notes on voices tracks
--- todo: return from backend to the same takes using index from satbify_takes table
 
 function deleteNotesInTimeSelection(table_takes)
     -- Get the current project time selection start and end
@@ -290,6 +279,7 @@ end
 
 -- Function to parse the HTTP response and insert notes accordingly
 function parse_and_insert_notes(response, takes)
+    local latestEnd = 0
     local mainTake
     for i = 1, #takes do
         -- Accessing the second element of the inner table (track_index)
@@ -299,17 +289,14 @@ function parse_and_insert_notes(response, takes)
         end
     end
     ::mainFound::
-
     -- Check if the response format is valid and delete existing notes within the time selection
     if isValidFormat(response) then
         deleteNotesInTimeSelection(takes)
     end
-
     -- Loop through each line of the response body
     for line in response:gmatch("[^\r\n]+") do
         -- Parse the note data from the line
         local track_num, note_num, ppq_start, ppq_end = line:match("(%d+), (%d+), (%d+), (%d+)")
-
         -- Check if all required data was successfully parsed
         if track_num and note_num and ppq_start and ppq_end then
             -- Convert parsed data from string to numbers
@@ -317,7 +304,6 @@ function parse_and_insert_notes(response, takes)
             note_num = tonumber(note_num)
             ppq_start = tonumber(ppq_start)
             ppq_end = tonumber(ppq_end)
-
             -- Loop through the provided takes to find the correct track to insert the note
             for i, take_info in ipairs(takes) do
                 local take = take_info[1] -- The take object
@@ -326,13 +312,8 @@ function parse_and_insert_notes(response, takes)
                 local endTimeFromMain = reaper.MIDI_GetProjTimeFromPPQPos(mainTake, ppq_end)
                 local note_ppq_start = reaper.MIDI_GetPPQPosFromProjTime(take, startTimeFromMain)
                 local note_ppq_end = reaper.MIDI_GetPPQPosFromProjTime(take, endTimeFromMain)
-
                 -- If the take's track number matches the parsed track number, insert the note
                 if take_track_index == track_num then
-                    -- Adjust PPQ positions by adding the timeOffset
-                    --local note_ppq_start = reaper.MIDI_GetPPQPosFromProjTime(take, ppq_start)
-                    --local note_ppq_end = reaper.MIDI_GetPPQPosFromProjTime(take, ppq_end)
-
                     -- Insert the note into the MIDI take
                     reaper.MIDI_InsertNote(
                             take,
@@ -345,6 +326,9 @@ function parse_and_insert_notes(response, takes)
                             100, -- velocity (0-127, we'll assume 100)
                             false) -- noSort
                 end
+                if endTimeFromMain > latestEnd then
+                    latestEnd = endTimeFromMain
+                end
             end
         elseif flagExit then -- Do not print anything if main track is created only now
         else
@@ -353,23 +337,35 @@ function parse_and_insert_notes(response, takes)
         end
     end
 
-    -- Sort MIDI data after inserting notes
+
+    -- Sort MIDI data after inserting notes and make takes longer
     for _, take_info in ipairs(takes) do
         local take = take_info[1]
+        local track_num = take_info[2] -- The track index
         reaper.MIDI_Sort(take)
+        if track_num > 0 then
+            local item = reaper.GetMediaItemTake_Item(take)
+            local take_start_time = reaper.GetMediaItemInfo_Value(item, "D_POSITION")
+            local take_length = reaper.GetMediaItemInfo_Value(item, "D_LENGTH")
+            local take_end_time = take_start_time + take_length
+            -- Calculate the new length needed
+            local nudge_length = take_end_time - latestEnd
+            -- Apply nudge to extend the take length
+            if nudge_length < 0 then
+                reaper.SetMediaItemSelected(item, true)
+                reaper.ApplyNudge(0, 0, 3, 1, nudge_length, true, 0)
+                reaper.SetMediaItemSelected(item, false)
+            end
+        end
     end
 end
 
-
--- Display the response in the Reaper console and insert notes
--- if response_body and response_code == 200 then
 if not flagExit then
     parse_and_insert_notes(response_body, satbify_takes)
 end
-
--- else
--- reaper.ShowConsoleMsg("Failed to execute HTTP request or no valid response received.\n")
--- end
+if sel_item_before then
+    reaper.SetMediaItemSelected(sel_item_before, true)
+end
 
 reaper.Undo_EndBlock("Insert MIDI notes from HTTP response", -1)
 
