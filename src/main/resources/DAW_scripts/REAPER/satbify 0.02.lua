@@ -1,9 +1,10 @@
 -- beta version 0.03
--- 2024.08.04
+-- 2024.09.09
 -- by Dmitri Goriuc
 
 -- todo: glue many items on one track in time selection
 -- todo: make a option to ignore notes on voices tracks
+-- todo: bug on backend ignoring first notes if starts with the item.
 
 
 function print(str)
@@ -92,8 +93,9 @@ end
 function read_notes(tracks)
     local notes = ""
     local satbify_takes = {} -- return this array
-    local mainTimeOffset
+    local additional_main_takes = {}
     local track_index = 0
+    local main_take = 0
     sel_item_before = reaper.GetSelectedMediaItem(0, 0)
     -- unselect all items:
     local num_items = reaper.CountMediaItems(0) -- Get the number of items in the current project
@@ -119,7 +121,6 @@ function read_notes(tracks)
             elseif track_name == "bass_satbify" then
                 track_index = 4
             end
-            local track_nubmer = reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER")
             local item_count = reaper.CountTrackMediaItems(track)
             local no_items_chosen = true
             -- Iterate through each media item on the track
@@ -128,6 +129,9 @@ function read_notes(tracks)
                 local item_start = reaper.GetMediaItemInfo_Value(item, "D_POSITION")
                 local item_end = item_start + reaper.GetMediaItemInfo_Value(item, "D_LENGTH")
                 -- if Item starts inside the time selection but ends outside
+                if isMain and not no_items_chosen then
+                    table.insert(additional_main_takes, reaper.GetActiveTake(item))
+                end
                 if item_start > time_sel_start and item_start < time_sel_end and item_end > time_sel_end and no_items_chosen then
                     if not isMain then
                         reaper.SetMediaItemSelected(item, true)
@@ -175,6 +179,7 @@ function read_notes(tracks)
                     flagExit = true
                 end
             end
+            isMain = false
         end
     else
         reaper.ShowMessageBox("Please, Set Time Selection", "Satbify", 0)
@@ -187,19 +192,39 @@ function read_notes(tracks)
     for i, take_info in ipairs(satbify_takes) do
             local take = take_info[1] -- The take object
             local track_num = take_info[2] -- The track index
-        local track = reaper.GetMediaItemTake_Track(take)
         local _, note_count = reaper.MIDI_CountEvts(take)
         -- Iterate through each MIDI note in the take
         for i = 0, note_count - 1 do
             local retval, selected, muted, startppqpos, endppqpos, chan, pitch, vel = reaper.MIDI_GetNote(take, i)
             -- Convert MIDI start position (PPQ) to project time
             local note_start_time = reaper.MIDI_GetProjTimeFromPPQPos(take, startppqpos)
-            local note_end_time = reaper.MIDI_GetProjTimeFromPPQPos(take, endppqpos)
-
             -- Only process the note if it's not muted and within the time selection
             if not muted and note_start_time >= time_sel_start - 0.01 and note_start_time <= time_sel_end  - 0.01 then
                 -- Add note information to the string 'notes' in the required format
                 notes = notes .. string.format("%d,%d,%d,%d-", track_num, pitch, startppqpos, endppqpos)
+            end
+        end
+        if track_num == 0 then
+            main_take = take
+        end
+    end
+
+    -- Iterate through each take in the additional_main_takes array
+    for i, take in ipairs(additional_main_takes) do
+        local _, note_count = reaper.MIDI_CountEvts(take)
+        -- Iterate through each MIDI note in the take
+        for i = 0, note_count - 1 do
+            local retval, selected, muted, startppqpos, endppqpos, chan, pitch, vel = reaper.MIDI_GetNote(take, i)
+            -- Convert MIDI start position (PPQ) to project time
+            local note_start_time = reaper.MIDI_GetProjTimeFromPPQPos(main_take, startppqpos)
+            local startTimeFromMain = reaper.MIDI_GetProjTimeFromPPQPos(take, startppqpos)
+            local endTimeFromMain = reaper.MIDI_GetProjTimeFromPPQPos(take, endppqpos)
+            local startppqpos = reaper.MIDI_GetPPQPosFromProjTime(main_take, startTimeFromMain)
+            local endppqpos = reaper.MIDI_GetPPQPosFromProjTime(main_take, endTimeFromMain)
+ -- Only process the note if it's not muted and within the time selection
+            if not muted and note_start_time >= time_sel_start - 0.01 and note_start_time <= time_sel_end  - 0.01 then
+                -- Add note information to the string 'notes' in the required format
+                notes = notes .. string.format("%d,%d,%d,%d-", 0, pitch, startppqpos, endppqpos)
             end
         end
     end
@@ -209,11 +234,6 @@ end
 
 local tracks = find_tracks()
 local notes_from_reaper, satbify_takes, timeOffset = read_notes(tracks)
-
-
-
--- if you need to get the track of a take: MediaTrack reaper.GetMediaItemTake_Track(MediaItem_Take take)
--- if you need to get the name of a take: string reaper.GetTakeName(MediaItem_Take take)
 
 -- send HTTP POST request using curl
 function send_http_request(url, body)
@@ -279,6 +299,7 @@ end
 
 -- Function to parse the HTTP response and insert notes accordingly
 function parse_and_insert_notes(response, takes)
+    --print(response)
     local latestEnd = 0
     local mainTake
     for i = 1, #takes do
@@ -309,6 +330,7 @@ function parse_and_insert_notes(response, takes)
                 local take = take_info[1] -- The take object
                 local take_track_index = take_info[2] -- The track index
                 local startTimeFromMain = reaper.MIDI_GetProjTimeFromPPQPos(mainTake, ppq_start)
+
                 local endTimeFromMain = reaper.MIDI_GetProjTimeFromPPQPos(mainTake, ppq_end)
                 local note_ppq_start = reaper.MIDI_GetPPQPosFromProjTime(take, startTimeFromMain)
                 local note_ppq_end = reaper.MIDI_GetPPQPosFromProjTime(take, endTimeFromMain)
@@ -321,9 +343,9 @@ function parse_and_insert_notes(response, takes)
                             false, -- muted
                             note_ppq_start, -- startppqpos
                             note_ppq_end,   -- endppqpos
-                            0, -- channel (0-15, we'll assume 0)
+                            0, -- channel
                             note_num, -- pitch
-                            100, -- velocity (0-127, we'll assume 100)
+                            100, -- velocity
                             false) -- noSort
                 end
                 if endTimeFromMain > latestEnd then
