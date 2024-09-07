@@ -1,5 +1,5 @@
 package com.DAWIntegration.Satbify;
-// todo: legato chords with pauses if legato is on.
+// todo: legato chords should be without pauses if legato is on.
 
 import com.DAWIntegration.Satbify.module.*;
 
