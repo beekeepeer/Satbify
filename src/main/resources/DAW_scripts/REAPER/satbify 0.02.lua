@@ -132,7 +132,8 @@ function read_notes(tracks)
                 if isMain and not no_items_chosen then
                     table.insert(additional_main_takes, reaper.GetActiveTake(item))
                 end
-                if item_start > time_sel_start and item_start < time_sel_end and item_end > time_sel_end and no_items_chosen then
+                    -- if item starts in time selection but ends outside
+                if item_start >= time_sel_start and item_start <= time_sel_end and item_end >= time_sel_end and no_items_chosen then
                     if not isMain then
                         reaper.SetMediaItemSelected(item, true)
                         reaper.ApplyNudge(0, 0, 1, 1, (item_start - time_sel_start), true, 0)
@@ -142,7 +143,7 @@ function read_notes(tracks)
                     no_items_chosen = false
                     table.insert(satbify_takes, {reaper.GetActiveTake(item), track_index})
                     -- if Item starts outside the time selection but ends inside
-                elseif item_start <= time_sel_start and item_end > time_sel_start and item_end < time_sel_end and no_items_chosen then
+                elseif item_start <= time_sel_start and item_end >= time_sel_start and item_end <= time_sel_end and no_items_chosen then
                     if not isMain then
                         reaper.SetMediaItemSelected(item, true)
                         reaper.ApplyNudge(0, 0, 3, 1, (item_end - time_sel_end), true, 0)
@@ -152,7 +153,7 @@ function read_notes(tracks)
                     no_items_chosen = false
                     table.insert(satbify_takes, {reaper.GetActiveTake(item), track_index})
                     -- if Item starts and ends in time selection
-                elseif item_start > time_sel_start and item_end < time_sel_end and no_items_chosen then
+                elseif item_start >= time_sel_start and item_end <= time_sel_end and no_items_chosen then
                     if not isMain then
                         reaper.SetMediaItemSelected(item, true)
                         reaper.ApplyNudge(0, 0, 1, 1, (item_start - time_sel_start), true, 0)
@@ -253,8 +254,8 @@ function send_http_request(url, body)
     return response_body, response_code
 end
 
---local url = "http://localhost:8080/api" -- testing locally
-local url = "https://satbify.up.railway.app/api"
+local url = "http://localhost:8080/api" -- testing locally
+--local url = "https://satbify.up.railway.app/api"
 local response_body
 local  response_code
 if not flagExit then
