@@ -2,9 +2,27 @@
 -- 2024.09.09
 -- by Dmitri Goriuc
 
+--[[
+       What is new
+Important:
+- notes are inserted in global time regardless item position
+- Satbify now works only within time selection: note start should be within time selection
+- muted notes are ignored.
+
+Less important:
+- Satbify tracks can now be at any position in the project (no need for making them first 5 tracks anymore).
+- required tracks are now created and named automatically if absent.
+- Satbify tracks are required to contain one of the following in the track names: 'main_satbify', 'soprano_satbify', 'alto_satbify', 'tenor_satbify', 'bass_satbify
+- If there is no track(s) which name contains one of required names, a new track(s) will be added and named.
+- if absent, new items will be created, or existing will bee resize to cover time selection - automatically
+- more than one items on a main_satbify track work now within time selection. (on other tracks items are still limited to one)
+--]]
+
 -- todo: glue many items on one track in time selection
 -- todo: make a option to ignore notes on voices tracks
--- todo: bug on backend ignoring first notes if starts with the item.
+-- todo: !!! send and receive project time, convert to ppq in lua only when send back to takes.!!!
+-- todo: create and process a keyswitch to ignore notes from voices tracks in the script (not backend).
+-- todo: make a list of test-cases to check before release.
 
 
 function print(str)
@@ -15,7 +33,7 @@ end
 
 local proj = reaper.EnumProjects(-1, "") -- -1 means the currently active project
 local flagExit = false
-local sel_item_before
+local sel_item_before, tracks, notes_from_reaper, satbify_takes
 
 -- Function to organize tracks for satbify
 function find_tracks()
@@ -229,15 +247,15 @@ function read_notes(tracks)
             end
         end
     end
-    --print(notes)
+    print(notes)
     return notes, satbify_takes
 end
 
 if not flagExit then
-    local tracks = find_tracks()
+    tracks = find_tracks()
 end
 if not flagExit then
-    local notes_from_reaper, satbify_takes, timeOffset = read_notes(tracks)
+    notes_from_reaper, satbify_takes = read_notes(tracks)
 end
 
 -- send HTTP POST request using curl
@@ -258,8 +276,8 @@ function send_http_request(url, body)
     return response_body, response_code
 end
 
---local url = "http://localhost:8080/api" -- testing locally
-local url = "https://satbify.up.railway.app/api"
+local url = "http://localhost:8080/api" -- testing locally
+--local url = "https://satbify.up.railway.app/api"
 local response_body
 local  response_code
 if not flagExit then
