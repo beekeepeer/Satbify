@@ -233,8 +233,12 @@ function read_notes(tracks)
     return notes, satbify_takes
 end
 
-local tracks = find_tracks()
-local notes_from_reaper, satbify_takes, timeOffset = read_notes(tracks)
+if not flagExit then
+    local tracks = find_tracks()
+end
+if not flagExit then
+    local notes_from_reaper, satbify_takes, timeOffset = read_notes(tracks)
+end
 
 -- send HTTP POST request using curl
 function send_http_request(url, body)
@@ -254,8 +258,8 @@ function send_http_request(url, body)
     return response_body, response_code
 end
 
-local url = "http://localhost:8080/api" -- testing locally
---local url = "https://satbify.up.railway.app/api"
+--local url = "http://localhost:8080/api" -- testing locally
+local url = "https://satbify.up.railway.app/api"
 local response_body
 local  response_code
 if not flagExit then
