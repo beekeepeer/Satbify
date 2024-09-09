@@ -11,8 +11,8 @@ public class Chord{
     private int tenor;
     private int bass;
     private int finalSoprano, finalAlto, finalTenor, finalBass; // for harmonizing given notes
-    private int tickStartTime;
-    private int tickEndTime;
+    private double noteStartTime;
+    private double noteEndTime;
     private Key keyRoot = Key.C;
     private Degree chordDegree = Degree.I;
     private Scale keyScale = Scale.MAJOR_NATURAL;
@@ -54,8 +54,8 @@ public class Chord{
                 " \n chordType =       " + chordType +
                 " \n alteration =      " + alteration +
                 " \n occurrence =      " + occurrence +
-                " \n tickStartTime =   " + tickStartTime +
-                " \n tickEndTime =     " + tickEndTime +
+                " \n tickStartTime =   " + noteStartTime +
+                " \n tickEndTime =     " + noteEndTime +
                 " \n soprano =         " + soprano +
                 " \n alto =            " + alto +
                 " \n tenor =           " + tenor +

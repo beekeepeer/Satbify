@@ -24,8 +24,8 @@ public abstract class Chords {
 
         for (int i = 0; i < notes.size(); i++) {
             Note note = notes.get(i);
-            c.setTickStartTime(note.start());
-            c.setTickEndTime(note.end());
+            c.setNoteStartTime(note.start());
+            c.setNoteEndTime(note.end());
             pitch = note.pitch();
             int trackNumber = note.reaperTrack();
             c = applyKeySwitch(pitch, c);
@@ -77,7 +77,7 @@ public abstract class Chords {
                 filter(s -> s.length() > 10).
                 map(Chords::StringToNote).
                 sorted(Comparator
-                        .comparingInt(Note::start)
+                        .comparingDouble(Note::start)
                         .thenComparingInt(function)).
                 collect(Collectors.toCollection(ArrayList::new));
     }
@@ -194,8 +194,8 @@ public abstract class Chords {
                 c.getFinalAlto(),
                 c.getFinalTenor(),
                 c.getFinalBass(),
-                c.getTickStartTime(),
-                c.getTickEndTime(),
+                c.getNoteStartTime(),
+                c.getNoteEndTime(),
                 c.getKeyRoot(),
                 c.getChordDegree(),
                 c.getKeyScale(),
@@ -277,22 +277,22 @@ public abstract class Chords {
 
         int reaperTrack = Integer.parseInt(ar[0]);
         int pitch = Integer.parseInt(ar[1]);
-        int start = Integer.parseInt(ar[2]);
-        int end = Integer.parseInt(ar[3]);
+        double start = Double.parseDouble(ar[2]);
+        double end = Double.parseDouble(ar[3]);
 
         return new Note(reaperTrack, pitch, start, end);
     }
     private static String returnToReaper(ArrayList<Chord> finalChords, boolean legato) {
         StringBuilder out = new StringBuilder();
         int sP = 0, aP = 0, tP = 0, bP = 0;
-        int sopranoStartTime = finalChords.get(0).getTickStartTime();
-        int sopranoEndTime = finalChords.get(0).getTickEndTime();
-        int altoStartTime = sopranoStartTime;
-        int altoEndTime = sopranoEndTime;
-        int tenorStartTime = sopranoStartTime;
-        int tenorEndTime = sopranoEndTime;
-        int bassStartTime = sopranoStartTime;
-        int bassEndTime = sopranoEndTime;
+        double sopranoStartTime = finalChords.get(0).getNoteStartTime();
+        double sopranoEndTime = finalChords.get(0).getNoteEndTime();
+        double altoStartTime = sopranoStartTime;
+        double altoEndTime = sopranoEndTime;
+        double tenorStartTime = sopranoStartTime;
+        double tenorEndTime = sopranoEndTime;
+        double bassStartTime = sopranoStartTime;
+        double bassEndTime = sopranoEndTime;
         boolean mustAddS = true;
         boolean mustAddA = true;
         boolean mustAddT = true;
@@ -313,7 +313,7 @@ public abstract class Chords {
                     // soprano block:
                     if (sP == finalChords.get(i).getSoprano()) {
                         // do not add, but save to variables
-                        sopranoEndTime = finalChords.get(i).getTickEndTime();
+                        sopranoEndTime = finalChords.get(i).getNoteEndTime();
                         mustAddS = true;
 
                         // if this is the last chord:
@@ -324,26 +324,26 @@ public abstract class Chords {
                     } else {
                         if (mustAddS) {
                             // add previous note, if was not added:
-                            appendNote(out, 1, sP, sopranoStartTime, sopranoEndTime + 5);
+                            appendNote(out, 1, sP, sopranoStartTime, sopranoEndTime + + 0.005);
                             mustAddS = false;
                         }
                         // apply note at i:
-                        sopranoStartTime = finalChords.get(i).getTickStartTime();
-                        sopranoEndTime = finalChords.get(i).getTickEndTime();
+                        sopranoStartTime = finalChords.get(i).getNoteStartTime();
+                        sopranoEndTime = finalChords.get(i).getNoteEndTime();
                         // save previous to the variable:
                         sP = finalChords.get(i).getSoprano();
 
 
                         if (i == finalChords.size() - 1 || (finalChords.size() > i + 1 && sP != finalChords.get(i + 1).getSoprano())) {
                             // append:
-                            appendNote(out, 1, sP, sopranoStartTime, sopranoEndTime + 5);
+                            appendNote(out, 1, sP, sopranoStartTime, sopranoEndTime + + 0.005);
                         }
                     }
 
                     // alto block:
                     if (aP == finalChords.get(i).getAlto()) {
                         // do not add, but save to variables
-                        altoEndTime = finalChords.get(i).getTickEndTime();
+                        altoEndTime = finalChords.get(i).getNoteEndTime();
                         mustAddA = true;
 
                         // if this is the last chord:
@@ -355,24 +355,24 @@ public abstract class Chords {
 
                         if (mustAddA) {
                             // add previous note, if was not added:
-                            appendNote(out, 2, aP, altoStartTime, altoEndTime + 5);
+                            appendNote(out, 2, aP, altoStartTime, altoEndTime + + 0.005);
                             mustAddA = false;
                         }
                         // apply note at i:
-                        altoStartTime = finalChords.get(i).getTickStartTime();
-                        altoEndTime = finalChords.get(i).getTickEndTime();
+                        altoStartTime = finalChords.get(i).getNoteStartTime();
+                        altoEndTime = finalChords.get(i).getNoteEndTime();
                         // save previous to the variable:
                         aP = finalChords.get(i).getAlto();
                         if (i == finalChords.size() - 1 || (finalChords.size() > i + 1 && aP != finalChords.get(i + 1).getAlto())) {
                             // append:
-                            appendNote(out, 2, aP, altoStartTime, altoEndTime + 5);
+                            appendNote(out, 2, aP, altoStartTime, altoEndTime + + 0.005);
                         }
                     }
 
                     // tenor block:
                     if (tP == finalChords.get(i).getTenor()) {
                         // do not add, but save to variables
-                        tenorEndTime = finalChords.get(i).getTickEndTime();
+                        tenorEndTime = finalChords.get(i).getNoteEndTime();
                         mustAddT = true;
                         // if this is the last chord:
                         if (i == finalChords.size() - 1) {
@@ -383,26 +383,26 @@ public abstract class Chords {
 
                         if (mustAddT) {
                             // add previous note, if was not added:
-                            appendNote(out, 3, tP, tenorStartTime, tenorEndTime + 5);
+                            appendNote(out, 3, tP, tenorStartTime, tenorEndTime + + 0.005);
                             mustAddT = false;
                         }
                         // apply note at i:
-                        tenorStartTime = finalChords.get(i).getTickStartTime();
-                        tenorEndTime = finalChords.get(i).getTickEndTime();
+                        tenorStartTime = finalChords.get(i).getNoteStartTime();
+                        tenorEndTime = finalChords.get(i).getNoteEndTime();
                         // save previous to the variable:
                         tP = finalChords.get(i).getTenor();
                         // append:
                         // if last chord                or  next check will not fail              next note is not the same
                         if (i == finalChords.size() - 1 || (finalChords.size() > i + 1 && tP != finalChords.get(i + 1).getTenor())) {
                             // append:
-                            appendNote(out, 3, tP, tenorStartTime, tenorEndTime + 5);
+                            appendNote(out, 3, tP, tenorStartTime, tenorEndTime + + 0.005);
                         }
                     }
 
                     // bass block:
                     if (bP == finalChords.get(i).getBass()) {
                         // do not add, but save to variables
-                        bassEndTime = finalChords.get(i).getTickEndTime();
+                        bassEndTime = finalChords.get(i).getNoteEndTime();
                         mustAddB = true;
                         // if this is the last chord:
                         if (i == finalChords.size() - 1) {
@@ -412,37 +412,37 @@ public abstract class Chords {
                     } else {
                         if (mustAddB) {
                             // add previous note, if was not added:
-                            appendNote(out, 4, bP, bassStartTime, bassEndTime + 5);
+                            appendNote(out, 4, bP, bassStartTime, bassEndTime + + 0.005);
                             mustAddB = false;
                         }
                         // apply note at i:
-                        bassStartTime = finalChords.get(i).getTickStartTime();
-                        bassEndTime = finalChords.get(i).getTickEndTime();
+                        bassStartTime = finalChords.get(i).getNoteStartTime();
+                        bassEndTime = finalChords.get(i).getNoteEndTime();
                         // save previous to the variable:
                         bP = finalChords.get(i).getBass();
                         // append:
                         if (i == finalChords.size() - 1 || (finalChords.size() > i + 1 && bP != finalChords.get(i + 1).getBass())) {
                             // append:
-                            appendNote(out, 4, bP, bassStartTime, bassEndTime + 5);
+                            appendNote(out, 4, bP, bassStartTime, bassEndTime + + 0.005);
                         }
                     }
                 }
                 else {
-                    var start = finalChords.get(i).getTickStartTime();
-                    var end = finalChords.get(i).getTickEndTime();
+                    var start = finalChords.get(i).getNoteStartTime();
+                    var end = finalChords.get(i).getNoteEndTime();
                     appendNote(out, 1, finalChords.get(i).getSoprano(), start, end);
                     appendNote(out, 2, finalChords.get(i).getAlto(), start, end);
                     appendNote(out, 3, finalChords.get(i).getTenor(), start, end);
                     appendNote(out, 4, finalChords.get(i).getBass(), start, end);
                 }
             }
-//            System.out.println(out);
+            System.out.println(out);
         } catch (Exception e) {
             throw new RuntimeException("   ! \n! ! ! \n! ! ! ! \n! ! ! !The output of This program is EMPTY ! ! ! \n! ! \n ! !\n ! ! ! ");
         }
         return out.toString();
     }
-    private static void appendNote(StringBuilder sb, int track, int note, int start, int end) {
+    private static void appendNote(StringBuilder sb, int track, int note, double start, double end) {
         sb.append(track).append(", ")
                 .append(note).append(", ")
                 .append(start).append(", ")
