@@ -20,7 +20,6 @@ Less important:
 
 -- todo: glue many items on one track in time selection
 -- todo: make a option to ignore notes on voices tracks
--- todo: !!! send and receive project time, convert to ppq in lua only when send back to takes.!!!
 -- todo: create and process a keyswitch to ignore notes from voices tracks in the script (not backend).
 -- todo: make a list of test-cases to check before release.
 
@@ -217,10 +216,11 @@ function read_notes(tracks)
             local retval, selected, muted, startppqpos, endppqpos, chan, pitch, vel = reaper.MIDI_GetNote(take, i)
             -- Convert MIDI start position (PPQ) to project time
             local note_start_time = reaper.MIDI_GetProjTimeFromPPQPos(take, startppqpos)
+            local note_end_time = reaper.MIDI_GetProjTimeFromPPQPos(take, endppqpos)
             -- Only process the note if it's not muted and within the time selection
             if not muted and note_start_time >= time_sel_start - 0.01 and note_start_time <= time_sel_end  - 0.01 then
                 -- Add note information to the string 'notes' in the required format
-                notes = notes .. string.format("%d,%d,%d,%d-", track_num, pitch, startppqpos, endppqpos)
+                notes = notes .. string.format("%d,%d,%.12f,%.12f-", track_num, pitch, note_start_time, note_end_time)
             end
         end
         if track_num == 0 then
@@ -235,19 +235,16 @@ function read_notes(tracks)
         for i = 0, note_count - 1 do
             local retval, selected, muted, startppqpos, endppqpos, chan, pitch, vel = reaper.MIDI_GetNote(take, i)
             -- Convert MIDI start position (PPQ) to project time
-            local note_start_time = reaper.MIDI_GetProjTimeFromPPQPos(main_take, startppqpos)
-            local startTimeFromMain = reaper.MIDI_GetProjTimeFromPPQPos(take, startppqpos)
-            local endTimeFromMain = reaper.MIDI_GetProjTimeFromPPQPos(take, endppqpos)
-            local startppqpos = reaper.MIDI_GetPPQPosFromProjTime(main_take, startTimeFromMain)
-            local endppqpos = reaper.MIDI_GetPPQPosFromProjTime(main_take, endTimeFromMain)
+            local note_start_time = reaper.MIDI_GetProjTimeFromPPQPos(take, startppqpos)
+            local note_end_time =   reaper.MIDI_GetProjTimeFromPPQPos(take, endppqpos)
  -- Only process the note if it's not muted and within the time selection
             if not muted and note_start_time >= time_sel_start - 0.01 and note_start_time <= time_sel_end  - 0.01 then
                 -- Add note information to the string 'notes' in the required format
-                notes = notes .. string.format("%d,%d,%d,%d-", 0, pitch, startppqpos, endppqpos)
+                notes = notes .. string.format("%d,%d,%.12f,%.12f-", 0, pitch, note_start_time, note_end_time)
             end
         end
     end
-    print(notes)
+    print(notes:gsub("-", "\n"))
     return notes, satbify_takes
 end
 
@@ -283,6 +280,7 @@ local  response_code
 if not flagExit then
     response_body, response_code = send_http_request(url, notes_from_reaper)
 end
+--print(response_body)
 
 function deleteNotesInTimeSelection(table_takes)
     -- Get the current project time selection start and end
@@ -309,7 +307,7 @@ end
 
 function isValidFormat(str)
     -- Pattern to match the specific format of each line
-    local pattern = "^%d+, %d+, %d+, %d+$"
+    local pattern = "^%d+, %d+, %d+%.%d{0,12}, %d+%.%d{0,12}$"
     -- Loop through each line in the string
     for line in str:gmatch("[^\r\n]+") do
         -- Check if the line matches the pattern
@@ -340,23 +338,22 @@ function parse_and_insert_notes(response, takes)
     -- Loop through each line of the response body
     for line in response:gmatch("[^\r\n]+") do
         -- Parse the note data from the line
-        local track_num, note_num, ppq_start, ppq_end = line:match("(%d+), (%d+), (%d+), (%d+)")
+        local track_num, note_num, startTime, endTime = line:match("(%d+), (%d+), (%d+%.%d*), (%d+%.%d*)")
         -- Check if all required data was successfully parsed
-        if track_num and note_num and ppq_start and ppq_end then
+        if track_num and note_num and startTime and endTime then
             -- Convert parsed data from string to numbers
+            print(endTime)
             track_num = tonumber(track_num)
             note_num = tonumber(note_num)
-            ppq_start = tonumber(ppq_start)
-            ppq_end = tonumber(ppq_end)
+            startTime = tonumber(startTime)
+            endTime = tonumber(endTime)
             -- Loop through the provided takes to find the correct track to insert the note
             for i, take_info in ipairs(takes) do
                 local take = take_info[1] -- The take object
                 local take_track_index = take_info[2] -- The track index
-                local startTimeFromMain = reaper.MIDI_GetProjTimeFromPPQPos(mainTake, ppq_start)
-
-                local endTimeFromMain = reaper.MIDI_GetProjTimeFromPPQPos(mainTake, ppq_end)
-                local note_ppq_start = reaper.MIDI_GetPPQPosFromProjTime(take, startTimeFromMain)
-                local note_ppq_end = reaper.MIDI_GetPPQPosFromProjTime(take, endTimeFromMain)
+                local note_ppq_start = reaper.MIDI_GetPPQPosFromProjTime(take, startTime)
+                local note_ppq_end =   reaper.MIDI_GetPPQPosFromProjTime(take, endTime)
+                --print(note_ppq_end)
                 -- If the take's track number matches the parsed track number, insert the note
                 if take_track_index == track_num then
                     -- Insert the note into the MIDI take
@@ -371,8 +368,8 @@ function parse_and_insert_notes(response, takes)
                             100, -- velocity
                             false) -- noSort
                 end
-                if endTimeFromMain > latestEnd then
-                    latestEnd = endTimeFromMain
+                if endTime > latestEnd then
+                    latestEnd = endTime
                 end
             end
         elseif flagExit then -- Do not print anything if main track is created only now
