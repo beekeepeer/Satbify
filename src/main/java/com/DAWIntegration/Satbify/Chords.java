@@ -436,7 +436,7 @@ public abstract class Chords {
                     appendNote(out, 4, finalChords.get(i).getBass(), start, end);
                 }
             }
-            System.out.println(out);
+//            System.out.println(out);
         } catch (Exception e) {
             throw new RuntimeException("   ! \n! ! ! \n! ! ! ! \n! ! ! !The output of This program is EMPTY ! ! ! \n! ! \n ! !\n ! ! ! ");
         }

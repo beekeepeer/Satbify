@@ -22,6 +22,8 @@ Less important:
 -- todo: make a option to ignore notes on voices tracks
 -- todo: create and process a keyswitch to ignore notes from voices tracks in the script (not backend).
 -- todo: make a list of test-cases to check before release.
+-- todo: compile in order to hide implementation.
+-- todo: delete notes in time selection before adding new. deleteNotesInTimeSelection doesn't work
 
 
 function print(str)
@@ -244,7 +246,7 @@ function read_notes(tracks)
             end
         end
     end
-    print(notes:gsub("-", "\n"))
+    --print(notes:gsub("-", "\n"))
     return notes, satbify_takes
 end
 
@@ -333,7 +335,7 @@ function parse_and_insert_notes(response, takes)
     ::mainFound::
     -- Check if the response format is valid and delete existing notes within the time selection
     if isValidFormat(response) then
-        deleteNotesInTimeSelection(takes)
+        deleteNotesInTimeSelection(satbify_takes)
     end
     -- Loop through each line of the response body
     for line in response:gmatch("[^\r\n]+") do
@@ -342,7 +344,7 @@ function parse_and_insert_notes(response, takes)
         -- Check if all required data was successfully parsed
         if track_num and note_num and startTime and endTime then
             -- Convert parsed data from string to numbers
-            print(endTime)
+            --print(endTime)
             track_num = tonumber(track_num)
             note_num = tonumber(note_num)
             startTime = tonumber(startTime)
@@ -403,7 +405,7 @@ function parse_and_insert_notes(response, takes)
 end
 
 if not flagExit then
-    parse_and_insert_notes(response_body, satbify_takes)
+    --parse_and_insert_notes(response_body, satbify_takes)
 end
 if sel_item_before then
     reaper.SetMediaItemSelected(sel_item_before, true)
