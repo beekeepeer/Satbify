@@ -17,6 +17,7 @@ Less important:
 - if absent, new items will be created, or existing will bee resize to cover time selection - automatically
 - more than one items on a main_satbify track work now within time selection. (on other tracks items are still limited to one)
 - Use keyswitch C1 if you wnt to harmonize given notes on the voice. Otherwise all the notes will be deleted.
+todo: delete notes in time selection is buggy
 --]]
 
 
