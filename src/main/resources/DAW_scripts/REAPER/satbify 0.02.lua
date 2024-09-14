@@ -295,7 +295,7 @@ end
 --print(response_body)
 
 function deleteNotesInTimeSelection(table_takes)
-    --print("delete method is called, time selection:" .. timeSelStart)
+    print("delete method is called, time selection:" .. timeSelStart)
     for i, take_info in ipairs(table_takes) do
         local take = take_info[1] -- The take object
         local track_num = take_info[2] -- The track index
@@ -320,7 +320,7 @@ end
 
 function isValidFormat(str)
     -- Pattern to match the specific format of each line
-    local pattern = "^%d+, %d+, %d+%.%d, %d+%.%d$"
+    local pattern = "^%d+, %d+, %d+%.%d+, %d+%.%d+$"
     -- Loop through each line in the string
     for line in str:gmatch("[^\r\n]+") do
         -- Check if the line matches the pattern
@@ -333,7 +333,7 @@ end
 
 -- Function to parse the HTTP response and insert notes accordingly
 function parse_and_insert_notes(response, takes)
-    --print(response)
+    print(response)
     local latestEnd = 0
     local mainTake
     for i = 1, #takes do
