@@ -26,3 +26,11 @@ Back:
 ‌выбирать аккорды функциями а не ступенями
 ‌из выбранной последовательности функций выбирать "сложность"решения с помощью velocity.
 ‌сложность выбранной последовательности начинается с элементарных -> альтерации ДД, заканчивается заимстваваниями из других тональностей.
+
+
+-- todo: glue many items on voce track in time selection?
+-- todo: make an option to ignore notes on voices tracks. create and process a keyswitch to ignore notes from voices tracks in the script (not backend).
+-- todo: make a list of test-cases to check before release.
++ delete notes in time selection before adding new.
+-- todo: when legato, make last notes length original.
+-- todo: add voice range limitation separate for each voice.

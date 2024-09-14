@@ -16,14 +16,10 @@ Less important:
 - If there is no track(s) which name contains one of required names, a new track(s) will be added and named.
 - if absent, new items will be created, or existing will bee resize to cover time selection - automatically
 - more than one items on a main_satbify track work now within time selection. (on other tracks items are still limited to one)
+- Use keyswitch C1 if you wnt to harmonize given notes on the voice. Otherwise all the notes will be deleted.
 --]]
 
--- todo: glue many items on one track in time selection
--- todo: make a option to ignore notes on voices tracks
--- todo: create and process a keyswitch to ignore notes from voices tracks in the script (not backend).
--- todo: make a list of test-cases to check before release.
--- todo: compile in order to hide implementation.
--- todo: delete notes in time selection before adding new. deleteNotesInTimeSelection doesn't work
+
 
 
 function print(str)
@@ -34,7 +30,8 @@ end
 
 local proj = reaper.EnumProjects(-1, "") -- -1 means the currently active project
 local flagExit = false
-local sel_item_before, tracks, notes_from_reaper, satbify_takes
+local sel_item_before, tracks, notes_from_reaper, satbify_takes, timeSelStart, timeSelEnd, hs, ha, ht, hb
+local hksw = 24
 
 -- Function to organize tracks for satbify
 function find_tracks()
@@ -123,8 +120,8 @@ function read_notes(tracks)
         reaper.SetMediaItemSelected(current_item, false) -- Unselect each item
     end
     -- Get the time selection start and end times
-    local time_sel_start, time_sel_end = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
-    if (time_sel_end - time_sel_start) > 0 then
+    timeSelStart, timeSelEnd = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
+    if (timeSelEnd - timeSelStart) > 0 then
         local isMain = false
         -- Iterate through each track in the table
         for track_name, track in pairs(tracks) do
@@ -152,38 +149,38 @@ function read_notes(tracks)
                     table.insert(additional_main_takes, reaper.GetActiveTake(item))
                 end
                     -- if item starts in time selection but ends outside
-                if item_start >= time_sel_start and item_start <= time_sel_end and item_end >= time_sel_end and no_items_chosen then
+                if item_start >= timeSelStart and item_start <= timeSelEnd and item_end >= timeSelEnd and no_items_chosen then
                     if not isMain then
                         reaper.SetMediaItemSelected(item, true)
-                        reaper.ApplyNudge(0, 0, 1, 1, (item_start - time_sel_start), true, 0)
+                        reaper.ApplyNudge(0, 0, 1, 1, (item_start - timeSelStart), true, 0)
                         reaper.SetMediaItemSelected(item, false)
                         reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(item), "P_NAME", track_name, true)
                     end
                     no_items_chosen = false
                     table.insert(satbify_takes, {reaper.GetActiveTake(item), track_index})
                     -- if Item starts outside the time selection but ends inside
-                elseif item_start <= time_sel_start and item_end >= time_sel_start and item_end <= time_sel_end and no_items_chosen then
+                elseif item_start <= timeSelStart and item_end >= timeSelStart and item_end <= timeSelEnd and no_items_chosen then
                     if not isMain then
                         reaper.SetMediaItemSelected(item, true)
-                        reaper.ApplyNudge(0, 0, 3, 1, (item_end - time_sel_end), true, 0)
+                        reaper.ApplyNudge(0, 0, 3, 1, (item_end - timeSelEnd), true, 0)
                         reaper.SetMediaItemSelected(item, false)
                         reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(item), "P_NAME", track_name, true)
                     end
                     no_items_chosen = false
                     table.insert(satbify_takes, {reaper.GetActiveTake(item), track_index})
                     -- if Item starts and ends in time selection
-                elseif item_start >= time_sel_start and item_end <= time_sel_end and no_items_chosen then
+                elseif item_start >= timeSelStart and item_end <= timeSelEnd and no_items_chosen then
                     if not isMain then
                         reaper.SetMediaItemSelected(item, true)
-                        reaper.ApplyNudge(0, 0, 1, 1, (item_start - time_sel_start), true, 0)
-                        reaper.ApplyNudge(0, 0, 3, 1, (item_end - time_sel_end), true, 0)
+                        reaper.ApplyNudge(0, 0, 1, 1, (item_start - timeSelStart), true, 0)
+                        reaper.ApplyNudge(0, 0, 3, 1, (item_end - timeSelEnd), true, 0)
                         reaper.SetMediaItemSelected(item, false)
                         reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(item), "P_NAME", track_name, true)
                     end
                     no_items_chosen = false
                     table.insert(satbify_takes, {reaper.GetActiveTake(item), track_index})
                     -- if Item already covers the entire time selection
-                elseif item_start <= time_sel_start and item_end >= time_sel_end and no_items_chosen then
+                elseif item_start <= timeSelStart and item_end >= timeSelEnd and no_items_chosen then
                     no_items_chosen = false
                     reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(item), "P_NAME", track_name, true)
                     table.insert(satbify_takes, {reaper.GetActiveTake(item), track_index})
@@ -191,7 +188,7 @@ function read_notes(tracks)
             end
             -- if No item exists in the time selection, create a new MIDI item
             if no_items_chosen then
-                local new_item = reaper.CreateNewMIDIItemInProj(track, time_sel_start, time_sel_end, false)
+                local new_item = reaper.CreateNewMIDIItemInProj(track, timeSelStart, timeSelEnd, false)
                 reaper.UpdateItemInProject(new_item)
                 reaper.GetSetMediaItemTakeInfo_String(reaper.GetActiveTake(new_item), "P_NAME", track_name, true)
                 table.insert(satbify_takes, {reaper.GetActiveTake(new_item), track_index})
@@ -205,8 +202,6 @@ function read_notes(tracks)
         reaper.ShowMessageBox("Please, Set Time Selection", "Satbify", 0)
         flagExit = true
     end
-    -- restore item selection
-    local time_sel_start, time_sel_end = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
 
     -- Iterate through each take in the satbify_takes array
     for i, take_info in ipairs(satbify_takes) do
@@ -219,8 +214,22 @@ function read_notes(tracks)
             -- Convert MIDI start position (PPQ) to project time
             local note_start_time = reaper.MIDI_GetProjTimeFromPPQPos(take, startppqpos)
             local note_end_time = reaper.MIDI_GetProjTimeFromPPQPos(take, endppqpos)
-            -- Only process the note if it's not muted and within the time selection
-            if not muted and note_start_time >= time_sel_start - 0.01 and note_start_time <= time_sel_end  - 0.01 then
+
+            if track_num == 1 and pitch == hksw then
+                hs = true
+            elseif track_num == 2 and pitch == hksw then
+                ha = true
+            elseif track_num == 3 and pitch == hksw then
+                ht = true
+            elseif track_num == 4 and pitch == hksw then
+                hb = true
+            end
+
+            -- Only process the note if it's not muted, within the time selection or should be harmonised
+            if not muted and note_start_time >= timeSelStart - 0.01 and note_start_time <= timeSelEnd  - 0.01
+                    and (track_num == 0 or (track_num == 1 and hs) or (track_num == 2 and ha) or (track_num == 3 and ht) or (track_num == 4 and hb))
+                and pitch ~= hksw
+            then
                 -- Add note information to the string 'notes' in the required format
                 notes = notes .. string.format("%d,%d,%.12f,%.12f-", track_num, pitch, note_start_time, note_end_time)
             end
@@ -240,13 +249,13 @@ function read_notes(tracks)
             local note_start_time = reaper.MIDI_GetProjTimeFromPPQPos(take, startppqpos)
             local note_end_time =   reaper.MIDI_GetProjTimeFromPPQPos(take, endppqpos)
  -- Only process the note if it's not muted and within the time selection
-            if not muted and note_start_time >= time_sel_start - 0.01 and note_start_time <= time_sel_end  - 0.01 then
+            if not muted and note_start_time >= timeSelStart - 0.01 and note_start_time <= timeSelEnd  - 0.01 then
                 -- Add note information to the string 'notes' in the required format
                 notes = notes .. string.format("%d,%d,%.12f,%.12f-", 0, pitch, note_start_time, note_end_time)
             end
         end
     end
-    --print(notes:gsub("-", "\n"))
+    print(notes:gsub("-", "\n"))
     return notes, satbify_takes
 end
 
@@ -285,22 +294,23 @@ end
 --print(response_body)
 
 function deleteNotesInTimeSelection(table_takes)
-    -- Get the current project time selection start and end
-    local timeSelStart, timeSelEnd = reaper.GetSet_LoopTimeRange(false, false, 0, 0, false)
-    -- Loop through each take provided in the table
+    --print("delete method is called, time selection:" .. timeSelStart)
     for i, take_info in ipairs(table_takes) do
         local take = take_info[1] -- The take object
         local track_num = take_info[2] -- The track index
-        -- Get PPQ positions corresponding to the project's time selection for this take
         local start_ppq = reaper.MIDI_GetPPQPosFromProjTime(take, timeSelStart)
         local end_ppq = reaper.MIDI_GetPPQPosFromProjTime(take, timeSelEnd)
-        -- Count the number of notes in the take
         local retval, notesCount, _, _ = reaper.MIDI_CountEvts(take)
         -- Loop through the notes in reverse order to avoid messing up the note indices when deleting
         for noteIndex = notesCount - 1, 0, -1 do
             local retval, selected, muted, startppqpos, endppqpos, chan, pitch, vel = reaper.MIDI_GetNote(take, noteIndex)
             -- Check if the note start is within the time selection
-            if startppqpos >= start_ppq and startppqpos < end_ppq and track_num > 0 then
+            if startppqpos >= start_ppq and startppqpos < end_ppq and track_num > 0
+                    and not ((hs and track_num == 1 and pitch == hksw)
+                    or (ha and track_num == 2 and pitch == hksw)
+                    or (ht and track_num == 3 and pitch == hksw)
+                    or (hb and track_num == 4 and pitch == hksw))
+            then
                 reaper.MIDI_DeleteNote(take, noteIndex)
             end
         end
@@ -309,7 +319,7 @@ end
 
 function isValidFormat(str)
     -- Pattern to match the specific format of each line
-    local pattern = "^%d+, %d+, %d+%.%d{0,12}, %d+%.%d{0,12}$"
+    local pattern = "^%d+, %d+, %d+%.%d, %d+%.%d$"
     -- Loop through each line in the string
     for line in str:gmatch("[^\r\n]+") do
         -- Check if the line matches the pattern
@@ -377,7 +387,7 @@ function parse_and_insert_notes(response, takes)
         elseif flagExit then -- Do not print anything if main track is created only now
         else
             -- Log an error message if parsing the line failed
-            reaper.ShowConsoleMsg("I can't tackle this just yet... " .. "\n")
+            reaper.ShowMessageBox("I can't do this this just yet... ", "Satbify", 0)
         end
     end
 
@@ -405,7 +415,7 @@ function parse_and_insert_notes(response, takes)
 end
 
 if not flagExit then
-    --parse_and_insert_notes(response_body, satbify_takes)
+    parse_and_insert_notes(response_body, satbify_takes)
 end
 if sel_item_before then
     reaper.SetMediaItemSelected(sel_item_before, true)
