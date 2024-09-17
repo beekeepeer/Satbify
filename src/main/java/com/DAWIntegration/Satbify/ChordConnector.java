@@ -21,99 +21,39 @@ public class ChordConnector {
 
         return new ArrayList<>(Arrays.asList(findBestConnected(chordArray)));
     }
-    public ArrayList<Chord> findBestConnectedChords(Chord[][] arrays) {    // todo: not tested properly!!!
-        int n = arrays.length;
-        int[][] dp = new int[n][];
-        int[][] backtrack = new int[n][];
-
-        // Initialize dp and backtrack arrays
-        for (int i = 0; i < n; i++) {
-            int len = arrays[i].length;
-            dp[i] = new int[len];
-            backtrack[i] = new int[len];
-            Arrays.fill(dp[i], Integer.MAX_VALUE);
-        }
-
-        // Fill dp array for the first array
-        for (int j = 0; j < arrays[0].length; j++) {
-            dp[0][j] = 0; // No previous arrays to compare, so initialize with 0
-        }
-
-        // Fill dp array for other arrays
-        for (int i = 1; i < n; i++) {
-            for (int j = 0; j < arrays[i].length; j++) {
-                for (int k = 0; k < arrays[i - 1].length; k++) {
-                    if (haveParallels(arrays[i - 1][k], arrays[i][j])) continue;    // todo: not tested properly!!!
-                    int connectionCost = calculateSmoothness(arrays[i - 1][k], arrays[i][j]);
-                    if (connectionCost < dp[i][j]) {
-                        dp[i][j] = connectionCost;
-                        backtrack[i][j] = k;
-                    }
-                }
-            }
-        }
-
-        // Find the best last chord in the last array
-        int minIndex = 0;
-        int minCost = Integer.MAX_VALUE;
-        for (int j = 0; j < arrays[n - 1].length; j++) {
-            if (dp[n - 1][j] < minCost) {
-                minCost = dp[n - 1][j];
-                minIndex = j;
-            }
-        }
-
-        // Reconstruct the path
-        Chord[] result = new Chord[n];
-        int currentIndex = minIndex;
-        for (int i = n - 1; i >= 0; i--) {
-            result[i] = arrays[i][currentIndex];
-            if (i > 0) {
-                currentIndex = backtrack[i][currentIndex];
-            }
-        }
-
-        return new ArrayList<>(Arrays.asList(result));
-    }
-
 
 
 public static Chord[] findBestConnected(Chord[][] arr) {
     int l = arr.length;
     int[] outIndexes = new int[l];
     Chord[] out = new Chord[l];
-
     // DP arrays to store the minimum smoothness and the path to reconstruct
     int[][] dp = new int[l][];
     int[][] path = new int[l][];
-
+    if (l == 1) return new Chord [] {arr [0][0]}; // todo: if array length is 1 - return one random chord. The problem is not here.
     // Initialize dp and path arrays
     for (int i = 0; i < l; i++) {
         dp[i] = new int[arr[i].length];
         path[i] = new int[arr[i].length];
-
         // Fill dp[i] with a large number (since we are minimizing)
         Arrays.fill(dp[i], Integer.MAX_VALUE);
     }
-
     // Base case: for the first chord set, there's no previous chord, so smoothness is 0
     for (int j = 0; j < arr[0].length; j++) {
         dp[0][j] = 0; // No smoothness cost for the first chord
     }
-
     // Fill dp array using previously computed values
     for (int i = 1; i < l; i++) {
         for (int j = 0; j < arr[i].length; j++) {
             for (int k = 0; k < arr[i - 1].length; k++) {
                 int currentSmoothness = dp[i - 1][k] + calculateSmoothness(arr[i - 1][k], arr[i][j]);
-                if (currentSmoothness < dp[i][j]) {
+                if (currentSmoothness < dp[i][j] && !haveParallels(arr[i - 1][k], arr[i][j])) { // eliminate parallels
                     dp[i][j] = currentSmoothness;
                     path[i][j] = k; // Record the index that led to this minimum
                 }
             }
         }
     }
-
     // Find the best final chord with the minimum smoothness
     int minSmoothness = Integer.MAX_VALUE;
     int bestLastIndex = -1;
@@ -123,19 +63,16 @@ public static Chord[] findBestConnected(Chord[][] arr) {
             bestLastIndex = j;
         }
     }
-
     // Reconstruct the best path
     int currentIndex = bestLastIndex;
     for (int i = l - 1; i >= 0; i--) {
         outIndexes[i] = currentIndex;
         currentIndex = path[i][currentIndex]; // Move to the previous index
     }
-
     // Build the result based on the outIndexes
     for (int i = 0; i < l; i++) {
         out[i] = arr[i][outIndexes[i]];
     }
-
     return out;
 }
 
@@ -146,7 +83,7 @@ public static Chord[] findBestConnected(Chord[][] arr) {
 
 
 
-    public static int calculateSmoothness(Chord a, Chord b){
+    private static int calculateSmoothness(Chord a, Chord b){
         int sd, ad, td, bd, power = 3, result = 0;
         sd = a.getSoprano() - b.getSoprano();
         ad = a.getAlto() - b.getAlto();
@@ -169,7 +106,7 @@ public static Chord[] findBestConnected(Chord[][] arr) {
 
         return result;
     }
-    private boolean haveParallels(Chord a, Chord b) {
+    private static boolean haveParallels(Chord a, Chord b) {
         //differences:
         int sd = a.getSoprano() - b.getSoprano();
         int ad = a.getAlto() - b.getAlto();
