@@ -284,8 +284,9 @@ function send_http_request(url, body)
     return response_body, response_code
 end
 
-local url = "http://localhost:8080/api" -- testing locally
+--local url = "http://localhost:8080/api" -- testing locally
 --local url = "https://satbify.up.railway.app/api"
+local url = "https://satbify-debug.up.railway.app/api"
 local response_body
 local  response_code
 if not flagExit then
