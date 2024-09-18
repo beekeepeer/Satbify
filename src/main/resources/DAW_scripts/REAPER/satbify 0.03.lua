@@ -17,7 +17,6 @@ Less important:
 - if absent, new items will be created, or existing will bee resize to cover time selection - automatically
 - more than one items on a main_satbify track work now within time selection. (on other tracks items are still limited to one)
 - Use keyswitch C1 if you wnt to harmonize given notes on the voice. Otherwise all the notes will be deleted.
-todo: delete notes in time selection is buggy
 --]]
 
 
@@ -229,7 +228,7 @@ function read_notes(tracks)
             -- Only process the note if it's not muted, within the time selection or should be harmonised
             if not muted and note_start_time >= timeSelStart - 0.01 and note_start_time <= timeSelEnd  - 0.01
                     and (track_num == 0 or (track_num == 1 and hs) or (track_num == 2 and ha) or (track_num == 3 and ht) or (track_num == 4 and hb))
-                and pitch ~= hksw
+                    and pitch ~= hksw
             then
                 -- Add note information to the string 'notes' in the required format
                 notes = notes .. string.format("%d,%d,%.12f,%.12f-", track_num, pitch, note_start_time, note_end_time)

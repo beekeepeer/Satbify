@@ -23,7 +23,7 @@ public class ChordConnector {
     }
 
 
-public static Chord[] findBestConnected(Chord[][] arr) {
+public Chord[] findBestConnected(Chord[][] arr) {
     int l = arr.length;
     int[] outIndexes = new int[l];
     Chord[] out = new Chord[l];
@@ -83,7 +83,7 @@ public static Chord[] findBestConnected(Chord[][] arr) {
 
 
 
-    private static int calculateSmoothness(Chord a, Chord b){
+    private int calculateSmoothness(Chord a, Chord b){
         int sd, ad, td, bd, power = 3, result = 0;
         sd = a.getSoprano() - b.getSoprano();
         ad = a.getAlto() - b.getAlto();
@@ -106,14 +106,14 @@ public static Chord[] findBestConnected(Chord[][] arr) {
 
         return result;
     }
-    private static boolean haveParallels(Chord a, Chord b) {
+    private boolean haveParallels(Chord a, Chord b) {
         //differences:
         int sd = a.getSoprano() - b.getSoprano();
         int ad = a.getAlto() - b.getAlto();
         int td = a.getTenor() - b.getTenor();
         int bd = a.getBass() - b.getBass();
 
-        int[] intervals = {7, 12};
+        int[] intervals = {7, 12}; // over any octaves
         for (int forbidden : intervals) {
             if ((a.getSoprano() - a.getAlto()) % forbidden == 0
                     && sd == ad) {

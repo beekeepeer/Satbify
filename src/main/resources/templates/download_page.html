@@ -19,10 +19,10 @@
     </div>
 </header>
 <main style="padding: 20px;">
-    <p>This is a preview version and some features are not publicly available just yet.</p>
-    <p style="text-align: left; max-width: 800px; margin: 20px auto;">Download v0.02 (windows supported):</p>
+    <p>This is a preview version and some features are not publicly available just yet. </p>
+    <p style="text-align: left; max-width: 800px; margin: 20px auto;">Download v0.03:</p>
     <div style="display: flex; flex-direction: column; align-items: flex-start; max-width: 800px; margin: 20px auto;">
-        <a href="/download/satbify 0.02.lua" style="font-size: 1.2em; text-decoration: none; padding: 10px 20px; background-color: #cccccc; color: black; border: none; border-radius: 5px; margin-bottom: 10px;">Reaper script</a>
+        <a href="/download/satbify 0.03.lua" style="font-size: 1.2em; text-decoration: none; padding: 10px 20px; background-color: #cccccc; color: black; border: none; border-radius: 5px; margin-bottom: 10px;">Reaper script</a>
         <a href="/download/satbify_note_names.txt" style="font-size: 1.2em; text-decoration: none; padding: 10px 20px; background-color: #cccccc; color: black; border: none; border-radius: 5px;">Note names</a>
     </div>
     <section style="text-align: left; max-width: 800px; margin: 20px auto;">
@@ -39,6 +39,29 @@
             <li>The "satbify_note_names.txt" file should be placed inside the "MIDINoteNames" folder.</li>
             <li>When moved, in Reaper's Actions list, add the script, and assign any shortcut.</li>
             <li>Open the MIDI editor, go to File -> Note/CC name -> Load note/CC name from file -> Choose file... -> select "satbify_note_names.txt" file.</li>
+        </ul>
+    </section>
+    <!-- New Section for "What's New" -->
+    <section style="text-align: left; max-width: 800px; margin: 20px auto;">
+        <h3>What's New in Version 0.03</h3>
+
+        <h4>Important:</h4>
+        <ul>
+            <li>Satbify now only works within the time selection: note start must be within the time selection.</li>
+            <li>The engine has been updated to ensure more consistent and predictable chord transitions.</li>
+            <li>On the voices tracks, use the C1(24) keyswitch if you want to harmonize specific notes within a voice. Otherwise, all the notes will be deleted.</li>
+            <li>Muted notes are ignored.</li>
+        </ul>
+
+        <h4>Less Important:</h4>
+        <ul>
+            <li>Satbify tracks can now be positioned anywhere in the project (no need to make them the first 5 tracks anymore).</li>
+            <li>Required tracks are now automatically created and named if they are missing.</li>
+            <li>Satbify tracks must contain one of the following in their names: 'main_satbify', 'soprano_satbify', 'alto_satbify', 'tenor_satbify', 'bass_satbify'.</li>
+            <li>If no track contains one of the required names, new tracks will be added and named accordingly.</li>
+            <li>If absent, new items will be created, or existing items will be resized to cover the time selection automatically.</li>
+            <li>Multiple items can now exist on the 'main_satbify' track within the time selection (on other tracks, items are still limited to one).</li>
+            <li>Fixed: Now notes are inserted in global time regardless of the item's position.</li>
         </ul>
     </section>
 </main>
