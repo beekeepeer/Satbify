@@ -27,16 +27,16 @@ Back:
 ‌из выбранной последовательности функций выбирать "сложность"решения с помощью velocity.
 ‌сложность выбранной последовательности начинается с элементарных -> альтерации ДД, заканчивается заимстваваниями из других тональностей.
 
-
-+ todo: key 24 should preserve notes only above it, meaning only notes start. lua.
+!!!-- todo: legato chords should be without pauses if legato is on.
++ key 24 should preserve notes only above it, meaning only notes start. lua.
 -- problem: chords with harmonized voice is difficult to connect smoothly with normal chords.
--- todo: glue many items on voce track in time selection?
 + todo: make an option to ignore notes on voices tracks. create and process a keyswitch to ignore notes from voices tracks in the script (not backend).
--- todo: make a list of test-cases to check before release.
--- todo: keyswitchs for parallels
+-- make a list of test-cases
+-- todo: keyswitchses for parallels
 -- todo: when legato, make last notes length original.
 -- todo: add voice range limitation separate for each voice.
-+ todo: if array length is 1 - return one random chord.
++ if array length is 1 - return one random chord.
 -- todo: Handle exceptions and send the message to reaper.
 -- todo: for each voice set diapason limits.
--- todo: work with exceptions to print pretty.
+-- three voices
+-- one chord track instead of four.

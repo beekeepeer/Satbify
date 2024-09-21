@@ -1,5 +1,4 @@
 package com.DAWIntegration.Satbify;
-// todo: legato chords should be without pauses if legato is on.
 
 import com.DAWIntegration.Satbify.module.*;
 
@@ -25,7 +24,12 @@ public abstract class Chords {
         for (int i = 0; i < notes.size(); i++) {
             Note note = notes.get(i);
             c.setNoteStartTime(note.start());
-            c.setNoteEndTime(note.end());
+
+            if(i == notes.size() - 1) {
+                c.setNoteEndTime(note.end());
+            } else {
+                c.setNoteEndTime(notes.get(i + 1).start());
+            }
             pitch = note.pitch();
             int trackNumber = note.reaperTrack();
             c = applyKeySwitch(pitch, c);
@@ -427,10 +431,10 @@ public abstract class Chords {
                 else {
                     var start = finalChords.get(i).getNoteStartTime();
                     var end = finalChords.get(i).getNoteEndTime();
-                    appendNote(out, 1, finalChords.get(i).getSoprano(), start, end);
-                    appendNote(out, 2, finalChords.get(i).getAlto(), start, end);
-                    appendNote(out, 3, finalChords.get(i).getTenor(), start, end);
-                    appendNote(out, 4, finalChords.get(i).getBass(), start, end);
+                    appendNote(out, 1, finalChords.get(i).getSoprano(), start, end - 0.005);
+                    appendNote(out, 2, finalChords.get(i).getAlto(), start, end - 0.005);
+                    appendNote(out, 3, finalChords.get(i).getTenor(), start, end - 0.005);
+                    appendNote(out, 4, finalChords.get(i).getBass(), start, end - 0.005);
                 }
             }
 //            System.out.println(out);
