@@ -26,11 +26,13 @@ function print(str)
     reaper.ShowConsoleMsg(str .. "\n")
 end
 
-
+local url = "http://localhost:8080/api" -- testing locally
+--local url = "https://satbify.up.railway.app/api"
+--local url = "https://satbify-debug.up.railway.app/api"
 
 local proj = reaper.EnumProjects(-1, "") -- -1 means the currently active project
 local flagExit = false
-local sel_item_before, tracks, notes_from_reaper, satbify_takes, timeSelStart, timeSelEnd, hs, ha, ht, hb
+local sel_item_before, tracks, notes_from_reaper, satbify_takes, timeSelStart, timeSelEnd, hs, ha, ht, hb, hkswOffS, hkswOffA, hkswOffT, hkswOffB
 local hksw = 24
 
 -- Function to organize tracks for satbify
@@ -217,17 +219,25 @@ function read_notes(tracks)
 
             if track_num == 1 and pitch == hksw then
                 hs = true
+                hkswOffS = note_end_time
             elseif track_num == 2 and pitch == hksw then
                 ha = true
+                hkswOffA = note_end_time
             elseif track_num == 3 and pitch == hksw then
                 ht = true
+                hkswOffT = note_end_time
             elseif track_num == 4 and pitch == hksw then
                 hb = true
+                hkswOffB = note_end_time
             end
 
             -- Only process the note if it's not muted, within the time selection or should be harmonised
             if not muted and note_start_time >= timeSelStart - 0.01 and note_start_time <= timeSelEnd  - 0.01
-                    and (track_num == 0 or (track_num == 1 and hs) or (track_num == 2 and ha) or (track_num == 3 and ht) or (track_num == 4 and hb))
+                    and (track_num == 0
+                    or (track_num == 1 and hs and hkswOffS > note_start_time)
+                    or (track_num == 2 and ha and hkswOffA > note_start_time)
+                    or (track_num == 3 and ht and hkswOffT > note_start_time)
+                    or (track_num == 4 and hb and hkswOffB > note_start_time))
                     and pitch ~= hksw
             then
                 -- Add note information to the string 'notes' in the required format
@@ -284,9 +294,7 @@ function send_http_request(url, body)
     return response_body, response_code
 end
 
---local url = "http://localhost:8080/api" -- testing locally
---local url = "https://satbify.up.railway.app/api"
-local url = "https://satbify-debug.up.railway.app/api"
+
 local response_body
 local  response_code
 if not flagExit then
