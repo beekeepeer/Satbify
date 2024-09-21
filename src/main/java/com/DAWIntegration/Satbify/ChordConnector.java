@@ -9,7 +9,6 @@ import java.util.Arrays;
 
 
 public class ChordConnector {
-    static long counter = 0;
 
     public ArrayList<Chord> connect(ArrayList<ArrayList<Chord>> in){
         Chord[][] chordArray = in.stream().map(x -> x.stream()
@@ -30,7 +29,6 @@ public Chord[] findBestConnected(Chord[][] arr) {
     // DP arrays to store the minimum smoothness and the path to reconstruct
     int[][] dp = new int[l][];
     int[][] path = new int[l][];
-    if (l == 1) return new Chord [] {arr [0][0]}; // todo: if array length is 1 - return one random chord. The problem is not here.
     // Initialize dp and path arrays
     for (int i = 0; i < l; i++) {
         dp[i] = new int[arr[i].length];

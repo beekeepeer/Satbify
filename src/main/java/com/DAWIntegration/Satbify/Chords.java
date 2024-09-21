@@ -47,6 +47,7 @@ public abstract class Chords {
         // reset inherited from past operations:
         c = new Chord(); // chord from previous request is available for garbage collection.
         smoothBass = false;
+        id = 0;
         return returnToReaper (connected, legato);
     }
 
@@ -170,8 +171,7 @@ public abstract class Chords {
                     x = applyRootDegreeScale(x);
                     return x;
                 })
-
-                .flatMap(Chords::addBassVariant) // todo:  here is the problem!!!!
+                .flatMap(Chords::addBassVariant)
 //                .peek(chord -> System.out.println(chord.getFinalTenor()))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
@@ -227,16 +227,13 @@ public abstract class Chords {
         } else return Stream.of(original);
     }
     private static Chord applyRootDegreeScale(Chord x) {
-
         int s = raiseToDegree(x.getSoprano(), x.getChordDegree());
         s = applyScale(x.getKeyScale(), s);
         s += x.getKeyRoot().getKeyNumber();
 
-
         int a = raiseToDegree(x.getAlto(), x.getChordDegree());
         a = applyScale(x.getKeyScale(), a);
-        a += x.getKeyRoot().getKeyNumber();                 // ok
-
+        a += x.getKeyRoot().getKeyNumber();
 
         int t = raiseToDegree(x.getTenor(), x.getChordDegree());
         t = applyScale(x.getKeyScale(), t);
@@ -258,7 +255,7 @@ public abstract class Chords {
         // todo: make a notes list for pentatonic and hexatonic. Add a "Scale" method argument
         List<Integer> notes = List.of(0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24, 26, 28, 29, 31, 33, 35, 36, 38, 40, 41, 43, 45, 47, 48, 50, 52, 53, 55, 57, 59, 60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79, 81, 83, 84, 86, 88, 89, 91, 93, 95, 96, 98, 100, 101, 103, 105, 107, 108, 110, 112, 113, 115, 117, 119, 120, 122, 124, 125);
         var a = notes.indexOf(noteNumber);
-        return notes.get(a + ordinal);
+        return notes.get(ordinal + a);
     }
     private static int applyScale(Scale scale, int n) {
         int bypass = n;
@@ -283,6 +280,7 @@ public abstract class Chords {
         return new Note(reaperTrack, pitch, start, end);
     }
     private static String returnToReaper(ArrayList<Chord> finalChords, boolean legato) {
+        if (finalChords.size() == 1) legato = false;
         StringBuilder out = new StringBuilder();
         int sP = 0, aP = 0, tP = 0, bP = 0;
         double sopranoStartTime = finalChords.get(0).getNoteStartTime();
@@ -297,7 +295,6 @@ public abstract class Chords {
         boolean mustAddA = true;
         boolean mustAddT = true;
         boolean mustAddB = true;
-
 
         try {
             for (int i = 0; i < finalChords.size(); i++) {
@@ -324,7 +321,7 @@ public abstract class Chords {
                     } else {
                         if (mustAddS) {
                             // add previous note, if was not added:
-                            appendNote(out, 1, sP, sopranoStartTime, sopranoEndTime + + 0.005);
+                            appendNote(out, 1, sP, sopranoStartTime, sopranoEndTime + 0.005);
                             mustAddS = false;
                         }
                         // apply note at i:
@@ -336,7 +333,7 @@ public abstract class Chords {
 
                         if (i == finalChords.size() - 1 || (finalChords.size() > i + 1 && sP != finalChords.get(i + 1).getSoprano())) {
                             // append:
-                            appendNote(out, 1, sP, sopranoStartTime, sopranoEndTime + + 0.005);
+                            appendNote(out, 1, sP, sopranoStartTime, sopranoEndTime + 0.005);
                         }
                     }
 
@@ -355,7 +352,7 @@ public abstract class Chords {
 
                         if (mustAddA) {
                             // add previous note, if was not added:
-                            appendNote(out, 2, aP, altoStartTime, altoEndTime + + 0.005);
+                            appendNote(out, 2, aP, altoStartTime, altoEndTime + 0.005);
                             mustAddA = false;
                         }
                         // apply note at i:
@@ -365,7 +362,7 @@ public abstract class Chords {
                         aP = finalChords.get(i).getAlto();
                         if (i == finalChords.size() - 1 || (finalChords.size() > i + 1 && aP != finalChords.get(i + 1).getAlto())) {
                             // append:
-                            appendNote(out, 2, aP, altoStartTime, altoEndTime + + 0.005);
+                            appendNote(out, 2, aP, altoStartTime, altoEndTime + 0.005);
                         }
                     }
 
@@ -383,7 +380,7 @@ public abstract class Chords {
 
                         if (mustAddT) {
                             // add previous note, if was not added:
-                            appendNote(out, 3, tP, tenorStartTime, tenorEndTime + + 0.005);
+                            appendNote(out, 3, tP, tenorStartTime, tenorEndTime + 0.005);
                             mustAddT = false;
                         }
                         // apply note at i:
@@ -395,7 +392,7 @@ public abstract class Chords {
                         // if last chord                or  next check will not fail              next note is not the same
                         if (i == finalChords.size() - 1 || (finalChords.size() > i + 1 && tP != finalChords.get(i + 1).getTenor())) {
                             // append:
-                            appendNote(out, 3, tP, tenorStartTime, tenorEndTime + + 0.005);
+                            appendNote(out, 3, tP, tenorStartTime, tenorEndTime + 0.005);
                         }
                     }
 
@@ -412,7 +409,7 @@ public abstract class Chords {
                     } else {
                         if (mustAddB) {
                             // add previous note, if was not added:
-                            appendNote(out, 4, bP, bassStartTime, bassEndTime + + 0.005);
+                            appendNote(out, 4, bP, bassStartTime, bassEndTime + 0.005);
                             mustAddB = false;
                         }
                         // apply note at i:
@@ -423,7 +420,7 @@ public abstract class Chords {
                         // append:
                         if (i == finalChords.size() - 1 || (finalChords.size() > i + 1 && bP != finalChords.get(i + 1).getBass())) {
                             // append:
-                            appendNote(out, 4, bP, bassStartTime, bassEndTime + + 0.005);
+                            appendNote(out, 4, bP, bassStartTime, bassEndTime + 0.005);
                         }
                     }
                 }
@@ -438,7 +435,7 @@ public abstract class Chords {
             }
 //            System.out.println(out);
         } catch (Exception e) {
-            throw new RuntimeException("   ! \n! ! ! \n! ! ! ! \n! ! ! !The output of This program is EMPTY ! ! ! \n! ! \n ! !\n ! ! ! ");
+            System.out.println("The output of This program is EMPTY.");
         }
         return out.toString();
     }
