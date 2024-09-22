@@ -1,9 +1,7 @@
 
   add features:
   - add a keySwitch to use average pitch only while average pitch is present under the chord. Yields random result.
--same Set a list of chord types available by default, making 7-th and 9-th chords unavailable until specified.
 -same сделать keySwitches inversion, chordType,  чтобы включать и выключать участие этих аккордов и/или non latching.
-  - legato keySwitch.
 - get scale and tonality change events from Reaper directly.
 - limit active area in time selection if set, or all the timeline if not. Reaper script only.
 - Скрытые октавы
@@ -14,19 +12,27 @@
     значит, в целом тональные тяготеня должны работать внутри тональности!!! Это Важно!
 - nрименяются обычно полными и разрешаются в тоннку
 - delete Alteration from repository constructor, solve this problem in the applyScale() method.
-- квинта в доминант нонакконде присутсвет только в перемещении, когда до тот же нонаккорд без квинты.
+- квинта в доминант нонакконде присутсвет только в перемещении, когда перед ним тот же нонаккорд без квинты.
     Как это реализовать???? нонаккорды без этогой фичи должны быть без квинты... потом добавлю фичу и квинту вместе.
 - Ограничить сверху и снизу входящие ноты со всех партий для гаромнизации. Чтобы ингорировать случайные слишком высокие и низкие.
-
 form keyswitch" предложение, период...
-‌выбирать аккорды функциями а не ступенями
 
-Back:
+
+
+
+
+
+! ! ! ! ! ! выбирать аккорды функциями а не ступенями:
 ‌скрытые октавы
-‌выбирать аккорды функциями а не ступенями
 ‌из выбранной последовательности функций выбирать "сложность"решения с помощью velocity.
-‌сложность выбранной последовательности начинается с элементарных -> альтерации ДД, заканчивается заимстваваниями из других тональностей.
+‌сложность выбранной последовательности начинается с элементарных, потом -> альтерации ДД, заканчивается заимстваваниями из других тональностей.
 
+
+
+
+
+
+!!!!! all secondary KS work without repeating.
 + legato chords should be without pauses if legato is on.
 + key 24 should preserve notes only above it, meaning only notes start. lua.
 -- problem: chords with harmonized voice is difficult to connect smoothly with normal chords.
@@ -39,3 +45,4 @@ Back:
 -- todo: Handle exceptions and send the message to reaper.
 -- three voices
 -- add option for one chord track instead of four.
+-- add more scales.
