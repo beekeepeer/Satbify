@@ -1,9 +1,17 @@
+Business
+All the business end on Reaper for now.
+I need to decide for now:
+    - eather I stop on Reaper and rewrite everyting in lua.
+        + I can get input request immediately.
+        - AI model will not be available in the future.
+    - or I organize vst midi system. I'll be limited by "realtime" request supply at playback.
+
+
 
   add features:
-  - add a keySwitch to use average pitch only while average pitch is present under the chord. Yields random result.
--same сделать keySwitches inversion, chordType,  чтобы включать и выключать участие этих аккордов и/или non latching.
-- get scale and tonality change events from Reaper directly.
-- limit active area in time selection if set, or all the timeline if not. Reaper script only.
+  - add a key_Switch to use average pitch ONLY WHILE AVERAGE PITCH IS PRESENT UNDER THE CHORD. Yields random result.
+- same сделать keySwitches inversion, chordType,  чтобы включать и выключать участие этих аккордов и/или non latching.
+! get scale and tonality change events from Reaper directly.
 - Скрытые октавы
 - Переченье
 - Пройтись по всей книге и найти все оценки качества соединений (желательные, нежелательные, возможные)
@@ -11,10 +19,10 @@
 - в секвенциях функциональная связь продолжает действовать только внутри звена, на грани же между звеньями она как бы отсутствует.
     значит, в целом тональные тяготеня должны работать внутри тональности!!! Это Важно!
 - nрименяются обычно полными и разрешаются в тоннку
-- delete Alteration from repository constructor, solve this problem in the applyScale() method.
+- delete Alteration from repository constructor, solve this problem in the applyScale() method (or similar)?
 - квинта в доминант нонакконде присутсвет только в перемещении, когда перед ним тот же нонаккорд без квинты.
     Как это реализовать???? нонаккорды без этогой фичи должны быть без квинты... потом добавлю фичу и квинту вместе.
-- Ограничить сверху и снизу входящие ноты со всех партий для гаромнизации. Чтобы ингорировать случайные слишком высокие и низкие.
+- Ограничить сверху и снизу входящие ноты со всех партий для гармонизации. Чтобы ингорировать случайные слишком высокие и низкие.
 form keyswitch" предложение, период...
 
 
@@ -23,8 +31,7 @@ form keyswitch" предложение, период...
 
 
 ! ! ! ! ! ! выбирать аккорды функциями а не ступенями:
-‌скрытые октавы
-‌из выбранной последовательности функций выбирать "сложность"решения с помощью velocity.
+‌из rыбранной последовательности функций выбирать "сложность" решения с помощью velocity.
 ‌сложность выбранной последовательности начинается с элементарных, потом -> альтерации ДД, заканчивается заимстваваниями из других тональностей.
 
 
@@ -36,13 +43,81 @@ form keyswitch" предложение, период...
 + legato chords should be without pauses if legato is on.
 + key 24 should preserve notes only above it, meaning only notes start. lua.
 -- problem: chords with harmonized voice is difficult to connect smoothly with normal chords.
-+ make an option to ignore notes on voices tracks. create and process a keyswitch to ignore notes from voices tracks in the script (not backend).
 -- make a list of test-cases
--- todo: keyswitchses for parallels
--- todo: when legato, make last notes length original.
+-- todo: keyswitchses for parallels on and off.
+!- todo: when legato, make last notes length original.
 -- todo: add voice range limitation separate for each voice.
 + if array length is 1 - return one random chord.
 -- todo: Handle exceptions and send the message to reaper.
 -- three voices
+-- run the script in loop to update each change immediately (with a small delay)
+    -- maybe not in time-selection, but for "added items" to follow.
+-- ignore keyswithces in main item if it is resized to hide keyswithces.
 -- add option for one chord track instead of four.
 -- add more scales.
+-- create an alternative script for four voices in a single item. And another one for leading only three voices. Only in lua.
+
+
+
+
+-- Notes should be grouped by timing. Each "chord" then will have index
+-- use groupChordsByTiming(chords); to round the time position for the cases when quantisation is not perfect.
+
+public class KeySwitchContext {
+    private List<Note> activeKeySwitches = new ArrayList<>();
+
+    public void addKeySwitch(Note keySwitch) {
+        activeKeySwitches.add(keySwitch);
+    }
+
+    public void removeExpiredKeySwitches(double currentTime) { // currentTime should be the index of the chord.
+        activeKeySwitches.removeIf(ks -> ks.end() < currentTime);
+    }
+
+    public List<Note> getActiveKeySwitches() {
+        return activeKeySwitches;
+    }
+
+    // Optional: Find specific types of key switches, like scales or harmonic functions
+    public Optional<Note> findKeySwitchByType(String type) {
+        return activeKeySwitches.stream().filter(ks -> ks.getType().equals(type)).findFirst();
+    // Maybe latching kw should be handled differently.
+    }
+}
+
+
+
+Thoughts from reading the textbook:
+- Try to change the logic to calculate the smoothness from linear to eather the voice connection is smooth or with a leap.
+- I should rethink the bass motions.
+- p26 parallel motion for all 4 voices is possible rarely.
+
+
+
+
+
+
+
+
+
+
+
+
+
+ChatGPT requests:
+- What design pattern should I use for organizing my Java app? The app takes a String sent form Reaper script as an input.
+The input String is a sequence of keySwitches decoded from midi notes. The maximum quantity of different keySwitches may be around 100.
+The app decodes this String in Chord objects and works the entire way with them.
+This sequence of chords should be connected following main Harmony and voiceLeading rules. The entire app is made for automating the use
+of these rules.
+The content of input String contains note messages form five tracks: main, soprano, alto, tenor and bass.
+In the usual scenario the input String contains only the note midi messages from the main track which contains only keyswiches for
+tonality, chord degree, scale, chord type and other information which influences the content and quality of the resulting sequence of chords,
+except the musical notes.
+Usually the notes form other tracks are ignored because they are generated by the app before, but can be used for
+harmonising given melody lines for each voice or preserving generated once,
+and for this functionality a single keyswitch works for each separate track, above this keyswitch notes will be sent to the java app together with
+keyswitches from the main track. Additionally the input String can contain such keySwitches from the main track,
+which do not provide any specific information for the chord to chose, but only the information about the timing of beginning and end
+of any chord. The chord will be chosen by the app considering only the quantity of chords, timing, adjacent chords and notes from other
+tracks if given.
