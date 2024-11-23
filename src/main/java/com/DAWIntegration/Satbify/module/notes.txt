@@ -62,28 +62,9 @@ form keyswitch" предложение, период...
 
 -- Notes should be grouped by timing. Each "chord" then will have index
 -- use groupChordsByTiming(chords); to round the time position for the cases when quantisation is not perfect.
+-- on the server build a reflection of the entire project in order to have the full map of the track.
+-- link similar harmony progressions: if a chord in chorus is changed - it changes in each repetition. Even in different tonalities.
 
-public class KeySwitchContext {
-    private List<Note> activeKeySwitches = new ArrayList<>();
-
-    public void addKeySwitch(Note keySwitch) {
-        activeKeySwitches.add(keySwitch);
-    }
-
-    public void removeExpiredKeySwitches(double currentTime) { // currentTime should be the index of the chord.
-        activeKeySwitches.removeIf(ks -> ks.end() < currentTime);
-    }
-
-    public List<Note> getActiveKeySwitches() {
-        return activeKeySwitches;
-    }
-
-    // Optional: Find specific types of key switches, like scales or harmonic functions
-    public Optional<Note> findKeySwitchByType(String type) {
-        return activeKeySwitches.stream().filter(ks -> ks.getType().equals(type)).findFirst();
-    // Maybe latching kw should be handled differently.
-    }
-}
 
 
 
