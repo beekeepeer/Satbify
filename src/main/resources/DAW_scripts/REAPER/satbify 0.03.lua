@@ -26,9 +26,9 @@ function print(str)
     reaper.ShowConsoleMsg(str .. "\n")
 end
 
---local url = "http://localhost:8080/api" -- testing locally
+local url = "http://localhost:8080/api" -- testing locally
 --local url = "https://satbify.up.railway.app/api"
-local url = "https://satbify-debug.up.railway.app/api"
+--local url = "https://satbify-debug.up.railway.app/api"
 
 local proj = reaper.EnumProjects(-1, "") -- -1 means the currently active project
 local flagExit = false

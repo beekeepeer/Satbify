@@ -1,0 +1,46 @@
+@startuml
+skinparam sequenceMessageAlign center
+skinparam participantFontSize 12
+skinparam sequenceParticipantFontSize 14
+title Sequence Diagram for Java Program Flow
+
+actor User as user
+participant Main
+participant Facade
+participant HelperA
+participant HelperB
+participant HelperC
+
+user -> Main: main(String[] args)
+Main -> Main: getInput(String s)
+activate Main
+Main --> Main: return input (String)
+deactivate Main
+
+Main -> Facade: new Facade()
+activate Facade
+
+Main -> Facade: go(String input)
+
+
+Facade -> HelperA: new HelperA()
+Facade -> HelperA: doWorkA()
+activate HelperA
+HelperA --> Facade: completed
+deactivate HelperA
+
+Facade -> HelperB: new HelperB()
+Facade -> HelperB: doWorkB()
+activate HelperB
+HelperB --> Facade: completed
+deactivate HelperB
+
+Facade -> HelperC: new HelperC()
+Facade -> HelperC: doWorkC()
+activate HelperC
+HelperC --> Facade: completed
+deactivate HelperC
+
+Facade --> Main: completed
+deactivate Facade
+@enduml

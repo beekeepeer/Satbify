@@ -91,7 +91,6 @@ public Chord[] findBestConnected(Chord[][] arr) {
         if ((sd > 0 && bd > 0)  ||  (sd < 0 && bd < 0))     // decrease probability of parallel s and b
             result += 150;
 
-
         result = result + (int)((Math.pow(Math.abs(sd), power)
                 + Math.pow(Math.abs(ad), power)
                 + Math.pow(Math.abs(td), power)
