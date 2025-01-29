@@ -1,6 +1,9 @@
 package com.DAWIntegration.Satbify;
 
 import com.DAWIntegration.Satbify.module.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.*;
 import java.util.function.ToIntFunction;
@@ -12,13 +15,13 @@ import static com.DAWIntegration.Satbify.repository.ChordRepository.chordsReposi
 public abstract class Chords {
     private static int id;
     public static boolean smoothBass = false;
-    public static String harmonise(String input) {
+    public static String harmonise(List<Note> notes) {
+        sortNotes(notes);
         int standard = 68;
         boolean legato = true;
         Chord c = new Chord();
         c.setTessitura(standard);
         int pitch;
-        List<Note> notes = parsArgs(input);
         ArrayList<ArrayList<Chord>> clonedFromRepo = new ArrayList<>();
 
         for (int i = 0; i < notes.size(); i++) {
@@ -69,7 +72,7 @@ public abstract class Chords {
         c.setOccurrence(null);
         return c;
     }
-    private static ArrayList<Note> parsArgs(String args) {
+    private static List<Note> sortNotes(List<Note> notes) {
         ToIntFunction<Note> function = new ToIntFunction<Note>() {
             @Override
             public int applyAsInt(Note note) {
@@ -78,13 +81,9 @@ public abstract class Chords {
                 } else return -1;
             }
         };
-        return Arrays.stream(args.split("-")).
-                filter(s -> s.length() > 10).
-                map(Chords::StringToNote).
-                sorted(Comparator
-                        .comparingDouble(Note::start)
-                        .thenComparingInt(function)).
-                collect(Collectors.toCollection(ArrayList::new));
+        notes.sort(Comparator.comparingDouble(Note::start)
+                .thenComparingInt(function));
+        return notes;
     }
     private static Chord applyKeySwitch(int pitch, Chord c) {
         switch (pitch) {
@@ -231,6 +230,7 @@ public abstract class Chords {
         } else return Stream.of(original);
     }
     private static Chord applyRootDegreeScale(Chord x) {
+        //todo: optimize for C Major
         int s = raiseToDegree(x.getSoprano(), x.getChordDegree());
         s = applyScale(x.getKeyScale(), s);
         s += x.getKeyRoot().getKeyNumber();
@@ -281,7 +281,7 @@ public abstract class Chords {
         double start = Double.parseDouble(ar[2]);
         double end = Double.parseDouble(ar[3]);
 
-        return new Note(reaperTrack, pitch, start, end);
+        return new Note(reaperTrack, pitch, 100, start, end);
     }
     private static String returnToReaper(ArrayList<Chord> finalChords, boolean legato) {
         if (finalChords.size() == 1) legato = false;

@@ -29,7 +29,8 @@ end
 local url = "http://localhost:8080/api" -- testing locally
 --local url = "https://satbify.up.railway.app/api"
 --local url = "https://satbify-debug.up.railway.app/api"
-
+local customerId = "12345"
+local token = "a7f5c3b7d98ef43e6a5a7c8b9d3e1f6d"
 local proj = reaper.EnumProjects(-1, "") -- -1 means the currently active project
 local flagExit = false
 local sel_item_before, tracks, notes_from_reaper, satbify_takes, timeSelStart, timeSelEnd, hs, ha, ht, hb, hkswOffS, hkswOffA, hkswOffT, hkswOffB
@@ -109,7 +110,7 @@ function find_tracks()
 end
 
 function read_notes(tracks)
-    local notes = ""
+    local notes = string.format("{\"customerId\":\"%s\",\"token\":\"%s\",\"notes\":[", customerId, token)
     local satbify_takes = {} -- return this array
     local additional_main_takes = {}
     local track_index = 0
@@ -241,7 +242,7 @@ function read_notes(tracks)
                     and pitch ~= hksw
             then
                 -- Add note information to the string 'notes' in the required format
-                notes = notes .. string.format("%d,%d,%.12f,%.12f-", track_num, pitch, note_start_time, note_end_time)
+                notes = notes .. string.format('{"track":"%d","note":"%d","velocity":"%d","start":"%.15f","end":"%.15f"},', track_num, pitch, vel, note_start_time, note_end_time)
             end
         end
         if track_num == 0 then
@@ -261,11 +262,12 @@ function read_notes(tracks)
  -- Only process the note if it's not muted and within the time selection
             if not muted and note_start_time >= timeSelStart - 0.01 and note_start_time <= timeSelEnd  - 0.01 then
                 -- Add note information to the string 'notes' in the required format
-                notes = notes .. string.format("%d,%d,%.12f,%.12f-", 0, pitch, note_start_time, note_end_time)
+                notes = notes .. string.format('{"track":"%d","note":"%d","velocity":"%d","start":"%.15f","end":"%.15f"},', track_num, pitch, vel, note_start_time, note_end_time)
             end
         end
     end
-    --print(notes:gsub("-", "\n"))
+    notes = string.sub(notes, 1, -2) .. "]}"
+    --print(notes)
     return notes, satbify_takes
 end
 
@@ -300,7 +302,7 @@ local  response_code
 if not flagExit then
     response_body, response_code = send_http_request(url, notes_from_reaper)
 end
---print(response_body)
+print(response_body)
 
 function deleteNotesInTimeSelection(table_takes)
     --print("delete method is called, time selection:" .. timeSelStart)

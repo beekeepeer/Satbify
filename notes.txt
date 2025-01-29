@@ -1,84 +1,8 @@
-Business
-All the business end on Reaper for now.
-I need to decide for now:
-    - eather I stop on Reaper and rewrite everyting in lua.
-        + I can get input request immediately.
-        - AI model will not be available in the future.
-    - or I organize vst midi system. I'll be limited by "realtime" request supply at playback.
-
-
-
-  add features:
-  - add a key_Switch to use average pitch ONLY WHILE AVERAGE PITCH IS PRESENT UNDER THE CHORD. Yields random result.
-- same сделать keySwitches inversion, chordType,  чтобы включать и выключать участие этих аккордов и/или non latching.
-! get scale and tonality change events from Reaper directly.
-- Скрытые октавы
-- Переченье
-- Пройтись по всей книге и найти все оценки качества соединений (желательные, нежелательные, возможные)
-- Параллельные октавы возможны при разрешении D7 стр 95.
-- в секвенциях функциональная связь продолжает действовать только внутри звена, на грани же между звеньями она как бы отсутствует.
-    значит, в целом тональные тяготеня должны работать внутри тональности!!! Это Важно!
-- nрименяются обычно полными и разрешаются в тоннку
-- delete Alteration from repository constructor, solve this problem in the applyScale() method (or similar)?
-- квинта в доминант нонакконде присутсвет только в перемещении, когда перед ним тот же нонаккорд без квинты.
-    Как это реализовать???? нонаккорды без этогой фичи должны быть без квинты... потом добавлю фичу и квинту вместе.
-- Ограничить сверху и снизу входящие ноты со всех партий для гармонизации. Чтобы ингорировать случайные слишком высокие и низкие.
-form keyswitch" предложение, период...
 
 
 
 
 
-
-! ! ! ! ! ! выбирать аккорды функциями а не ступенями:
-‌из rыбранной последовательности функций выбирать "сложность" решения с помощью velocity or CC. Это скорее не "сложность",
-а степень распространённости Отдельно для каждого парамента своё СС:
-- Положение этого аккорда в этй временной позиции
-- Голосоведение
-- Расположение
-- Удвоение
-- отдаление от основной тональности
-‌сложность выбранной последовательности начинается с элементарных, потом -> альтерации ДД, заканчивается заимстваваниями из других тональностей.
-
-
-
-
-
-
-!!!!! all secondary KS work without repeating.
-+ legato chords should be without pauses if legato is on.
-+ key 24 should preserve notes only above it, meaning only notes start. lua.
--- problem: chords with harmonized voice is difficult to connect smoothly with normal chords.
--- make a list of test-cases
--- todo: keyswitchses for parallels on and off.
-!- todo: when legato, make last notes length original.
--- todo: add voice range limitation separate for each voice.
-+ if array length is 1 - return one random chord.
--- todo: Handle exceptions and send the message to reaper.
--- three voices
--- run the script in loop to update each change immediately (with a small delay)
-    -- maybe not in time-selection, but for "added items" to follow.
--- ignore keyswithces in main item if it is resized to hide keyswithces.
--- add option for one chord track instead of four.
--- add more scales.
--- create an alternative script for four voices in a single item. And another one for leading only three voices. Only in lua.
-
-
-
-
--- Notes should be grouped by timing. Each "chord" then will have index. Или, вся система работает только в коцепции периода, предложения (первое, второе...),
-и обрамнело в массив разделённый на 16-е длительности. Длинна этого шаблона может задаваться пользователем из рипера. 
--- use groupChordsByTiming(chords); to round the time position for the cases when quantisation is not perfect.
--- on the server build a reflection of the entire project in order to have the full map of the track.
--- link similar harmony progressions: if a chord in chorus is changed - it changes in each repetition. Even in different tonalities.
-
-
-
-
-Thoughts from reading the textbook:
-- Try to change the logic to calculate the smoothness from linear to eather the voice connection is smooth or with a leap.
-- I should rethink the bass motions.
-- p26 parallel motion for all 4 voices is possible rarely.
 
 
 
