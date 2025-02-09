@@ -19,10 +19,16 @@ Less important:
 - Use keyswitch C1 if you wnt to harmonize given notes on the voice. Otherwise all the notes will be deleted.
 --]]
 
+package.cpath = package.cpath .. ";" .. reaper.GetResourcePath() ..'/Scripts/Classes Mobdebug/socket module/?.dll'    -- WINDOWS ONLY: Add socket module path for .dll files
+package.path = package.path .. ";" .. reaper.GetResourcePath()   ..'/Scripts/Classes Mobdebug/socket module/?.lua'      -- Add all lua socket modules to the path  
 
+require("mobdebug").start() -- Start mobdebug module
 
 
 function print(str)
+    if str == nil then
+        str = "there is nothing to print"
+    end
     reaper.ShowConsoleMsg(str .. "\n")
 end
 
@@ -282,6 +288,7 @@ end
 function send_http_request(url, body)
     -- Escape special characters in the body to ensure the curl command works correctly
     local escaped_body = string.gsub(body, '"', '\\"')
+    print(escaped_body)
     -- Use curl to send the HTTP request and capture the response directly
     local command = string.format('curl -s -w "%%{http_code}" -X POST -H "Content-Type: application/json" -d "%s" "%s"',
         escaped_body, url)
@@ -302,7 +309,7 @@ local  response_code
 if not flagExit then
     response_body, response_code = send_http_request(url, notes_from_reaper)
 end
-print(response_body)
+-- print(response_body)
 
 function deleteNotesInTimeSelection(table_takes)
     --print("delete method is called, time selection:" .. timeSelStart)

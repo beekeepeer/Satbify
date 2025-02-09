@@ -1,5 +1,7 @@
-package com.DAWIntegration.Satbify.module;
+package com.DAWIntegration.Satbify.Refactor;
 
+import com.DAWIntegration.Satbify.module.Note;
+import com.DAWIntegration.Satbify.module.RequestDeserialized;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;

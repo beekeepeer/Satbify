@@ -1,4 +1,4 @@
-package com.DAWIntegration.Satbify.module;
+package com.DAWIntegration.Satbify.Refactor;
 
 import java.util.List;
 public record Period (List<Phrase> phrases) {

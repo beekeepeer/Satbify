@@ -10,11 +10,13 @@ import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.DAWIntegration.Satbify.repository.ChordRepository.chordsRepositoryList;
+import com.DAWIntegration.Satbify.repository.ChordRepositoryEnum;
 
 public abstract class Chords {
     private static int id;
     public static boolean smoothBass = false;
+    static  List<Chord> chordsRepositoryList = ChordRepositoryEnum.INSTANCE.getChordsRepository();
+
     public static String harmonise(List<Note> notes) {
         sortNotes(notes);
         int standard = 68;

@@ -3,8 +3,9 @@ package com.DAWIntegration.Satbify.module;
 import lombok.*;
 
 
-@AllArgsConstructor
+
 @Data
+@AllArgsConstructor
 public class Chord{
     private int soprano;
     private int alto;
@@ -27,17 +28,17 @@ public class Chord{
 
 
     //constructor for ChordRepository
-    public Chord(MelodicPosition melodicPosition, Spacing spacing, Inversion inversion, ChordType chordType, Alteration alteration, Occurrence occurrence, int i, int i1, int i2, int i3) {
+    public Chord(MelodicPosition melodicPosition, Spacing spacing, Inversion inversion, ChordType chordType, Alteration alteration, Occurrence occurrence, int soprano, int alto, int tenor, int bass) {
         this.melodicPosition = melodicPosition;
         this.spacing = spacing;
         this.inversion = inversion;
         this.chordType = chordType;
         this.alteration = alteration;
         this.occurrence = occurrence;
-        this.soprano = i;
-        this.alto = i1;
-        this.tenor = i2;
-        this.bass = i3;
+        this.soprano = soprano;
+        this.alto = alto;
+        this.tenor = tenor;
+        this.bass = bass;
     }
     public Chord() {}
 
@@ -62,20 +63,5 @@ public class Chord{
                 " \n bass =            " + bass +
                 '}' +
                 " \n";
-    }
-
-
-    public boolean absentFinalNotes() {
-        return ! (this.finalSoprano != 0 ||
-                this.finalAlto != 0 ||
-                this.finalTenor != 0 ||
-                this.finalBass != 0);
-    }
-    public boolean fitsFinalNote() {
-//        System.out.println("this.finalBass" + this.finalBass);
-        return (this.finalSoprano != 0 && this.finalSoprano % 12 == this.getSoprano() % 12)
-                || (this.finalAlto != 0 && this.finalAlto % 12 == this.getAlto() % 12)
-                || (this.finalTenor != 0  && this.finalTenor % 12 == this.getTenor() % 12)
-                || (this.finalBass != 0 && this.finalBass % 12 == this.getBass() % 12);
     }
 }
