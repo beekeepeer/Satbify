@@ -59,7 +59,7 @@ class KeySwitchesToChordsConverterTest {
         assertEquals(ChordType.NINTH_CHORD, chords.get(7).getChordType());
         assertEquals(ChordType.TRIAD, chords.get(8).getChordType());
         assertEquals(ChordType.SEVENTH_CHORD, chords.get(9).getChordType());
-        assertEquals(ChordType.SEVENTH_CHORD, chords.get(10).getChordType());
+        assertEquals(ChordType.TRIAD, chords.get(10).getChordType());
     }
 
         @Test
@@ -76,7 +76,7 @@ class KeySwitchesToChordsConverterTest {
         assertEquals(Degree.I, chords.get(6).getChordDegree());
         assertEquals(Degree.II, chords.get(7).getChordDegree());
         assertEquals(Degree.IV, chords.get(8).getChordDegree());
-        assertEquals(Degree.I, chords.get(9).getChordDegree());
+        assertEquals(Degree.V, chords.get(9).getChordDegree());
         assertEquals(Degree.I, chords.get(10).getChordDegree());
     }
 

@@ -21,11 +21,10 @@ public class FatChord implements Cloneable {
     private Alteration alteration = Alteration.NONE;
     private Occurrence occurrence;
     private int register = 68;
-    private boolean legato;
+    private boolean legato = true;
     private int id;
     private int phraseNumber, periodNumber;
-    // smoothness should be always maximum, but lines should be "musical" and follow
-    // textbook (best practice).
+    // smoothness should be always maximum, but lines should be "musical" and follow textbook (best practice).
     // public boolean smoothSoprano = false;
     // public boolean smoothBass = false;
 

@@ -14,7 +14,9 @@ import com.DAWIntegration.Satbify.module.Scale;
 import com.DAWIntegration.Satbify.module.Spacing;
 
 import static com.DAWIntegration.Satbify.module.SatbifyMethods.isDegree;
+
 public class KeySwitchesToChordsConverter {
+    private int phraseNumber, periodNumber;
 
     public static KeySwitchesToChordsConverter getInstance() {
         return new KeySwitchesToChordsConverter();
@@ -22,13 +24,16 @@ public class KeySwitchesToChordsConverter {
 
     public List<FatChord> notesToChords(List<Note> notes) {
         final List<FatChord> preChords = new ArrayList<>();
-        final List<Note> ActiveKeySwitches = new ArrayList<>();
+        final List<Note> activeKeySwitches = new ArrayList<>();
+        var currentTime = 0.0;
         for (int i = 0; i < notes.size(); i++) {
             Note note = notes.get(i);
             if (!isDegree(note.pitch())) {
-                updateActiveKeySwitches(note, ActiveKeySwitches, note.start());
+                activeKeySwitches.add(note);
             } else {
-                addChord(preChords, note, ActiveKeySwitches);
+                updateActiveKeySwitches(note, activeKeySwitches, currentTime);
+                currentTime = note.end();
+                addChord(preChords, note, activeKeySwitches);
             }
         }
         return preChords;
@@ -42,7 +47,6 @@ public class KeySwitchesToChordsConverter {
                 iterator.remove();
             }
         }
-        activeKeySwitches.add(newKeySwitch);
     }
 
     private boolean isNotLatchingOutdated(Note note, double currentTime) {
@@ -53,12 +57,16 @@ public class KeySwitchesToChordsConverter {
         return isLatching(note) && isLatching(newKeySwitch);
     }
 
+    // TODO come up with several groups of latching + switchable keySwitches: roots, registers, functions, 
     private boolean isLatching(Note note) {
+        // RootKeys
         return note.pitch() <= 11;
+        // Registers
+        // || note.pitch() > 50 && note.pitch() < 80;
     }
 
     private boolean isOutdated(Note note, double currentTime) {
-        return note.end() <= currentTime;
+        return note.end() <= currentTime; // TODO round
     }
 
     private void addChord(List<FatChord> preChords, Note ChordDegreeNote, List<Note> activeKeySwitches) {
@@ -68,8 +76,6 @@ public class KeySwitchesToChordsConverter {
             applyKeySwitch(keySwitch.pitch(), chord);
         }
         preChords.add(chord);
-        activeKeySwitches.forEach(c -> System.out.print(c.pitch() + " "));
-        System.out.println();
     }
 
     private void applyKeySwitch(int pitch, FatChord chord) {
@@ -100,7 +106,6 @@ public class KeySwitchesToChordsConverter {
             case 22: chord.setKeyScale(Scale.MINOR_MELODIC);break;
             case 23: chord.setChordDegree(Degree.VII);break;
 
-//            case 30: legato = true;
 
             // a feature to add
 //            case 108: alteration = null; break;
@@ -127,7 +132,14 @@ public class KeySwitchesToChordsConverter {
             case 36: chord.setSpacing(Spacing.CLOSE);break;
             case 37: chord.setSpacing(Spacing.OPEN);break;
             case 38: chord.setSpacing(Spacing.MIXED_1);break;
-//            case 127: c.setSpacing(Spacing.MIXED_2);break;
+            case 39: chord.setLegato(false);
+
+            // register
+            case 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78:
+            case 79: chord.setRegister(pitch);
+
+            case 108: chord.setPhraseNumber(++phraseNumber);
+
         }
     }
 
