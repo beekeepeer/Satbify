@@ -61,13 +61,15 @@ public class KeySwitchesToChordsConverter {
         return note.end() <= currentTime;
     }
 
-    private void addChord(List<FatChord> preChords, Note note, List<Note> activeKeySwitches) {
+    private void addChord(List<FatChord> preChords, Note ChordDegreeNote, List<Note> activeKeySwitches) {
         var chord = FatChord.getInstance();
+        applyKeySwitch(ChordDegreeNote.pitch(), chord);
         for (Note keySwitch : activeKeySwitches) {
             applyKeySwitch(keySwitch.pitch(), chord);
-            System.out.println(chord.getChordDegree());
         }
         preChords.add(chord);
+        activeKeySwitches.forEach(c -> System.out.print(c.pitch() + " "));
+        System.out.println();
     }
 
     private void applyKeySwitch(int pitch, FatChord chord) {
