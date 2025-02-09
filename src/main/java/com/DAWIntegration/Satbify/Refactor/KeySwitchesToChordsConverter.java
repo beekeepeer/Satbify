@@ -43,9 +43,18 @@ public class KeySwitchesToChordsConverter {
         Iterator<Note> iterator = activeKeySwitches.iterator();
         while (iterator.hasNext()) {
             Note note = iterator.next();
+            incrementPeriod(note, newKeySwitch);
             if (isNotLatchingOutdated(note, currentTime) || areLatching(note, newKeySwitch)) {
                 iterator.remove();
             }
+        }
+    }
+
+    private void incrementPeriod(Note note, Note newKeySwitch) {
+        if (note.pitch() == 108
+        && newKeySwitch.pitch() == 108
+        && note.end() != newKeySwitch.start()){
+            this.periodNumber++;
         }
     }
 
@@ -72,6 +81,7 @@ public class KeySwitchesToChordsConverter {
     private void addChord(List<FatChord> preChords, Note ChordDegreeNote, List<Note> activeKeySwitches) {
         var chord = FatChord.getInstance();
         applyKeySwitch(ChordDegreeNote.pitch(), chord);
+        chord.setPeriodNumber(periodNumber);
         for (Note keySwitch : activeKeySwitches) {
             applyKeySwitch(keySwitch.pitch(), chord);
         }
@@ -138,7 +148,7 @@ public class KeySwitchesToChordsConverter {
             case 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78:
             case 79: chord.setRegister(pitch);
 
-            case 108: chord.setPhraseNumber(++phraseNumber);
+            case 108: chord.setPhraseNumber(++this.phraseNumber);
 
         }
     }
