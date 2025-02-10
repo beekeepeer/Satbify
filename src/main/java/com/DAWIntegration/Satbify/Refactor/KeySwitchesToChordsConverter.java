@@ -3,6 +3,7 @@ package com.DAWIntegration.Satbify.Refactor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import com.DAWIntegration.Satbify.module.ChordType;
 import com.DAWIntegration.Satbify.module.Degree;
@@ -16,72 +17,85 @@ import com.DAWIntegration.Satbify.module.Spacing;
 import static com.DAWIntegration.Satbify.module.SatbifyMethods.isDegree;
 
 public class KeySwitchesToChordsConverter {
-    private int phraseNumber, periodNumber;
-
-    public static KeySwitchesToChordsConverter getInstance() {
-        return new KeySwitchesToChordsConverter();
-    }
-
-    public List<FatChord> notesToChords(List<Note> notes) {
-        final List<FatChord> preChords = new ArrayList<>();
-        final List<Note> activeKeySwitches = new ArrayList<>();
-        var currentTime = 0.0;
-        for (int i = 0; i < notes.size(); i++) {
-            Note note = notes.get(i);
-            if (!isDegree(note.pitch())) {
-                activeKeySwitches.add(note);
-            } else {
-                updateActiveKeySwitches(note, activeKeySwitches, currentTime);
-                currentTime = note.end();
-                addChord(preChords, note, activeKeySwitches);
+    private int phraseNumber, periodNumber = 1;
+    private Note x;
+    
+        public static KeySwitchesToChordsConverter getInstance() {
+            return new KeySwitchesToChordsConverter();
+        }
+    
+        public List<FatChord> notesToChords(List<Note> notes) {
+            final List<FatChord> preChords = new ArrayList<>();
+            final List<Note> activeKeySwitches = new ArrayList<>();
+            double currentTime = 0.0;
+            for (int i = 0; i < notes.size(); i++) {
+                Note note = notes.get(i);
+                if (!isDegree(note.pitch())) {
+                    activeKeySwitches.add(note);
+                    System.out.println(i);
+                    incrementPeriod(note);
+                    incrementPhrase(note);
+                    System.out.println();
+                } else {
+                    updateActiveKeySwitches(note, activeKeySwitches, currentTime);
+                    currentTime = note.end();
+                    addChord(preChords, note, activeKeySwitches);
+                }
+            }
+            return preChords;
+        }
+    
+        private void updateActiveKeySwitches(Note newKeySwitch, List<Note> activeKeySwitches, double currentTime) {
+            Iterator<Note> iterator = activeKeySwitches.iterator();
+            while (iterator.hasNext()) {
+                Note note = iterator.next();
+                if (isNotLatchingOutdated(note, currentTime) || areLatching(note, newKeySwitch)) {
+                    iterator.remove();
+                }
             }
         }
-        return preChords;
-    }
-
-    private void updateActiveKeySwitches(Note newKeySwitch, List<Note> activeKeySwitches, double currentTime) {
-        Iterator<Note> iterator = activeKeySwitches.iterator();
-        while (iterator.hasNext()) {
-            Note note = iterator.next();
-            incrementPeriod(note, newKeySwitch);
-            if (isNotLatchingOutdated(note, currentTime) || areLatching(note, newKeySwitch)) {
-                iterator.remove();
+    
+        private void incrementPeriod(Note note) {
+            if (Objects.isNull(this.x)) {
+                return;
+            }
+            if ((note.pitch() == 108) && (this.x.end() != (note.start()))) {
+                this.periodNumber++;
+            System.out.println("Period " + this.x.end() + "  " + note.end());
             }
         }
-    }
-
-    private void incrementPeriod(Note note, Note newKeySwitch) {
-        if (note.pitch() == 108
-        && newKeySwitch.pitch() == 108
-        && note.end() != newKeySwitch.start()){
-            this.periodNumber++;
+    
+        private void incrementPhrase(Note note) {
+            if (note.pitch() == 108) {
+                this.phraseNumber++;
+                System.out.println("Phrase " + note.end());
+                this.x = note;
+            }
         }
-    }
-
-    private boolean isNotLatchingOutdated(Note note, double currentTime) {
-        return !isLatching(note) && isOutdated(note, currentTime);
-    }
-
-    private boolean areLatching(Note note, Note newKeySwitch) {
-        return isLatching(note) && isLatching(newKeySwitch);
-    }
-
-    // TODO come up with several groups of latching + switchable keySwitches: roots, registers, functions, 
-    private boolean isLatching(Note note) {
-        // RootKeys
-        return note.pitch() <= 11;
-        // Registers
-        // || note.pitch() > 50 && note.pitch() < 80;
-    }
-
-    private boolean isOutdated(Note note, double currentTime) {
-        return note.end() <= currentTime; // TODO round
-    }
-
-    private void addChord(List<FatChord> preChords, Note ChordDegreeNote, List<Note> activeKeySwitches) {
-        var chord = FatChord.getInstance();
-        applyKeySwitch(ChordDegreeNote.pitch(), chord);
-        chord.setPeriodNumber(periodNumber);
+    
+    
+        private boolean isNotLatchingOutdated(Note note, double currentTime) {
+            return !isLatching(note) && isOutdated(note, currentTime);
+        }
+    
+        private boolean areLatching(Note note, Note newKeySwitch) {
+            return isLatching(note) && isLatching(newKeySwitch);
+        }
+    
+        // TODO come up with several groups of latching + switchable keySwitches: roots, registers, functions, 
+        private boolean isLatching(Note note) {
+            // RootKeys
+            return note.pitch() <= 11;
+        }
+    
+        private boolean isOutdated(Note note, double currentTime) {
+            return note.end() <= currentTime; // TODO round
+        }
+    
+        private void addChord(List<FatChord> preChords, Note ChordDegreeNote, List<Note> activeKeySwitches) {
+            var chord = FatChord.getInstance();
+            applyKeySwitch(ChordDegreeNote.pitch(), chord);
+            chord.setPeriodNumber(this.periodNumber);
         for (Note keySwitch : activeKeySwitches) {
             applyKeySwitch(keySwitch.pitch(), chord);
         }
@@ -148,7 +162,7 @@ public class KeySwitchesToChordsConverter {
             case 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78:
             case 79: chord.setRegister(pitch);
 
-            case 108: chord.setPhraseNumber(++this.phraseNumber);
+            case 108: chord.setPhraseNumber(this.phraseNumber);
 
         }
     }

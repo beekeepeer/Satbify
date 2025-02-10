@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class KeySwitchesToChordsConverterTest {
 
     private List<Note> notes() {
-        String requestJson = "{\"customerId\":\"12345\",\"token\":\"a7f5c3b7d98ef43e6a5a7c8b9d3e1f6d\",\"notes\":[{\"track\":\"0\",\"note\":\"25\",\"velocity\":\"96\",\"start\":\"235.289071016113180\",\"end\":\"237.994953369054740\"},{\"track\":\"0\",\"note\":\"12\",\"velocity\":\"96\",\"start\":\"235.289071016113180\",\"end\":\"235.965541604348570\"},{\"track\":\"0\",\"note\":\"31\",\"velocity\":\"96\",\"start\":\"235.289071016113180\",\"end\":\"237.318482780819350\"},{\"track\":\"0\",\"note\":\"19\",\"velocity\":\"96\",\"start\":\"235.965541604348570\",\"end\":\"236.642012192583960\"},{\"track\":\"0\",\"note\":\"29\",\"velocity\":\"96\",\"start\":\"235.965541604348570\",\"end\":\"237.994953369054740\"},{\"track\":\"0\",\"note\":\"21\",\"velocity\":\"96\",\"start\":\"236.642012192583960\",\"end\":\"237.318482780819350\"},{\"track\":\"0\",\"note\":\"2\",\"velocity\":\"96\",\"start\":\"236.642012192583960\",\"end\":\"237.318482780819350\"},{\"track\":\"0\",\"note\":\"17\",\"velocity\":\"96\",\"start\":\"237.318482780819350\",\"end\":\"237.994953369054740\"},{\"track\":\"0\",\"note\":\"33\",\"velocity\":\"96\",\"start\":\"237.318482780819350\",\"end\":\"240.024365133760940\"},{\"track\":\"0\",\"note\":\"28\",\"velocity\":\"96\",\"start\":\"237.994953369054740\",\"end\":\"240.024365133760940\"},{\"track\":\"0\",\"note\":\"14\",\"velocity\":\"96\",\"start\":\"237.994953369054740\",\"end\":\"238.671423957290130\"},{\"track\":\"0\",\"note\":\"19\",\"velocity\":\"96\",\"start\":\"238.671423957290130\",\"end\":\"239.347894545525550\"},{\"track\":\"0\",\"note\":\"26\",\"velocity\":\"96\",\"start\":\"239.347894545525550\",\"end\":\"240.700835721996330\"},{\"track\":\"0\",\"note\":\"12\",\"velocity\":\"96\",\"start\":\"239.347894545525550\",\"end\":\"240.024365133760940\"},{\"track\":\"0\",\"note\":\"9\",\"velocity\":\"96\",\"start\":\"239.347894545525550\",\"end\":\"240.024365133760940\"},{\"track\":\"0\",\"note\":\"14\",\"velocity\":\"96\",\"start\":\"240.024365133760940\",\"end\":\"240.700835721996330\"},{\"track\":\"0\",\"note\":\"36\",\"velocity\":\"96\",\"start\":\"240.024365133760940\",\"end\":\"240.700835721996330\"},{\"track\":\"0\",\"note\":\"27\",\"velocity\":\"96\",\"start\":\"240.024365133760940\",\"end\":\"242.053776898467110\"},{\"track\":\"0\",\"note\":\"17\",\"velocity\":\"96\",\"start\":\"240.700835721996330\",\"end\":\"241.377306310231720\"},{\"track\":\"0\",\"note\":\"19\",\"velocity\":\"96\",\"start\":\"241.377306310231720\",\"end\":\"242.053776898467110\"},{\"track\":\"0\",\"note\":\"25\",\"velocity\":\"96\",\"start\":\"241.377306310231720\",\"end\":\"242.053776898467110\"},{\"track\":\"0\",\"note\":\"38\",\"velocity\":\"96\",\"start\":\"241.377306310231720\",\"end\":\"242.730247486702520\"},{\"track\":\"0\",\"note\":\"12\",\"velocity\":\"96\",\"start\":\"242.053776898467110\",\"end\":\"242.730247486702520\"}]}";
+        String requestJson = "{\"customerId\":\"12345\",\"token\":\"a7f5c3b7d98ef43e6a5a7c8b9d3e1f6d\",\"notes\":[{\"track\":\"0\",\"note\":\"25\",\"velocity\":\"96\",\"start\":\"235.289071016113180\",\"end\":\"237.994953369054740\"},{\"track\":\"0\",\"note\":\"12\",\"velocity\":\"96\",\"start\":\"235.289071016113180\",\"end\":\"235.965541604348570\"},{\"track\":\"0\",\"note\":\"31\",\"velocity\":\"96\",\"start\":\"235.289071016113180\",\"end\":\"237.318482780819350\"},{\"track\":\"0\",\"note\":\"108\",\"velocity\":\"96\",\"start\":\"235.289071016113180\",\"end\":\"236.642012192583960\"},{\"track\":\"0\",\"note\":\"19\",\"velocity\":\"96\",\"start\":\"235.965541604348570\",\"end\":\"236.642012192583960\"},{\"track\":\"0\",\"note\":\"29\",\"velocity\":\"96\",\"start\":\"235.965541604348570\",\"end\":\"237.994953369054740\"},{\"track\":\"0\",\"note\":\"21\",\"velocity\":\"96\",\"start\":\"236.642012192583960\",\"end\":\"237.318482780819350\"},{\"track\":\"0\",\"note\":\"2\",\"velocity\":\"96\",\"start\":\"236.642012192583960\",\"end\":\"237.318482780819350\"},{\"track\":\"0\",\"note\":\"108\",\"velocity\":\"96\",\"start\":\"236.642012192583960\",\"end\":\"237.927306310231190\"},{\"track\":\"0\",\"note\":\"17\",\"velocity\":\"96\",\"start\":\"237.318482780819350\",\"end\":\"237.994953369054740\"},{\"track\":\"0\",\"note\":\"33\",\"velocity\":\"96\",\"start\":\"237.318482780819350\",\"end\":\"240.024365133760940\"},{\"track\":\"0\",\"note\":\"28\",\"velocity\":\"96\",\"start\":\"237.994953369054740\",\"end\":\"240.024365133760940\"},{\"track\":\"0\",\"note\":\"14\",\"velocity\":\"96\",\"start\":\"237.994953369054740\",\"end\":\"238.671423957290130\"},{\"track\":\"0\",\"note\":\"108\",\"velocity\":\"96\",\"start\":\"237.994953369054740\",\"end\":\"240.624028123957090\"},{\"track\":\"0\",\"note\":\"19\",\"velocity\":\"96\",\"start\":\"238.671423957290130\",\"end\":\"239.347894545525550\"},{\"track\":\"0\",\"note\":\"26\",\"velocity\":\"96\",\"start\":\"239.347894545525550\",\"end\":\"240.700835721996330\"},{\"track\":\"0\",\"note\":\"12\",\"velocity\":\"96\",\"start\":\"239.347894545525550\",\"end\":\"240.024365133760940\"},{\"track\":\"0\",\"note\":\"9\",\"velocity\":\"96\",\"start\":\"239.347894545525550\",\"end\":\"240.024365133760940\"},{\"track\":\"0\",\"note\":\"14\",\"velocity\":\"96\",\"start\":\"240.024365133760940\",\"end\":\"240.700835721996330\"},{\"track\":\"0\",\"note\":\"36\",\"velocity\":\"96\",\"start\":\"240.024365133760940\",\"end\":\"240.700835721996330\"},{\"track\":\"0\",\"note\":\"27\",\"velocity\":\"96\",\"start\":\"240.024365133760940\",\"end\":\"242.053776898467110\"},{\"track\":\"0\",\"note\":\"17\",\"velocity\":\"96\",\"start\":\"240.700835721996330\",\"end\":\"241.377306310231720\"},{\"track\":\"0\",\"note\":\"108\",\"velocity\":\"96\",\"start\":\"240.700835721996330\",\"end\":\"242.730247486702520\"},{\"track\":\"0\",\"note\":\"19\",\"velocity\":\"96\",\"start\":\"241.377306310231720\",\"end\":\"242.053776898467110\"},{\"track\":\"0\",\"note\":\"25\",\"velocity\":\"96\",\"start\":\"241.377306310231720\",\"end\":\"242.053776898467110\"},{\"track\":\"0\",\"note\":\"38\",\"velocity\":\"96\",\"start\":\"241.377306310231720\",\"end\":\"242.730247486702520\"},{\"track\":\"0\",\"note\":\"12\",\"velocity\":\"96\",\"start\":\"242.053776898467110\",\"end\":\"242.730247486702520\"}]}";
         var sorter = new KeySwitchSorter();
         List<Note> notes = new ArrayList<>();
 
@@ -97,4 +97,41 @@ class KeySwitchesToChordsConverterTest {
         assertEquals(Key.A, chords.get(9).getKeyRoot());
         assertEquals(Key.A, chords.get(10).getKeyRoot());
     }
+
+    @Test
+    public void notesToChords_TestPhrases() throws Exception {
+        var converter = new KeySwitchesToChordsConverter();
+        var chords = converter.notesToChords(notes());
+        assertNotNull(chords);
+        assertEquals(1, chords.get(0).getPhraseNumber());
+        assertEquals(1, chords.get(1).getPhraseNumber());
+        assertEquals(2, chords.get(2).getPhraseNumber());
+        assertEquals(2, chords.get(3).getPhraseNumber());
+        assertEquals(3, chords.get(4).getPhraseNumber());
+        assertEquals(3, chords.get(5).getPhraseNumber());
+        assertEquals(3, chords.get(6).getPhraseNumber());
+        assertEquals(3, chords.get(7).getPhraseNumber());
+        assertEquals(4, chords.get(8).getPhraseNumber());
+        assertEquals(4, chords.get(9).getPhraseNumber());
+        assertEquals(4, chords.get(10).getPhraseNumber());
+    }
+
+    @Test
+    public void notesToChords_TestPeriod() throws Exception {
+        var converter = new KeySwitchesToChordsConverter();
+        var chords = converter.notesToChords(notes());
+        assertNotNull(chords);
+        assertEquals(1,  chords.get(0).getPeriodNumber());
+        assertEquals(1,  chords.get(1).getPeriodNumber());
+        assertEquals(1,  chords.get(2).getPeriodNumber());
+        assertEquals(1,  chords.get(3).getPeriodNumber());
+        assertEquals(2,  chords.get(4).getPeriodNumber());
+        assertEquals(2,  chords.get(6).getPeriodNumber());
+        assertEquals(2,  chords.get(5).getPeriodNumber());
+        assertEquals(2,  chords.get(8).getPeriodNumber());
+        assertEquals(3,  chords.get(7).getPeriodNumber());
+        assertEquals(3,  chords.get(9).getPeriodNumber());
+        assertEquals(3, chords.get(10).getPeriodNumber());
+    }
+
 }
