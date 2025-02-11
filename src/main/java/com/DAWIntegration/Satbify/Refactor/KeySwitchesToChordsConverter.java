@@ -32,10 +32,6 @@ public class KeySwitchesToChordsConverter {
                 Note note = notes.get(i);
                 if (!isDegree(note.pitch())) {
                     activeKeySwitches.add(note);
-                    System.out.println(i);
-                    incrementPeriod(note);
-                    incrementPhrase(note);
-                    System.out.println();
                 } else {
                     updateActiveKeySwitches(note, activeKeySwitches, currentTime);
                     currentTime = note.end();
@@ -49,36 +45,31 @@ public class KeySwitchesToChordsConverter {
             Iterator<Note> iterator = activeKeySwitches.iterator();
             while (iterator.hasNext()) {
                 Note note = iterator.next();
-                if (isNotLatchingOutdated(note, currentTime) || areLatching(note, newKeySwitch)) {
+                    incrementPhrasePeriod(note);
+                if (isNotLatchingOutdated(note, currentTime) || bothLatching(note, newKeySwitch)) {
                     iterator.remove();
                 }
             }
         }
     
-        private void incrementPeriod(Note note) {
-            if (Objects.isNull(this.x)) {
+        private void incrementPhrasePeriod(Note note) {
+            if (note.pitch() != 108 || this.x == note) {
                 return;
             }
-            if ((note.pitch() == 108) && (this.x.end() != (note.start()))) {
+            if (!Objects.isNull(this.x) && this.x.end() < (note.start())) {
                 this.periodNumber++;
-            System.out.println("Period " + this.x.end() + "  " + note.end());
             }
+            this.phraseNumber++;
+            this.x = note;
         }
-    
-        private void incrementPhrase(Note note) {
-            if (note.pitch() == 108) {
-                this.phraseNumber++;
-                System.out.println("Phrase " + note.end());
-                this.x = note;
-            }
-        }
+
     
     
         private boolean isNotLatchingOutdated(Note note, double currentTime) {
             return !isLatching(note) && isOutdated(note, currentTime);
         }
     
-        private boolean areLatching(Note note, Note newKeySwitch) {
+        private boolean bothLatching(Note note, Note newKeySwitch) {
             return isLatching(note) && isLatching(newKeySwitch);
         }
     
