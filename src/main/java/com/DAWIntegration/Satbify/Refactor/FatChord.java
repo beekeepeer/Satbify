@@ -54,7 +54,7 @@ public class FatChord implements Cloneable {
     private FatChord() {
     }
 
-    public static FatChord getInstance() {
+    public static FatChord getNewInstance() {
         return new FatChord();
     }
 

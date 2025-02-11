@@ -84,9 +84,11 @@ public class KeySwitchesToChordsConverter {
         }
     
         private void addChord(List<FatChord> preChords, Note ChordDegreeNote, List<Note> activeKeySwitches) {
-            var chord = FatChord.getInstance();
+            var chord = FatChord.getNewInstance();
             applyKeySwitch(ChordDegreeNote.pitch(), chord);
             chord.setPeriodNumber(this.periodNumber);
+            chord.setStartTime(ChordDegreeNote.start());
+            chord.setEndTime(ChordDegreeNote.end());
         for (Note keySwitch : activeKeySwitches) {
             applyKeySwitch(keySwitch.pitch(), chord);
         }

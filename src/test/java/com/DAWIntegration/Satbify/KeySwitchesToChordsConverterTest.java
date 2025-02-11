@@ -134,4 +134,21 @@ class KeySwitchesToChordsConverterTest {
         assertEquals(3, chords.get(10).getPeriodNumber());
     }
 
+    @Test
+    public void notesToChords_TestStartTime() throws Exception {
+        var converter = new KeySwitchesToChordsConverter();
+        var chords = converter.notesToChords(notes());
+        assertNotNull(chords);
+        // assertEquals(1,  chords.get(0).getPeriodNumber());
+        // assertEquals(1,  chords.get(1).getPeriodNumber());
+        // assertEquals(1,  chords.get(2).getPeriodNumber());
+        // assertEquals(1,  chords.get(3).getPeriodNumber());
+        // assertEquals(2,  chords.get(4).getPeriodNumber());
+        // assertEquals(2,  chords.get(5).getPeriodNumber());
+        // assertEquals(2,  chords.get(6).getPeriodNumber());
+        // assertEquals(2,  chords.get(7).getPeriodNumber());
+        // assertEquals(3,  chords.get(8).getPeriodNumber());
+        // assertEquals(3,  chords.get(9).getPeriodNumber());
+        // assertEquals(3, chords.get(10).getPeriodNumber());
+    }
 }
