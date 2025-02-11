@@ -18,7 +18,7 @@ import static com.DAWIntegration.Satbify.module.SatbifyMethods.isDegree;
 
 public class KeySwitchesToChordsConverter {
     private int phraseNumber, periodNumber = 1;
-    private Note x;
+    private Note previousKS;
     
         public static KeySwitchesToChordsConverter getInstance() {
             return new KeySwitchesToChordsConverter();
@@ -33,6 +33,7 @@ public class KeySwitchesToChordsConverter {
                 if (!isDegree(note.pitch())) {
                     activeKeySwitches.add(note);
                 } else {
+                    System.out.println(i);
                     updateActiveKeySwitches(note, activeKeySwitches, currentTime);
                     currentTime = note.end();
                     addChord(preChords, note, activeKeySwitches);
@@ -53,14 +54,14 @@ public class KeySwitchesToChordsConverter {
         }
     
         private void incrementPhrasePeriod(Note note) {
-            if (note.pitch() != 108 || this.x == note) {
+            if (note.pitch() != 108 || this.previousKS == note) {
                 return;
             }
-            if (!Objects.isNull(this.x) && this.x.end() < (note.start())) {
+            if (!Objects.isNull(this.previousKS) && this.previousKS.end() < (note.start())) {
                 this.periodNumber++;
             }
             this.phraseNumber++;
-            this.x = note;
+            this.previousKS = note;
         }
 
     

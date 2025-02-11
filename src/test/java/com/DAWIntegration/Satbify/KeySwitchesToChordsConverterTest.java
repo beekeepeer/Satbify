@@ -137,18 +137,38 @@ class KeySwitchesToChordsConverterTest {
     @Test
     public void notesToChords_TestStartTime() throws Exception {
         var converter = new KeySwitchesToChordsConverter();
-        var chords = converter.notesToChords(notes());
+        var notes = notes();
+        var chords = converter.notesToChords(notes);
         assertNotNull(chords);
-        // assertEquals(1,  chords.get(0).getPeriodNumber());
-        // assertEquals(1,  chords.get(1).getPeriodNumber());
-        // assertEquals(1,  chords.get(2).getPeriodNumber());
-        // assertEquals(1,  chords.get(3).getPeriodNumber());
-        // assertEquals(2,  chords.get(4).getPeriodNumber());
-        // assertEquals(2,  chords.get(5).getPeriodNumber());
-        // assertEquals(2,  chords.get(6).getPeriodNumber());
-        // assertEquals(2,  chords.get(7).getPeriodNumber());
-        // assertEquals(3,  chords.get(8).getPeriodNumber());
-        // assertEquals(3,  chords.get(9).getPeriodNumber());
-        // assertEquals(3, chords.get(10).getPeriodNumber());
+        assertEquals(notes.get(3).start(),  chords.get(0).getStartTime());
+        assertEquals(notes.get(5).start(),  chords.get(1).getStartTime());
+        assertEquals(notes.get(8).start(),  chords.get(2).getStartTime());
+        assertEquals(notes.get(10).start(),  chords.get(3).getStartTime());
+        assertEquals(notes.get(13).start(),  chords.get(4).getStartTime());
+        assertEquals(notes.get(14).start(),  chords.get(5).getStartTime());
+        assertEquals(notes.get(17).start(),  chords.get(6).getStartTime());
+        assertEquals(notes.get(20).start(),  chords.get(7).getStartTime());
+        assertEquals(notes.get(22).start(),  chords.get(8).getStartTime());
+        assertEquals(notes.get(25).start(),  chords.get(9).getStartTime());
+        assertEquals(notes.get(26).start(), chords.get(10).getStartTime());
+    }
+
+    @Test
+    public void notesToChords_TestEndTime() throws Exception {
+        var converter = new KeySwitchesToChordsConverter();
+        var notes = notes();
+        var chords = converter.notesToChords(notes);
+        assertNotNull(chords);
+        assertEquals(notes.get(3).end(),  chords.get(0).getEndTime());
+        assertEquals(notes.get(5).end(),  chords.get(1).getEndTime());
+        assertEquals(notes.get(8).end(),  chords.get(2).getEndTime());
+        assertEquals(notes.get(10).end(),  chords.get(3).getEndTime());
+        assertEquals(notes.get(13).end(),  chords.get(4).getEndTime());
+        assertEquals(notes.get(14).end(),  chords.get(5).getEndTime());
+        assertEquals(notes.get(17).end(),  chords.get(6).getEndTime());
+        assertEquals(notes.get(20).end(),  chords.get(7).getEndTime());
+        assertEquals(notes.get(22).end(),  chords.get(8).getEndTime());
+        assertEquals(notes.get(25).end(),  chords.get(9).getEndTime());
+        assertEquals(notes.get(26).end(), chords.get(10).getEndTime());
     }
 }
