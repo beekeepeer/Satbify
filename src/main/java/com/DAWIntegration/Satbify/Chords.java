@@ -1,10 +1,6 @@
 package com.DAWIntegration.Satbify;
 
 import com.DAWIntegration.Satbify.module.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-
 import java.util.*;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
@@ -28,12 +24,12 @@ public abstract class Chords {
 
         for (int i = 0; i < notes.size(); i++) {
             Note note = notes.get(i);
-            c.setNoteStartTime(note.start());
+            c.setNoteStartTime(note.startTime());
 
             if(i == notes.size() - 1) {
-                c.setNoteEndTime(note.end());
+                c.setNoteEndTime(note.endTime());
             } else {
-                c.setNoteEndTime(notes.get(i + 1).start());
+                c.setNoteEndTime(notes.get(i + 1).startTime());
             }
             pitch = note.pitch();
             int trackNumber = note.reaperTrack();
@@ -83,7 +79,7 @@ public abstract class Chords {
                 } else return -1;
             }
         };
-        notes.sort(Comparator.comparingDouble(Note::start)
+        notes.sort(Comparator.comparingDouble(Note::startTime)
                 .thenComparingInt(function));
         return notes;
     }
@@ -283,7 +279,7 @@ public abstract class Chords {
         double start = Double.parseDouble(ar[2]);
         double end = Double.parseDouble(ar[3]);
 
-        return new Note(reaperTrack, pitch, 100, start, end);
+        return new Note(reaperTrack, pitch, 100, start, end, 0, 0, 0, 0);
     }
     private static String returnToReaper(ArrayList<Chord> finalChords, boolean legato) {
         if (finalChords.size() == 1) legato = false;

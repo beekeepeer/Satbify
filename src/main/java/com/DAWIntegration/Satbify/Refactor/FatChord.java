@@ -10,7 +10,9 @@ public class FatChord implements Cloneable {
     private int soprano, alto, tenor, bass;
     private int finalSoprano, finalAlto, finalTenor, finalBass; // for harmonizing given notes
     private double startTime, endTime;
-    private MusicalTiming startMusical, endMusical; // bar number / beat number
+    // TODO 
+    private int startBar, endBar; // Musical timing
+    private double startBeat, endBeat; // Musical timing
     private Key keyRoot = Key.C;
     private Degree chordDegree = Degree.I;
     private Scale keyScale = Scale.MAJOR_NATURAL;
@@ -67,6 +69,7 @@ public class FatChord implements Cloneable {
             throw new AssertionError(); // Should not happen
         }
     }
+
 
 
 

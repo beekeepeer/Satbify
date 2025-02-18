@@ -34,7 +34,7 @@ public class ReaperDeserializer extends JsonDeserializer<RequestDeserialized> {
             double start = noteNode.get("start").asDouble();
             double end = noteNode.get("end").asDouble();
 
-            notes.add(new Note(reaperTrack, pitch, velocity, start, end));
+            notes.add(new Note(reaperTrack, pitch, velocity, start, end, 0, 0, 0, 0));
         });
 
         this.requestDeserialized = new RequestDeserialized(customerId, token, notes); // Store the deserialized object

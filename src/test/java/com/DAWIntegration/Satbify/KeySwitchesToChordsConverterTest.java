@@ -1,7 +1,7 @@
 package com.DAWIntegration.Satbify;
 
 import com.DAWIntegration.Satbify.Refactor.KeySwitchSorter;
-import com.DAWIntegration.Satbify.Refactor.KeySwitchesToChordsConverter;
+import com.DAWIntegration.Satbify.Refactor.KeySwitchesToChordsConverterToRefactor;
 import com.DAWIntegration.Satbify.module.ChordType;
 import com.DAWIntegration.Satbify.module.Degree;
 import com.DAWIntegration.Satbify.module.Note;
@@ -31,14 +31,14 @@ class KeySwitchesToChordsConverterTest {
             double start = Double.parseDouble(parts[3].split(":")[1].replace("\"", ""));
             double end = Double.parseDouble(parts[4].split(":")[1].replace("\"", ""));
 
-            notes.add(new Note(track, note, velocity, start, end));
+            notes.add(new Note(track, note, velocity, start, end, 0, 0, 0, 0));
         }
         return sorter.sortKeySwitches(notes);
     }
 
     @Test
     public void notesToChords_numberTest() throws Exception {
-        var converter = new KeySwitchesToChordsConverter();
+        var converter = new KeySwitchesToChordsConverterToRefactor();
         var chords = converter.notesToChords(notes());
                 assertNotNull(chords);
         assertEquals(11, chords.size());
@@ -46,7 +46,7 @@ class KeySwitchesToChordsConverterTest {
 
         @Test
     public void notesToChords_chordsTypes() throws Exception {
-        var converter = new KeySwitchesToChordsConverter();
+        var converter = new KeySwitchesToChordsConverterToRefactor();
         var chords = converter.notesToChords(notes());
         assertNotNull(chords);
         assertEquals(ChordType.SEVENTH_CHORD, chords.get(0).getChordType());
@@ -64,7 +64,7 @@ class KeySwitchesToChordsConverterTest {
 
         @Test
     public void notesToChords_chordsDegree() throws Exception {
-        var converter = new KeySwitchesToChordsConverter();
+        var converter = new KeySwitchesToChordsConverterToRefactor();
         var chords = converter.notesToChords(notes());
         assertNotNull(chords);
         assertEquals(Degree.I, chords.get(0).getChordDegree());
@@ -82,7 +82,7 @@ class KeySwitchesToChordsConverterTest {
 
     @Test
     public void notesToChords_TestRootKeys() throws Exception {
-        var converter = new KeySwitchesToChordsConverter();
+        var converter = new KeySwitchesToChordsConverterToRefactor();
         var chords = converter.notesToChords(notes());
         assertNotNull(chords);
         assertEquals(Key.C, chords.get(0).getKeyRoot());
@@ -100,7 +100,7 @@ class KeySwitchesToChordsConverterTest {
 
     @Test
     public void notesToChords_TestPhrases() throws Exception {
-        var converter = new KeySwitchesToChordsConverter();
+        var converter = new KeySwitchesToChordsConverterToRefactor();
         var chords = converter.notesToChords(notes());
         assertNotNull(chords);
         assertEquals(1, chords.get(0).getPhraseNumber());
@@ -118,7 +118,7 @@ class KeySwitchesToChordsConverterTest {
 
     @Test
     public void notesToChords_TestPeriod() throws Exception {
-        var converter = new KeySwitchesToChordsConverter();
+        var converter = new KeySwitchesToChordsConverterToRefactor();
         var chords = converter.notesToChords(notes());
         assertNotNull(chords);
         assertEquals(1,  chords.get(0).getPeriodNumber());
@@ -136,39 +136,39 @@ class KeySwitchesToChordsConverterTest {
 
     @Test
     public void notesToChords_TestStartTime() throws Exception {
-        var converter = new KeySwitchesToChordsConverter();
+        var converter = new KeySwitchesToChordsConverterToRefactor();
         var notes = notes();
         var chords = converter.notesToChords(notes);
         assertNotNull(chords);
-        assertEquals(notes.get(3).start(),  chords.get(0).getStartTime());
-        assertEquals(notes.get(5).start(),  chords.get(1).getStartTime());
-        assertEquals(notes.get(8).start(),  chords.get(2).getStartTime());
-        assertEquals(notes.get(10).start(),  chords.get(3).getStartTime());
-        assertEquals(notes.get(13).start(),  chords.get(4).getStartTime());
-        assertEquals(notes.get(14).start(),  chords.get(5).getStartTime());
-        assertEquals(notes.get(17).start(),  chords.get(6).getStartTime());
-        assertEquals(notes.get(20).start(),  chords.get(7).getStartTime());
-        assertEquals(notes.get(22).start(),  chords.get(8).getStartTime());
-        assertEquals(notes.get(25).start(),  chords.get(9).getStartTime());
-        assertEquals(notes.get(26).start(), chords.get(10).getStartTime());
+        assertEquals(notes.get(3).startTime(),  chords.get(0).getStartTime());
+        assertEquals(notes.get(5).startTime(),  chords.get(1).getStartTime());
+        assertEquals(notes.get(8).startTime(),  chords.get(2).getStartTime());
+        assertEquals(notes.get(10).startTime(),  chords.get(3).getStartTime());
+        assertEquals(notes.get(13).startTime(),  chords.get(4).getStartTime());
+        assertEquals(notes.get(14).startTime(),  chords.get(5).getStartTime());
+        assertEquals(notes.get(17).startTime(),  chords.get(6).getStartTime());
+        assertEquals(notes.get(20).startTime(),  chords.get(7).getStartTime());
+        assertEquals(notes.get(22).startTime(),  chords.get(8).getStartTime());
+        assertEquals(notes.get(25).startTime(),  chords.get(9).getStartTime());
+        assertEquals(notes.get(26).startTime(), chords.get(10).getStartTime());
     }
 
     @Test
     public void notesToChords_TestEndTime() throws Exception {
-        var converter = new KeySwitchesToChordsConverter();
+        var converter = new KeySwitchesToChordsConverterToRefactor();
         var notes = notes();
         var chords = converter.notesToChords(notes);
         assertNotNull(chords);
-        assertEquals(notes.get(3).end(),  chords.get(0).getEndTime());
-        assertEquals(notes.get(5).end(),  chords.get(1).getEndTime());
-        assertEquals(notes.get(8).end(),  chords.get(2).getEndTime());
-        assertEquals(notes.get(10).end(),  chords.get(3).getEndTime());
-        assertEquals(notes.get(13).end(),  chords.get(4).getEndTime());
-        assertEquals(notes.get(14).end(),  chords.get(5).getEndTime());
-        assertEquals(notes.get(17).end(),  chords.get(6).getEndTime());
-        assertEquals(notes.get(20).end(),  chords.get(7).getEndTime());
-        assertEquals(notes.get(22).end(),  chords.get(8).getEndTime());
-        assertEquals(notes.get(25).end(),  chords.get(9).getEndTime());
-        assertEquals(notes.get(26).end(), chords.get(10).getEndTime());
+        assertEquals(notes.get(3).endTime(),  chords.get(0).getEndTime());
+        assertEquals(notes.get(5).endTime(),  chords.get(1).getEndTime());
+        assertEquals(notes.get(8).endTime(),  chords.get(2).getEndTime());
+        assertEquals(notes.get(10).endTime(),  chords.get(3).getEndTime());
+        assertEquals(notes.get(13).endTime(),  chords.get(4).getEndTime());
+        assertEquals(notes.get(14).endTime(),  chords.get(5).getEndTime());
+        assertEquals(notes.get(17).endTime(),  chords.get(6).getEndTime());
+        assertEquals(notes.get(20).endTime(),  chords.get(7).getEndTime());
+        assertEquals(notes.get(22).endTime(),  chords.get(8).getEndTime());
+        assertEquals(notes.get(25).endTime(),  chords.get(9).getEndTime());
+        assertEquals(notes.get(26).endTime(), chords.get(10).getEndTime());
     }
 }

@@ -11,6 +11,6 @@ public class SatbifyController {
 
     @PostMapping("/api")
     public String processString(@RequestBody RequestDeserialized request) {
-        return new SatbifyFacade().processRequest(request.notes());
+        return SatbifyFacade.getInstance(request.notes()).processRequest();
     }
 }

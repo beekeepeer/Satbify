@@ -9,8 +9,6 @@ import java.util.function.ToIntFunction;
 
 // creates a list of Phrases with 2D lists of Chords
 public class KeySwitchSorter {
-    private FatChord keySwitchContext;
-    private int keySwitchPich;
 
     public static KeySwitchSorter getInstance() {
         return new KeySwitchSorter();
@@ -25,7 +23,7 @@ public class KeySwitchSorter {
                 } else return -1;
             }
         };
-        notes.sort(Comparator.comparingDouble(Note::start)
+        notes.sort(Comparator.comparingDouble(Note::startTime)
                 .thenComparingInt(degreeLastSort));
         return notes;
     }
