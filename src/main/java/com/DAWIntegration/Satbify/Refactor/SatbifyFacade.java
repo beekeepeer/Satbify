@@ -21,6 +21,7 @@ public class SatbifyFacade {
 
     // facade method
     public String processRequest() {
+        System.out.println("Facade");
         //set Root key, 
         var preChords = NotesToChordsConverter.getInstance().notesToChords(this.allKS);
         preChords = ScaleKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);

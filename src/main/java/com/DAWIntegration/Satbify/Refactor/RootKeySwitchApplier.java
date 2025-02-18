@@ -6,26 +6,27 @@ import com.DAWIntegration.Satbify.module.Key;
 import com.DAWIntegration.Satbify.module.Note;
 
 public class RootKeySwitchApplier implements KeySwitchApplier {
-
+// exception - if two root keySwitches start at the same time.
     public static RootKeySwitchApplier getInstance() {
         return new RootKeySwitchApplier();
     }
 
     @Override
     public List<FatChord> applyKeySwitch(List<Note> notes, List<FatChord> chords) {
-        int lastRootNoteIndex = 0;
         for (Note note : notes) {
-
-
-
-
-            
+            if (note.pitch() >= 0 && note.pitch() <= 11) {
+                for (FatChord chord : chords) {
+                    if(note.startTime() <= chord.getStartTime()){
+                        chord.setKeyRoot(rootFromNote(note));
+                    }
+                }
             }
+        }
         return chords;
     }
 
-    private Key rootFromNote(int pitch) {
-        switch (pitch) {
+    private Key rootFromNote(Note note) {
+        switch (note.pitch()) {
             case 0:  return Key.C;
             case 1:  return Key.C_Sharp;
             case 2:  return Key.D;
@@ -38,7 +39,7 @@ public class RootKeySwitchApplier implements KeySwitchApplier {
             case 9:  return Key.A;
             case 10: return Key.A_Sharp;
             case 11: return Key.B;
-            default: return null; // This line will never be reached due to the check above.
+            default: return Key.C;
         }
     }
 }
