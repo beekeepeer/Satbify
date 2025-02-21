@@ -224,6 +224,11 @@ function read_notes(tracks)
             local note_start_time = reaper.MIDI_GetProjTimeFromPPQPos(take, startppqpos)
             local note_end_time = reaper.MIDI_GetProjTimeFromPPQPos(take, endppqpos)
 
+            local start_retval, start_measures, start_cml, start_fullbeats, start_cdenom = reaper.TimeMap2_timeToBeats(0, note_start_time)
+            local end_retval, end_measures, end_cml, end_fullbeats, end_cdenom = reaper.TimeMap2_timeToBeats(0, note_end_time)
+            -- start_bar = start_bar + 1  -- Convert 0-based to 1-based index
+            -- end_bar = end_bar + 1      -- Convert 0-based to 1-based index
+
             if track_num == 1 and pitch == hksw then
                 hs = true
                 hkswOffS = note_end_time
@@ -248,7 +253,10 @@ function read_notes(tracks)
                     and pitch ~= hksw
             then
                 -- Add note information to the string 'notes' in the required format
-                notes = notes .. string.format('{"track":"%d","note":"%d","velocity":"%d","start":"%.15f","end":"%.15f"},', track_num, pitch, vel, note_start_time, note_end_time)
+                notes = notes ..  string.format(
+                    '{"track":"%d","note":"%d","velocity":"%d","start":"%.15f","end":"%.15f","startBar":%d,"endBar":%d,"startBeat":%.3f,"endBeat":%.3f},',
+                    track_num, pitch, vel, note_start_time, note_end_time, start_measures, end_measures, start_fullbeats, end_fullbeats
+                )
             end
         end
         if track_num == 0 then
@@ -265,10 +273,17 @@ function read_notes(tracks)
             -- Convert MIDI start position (PPQ) to project time
             local note_start_time = reaper.MIDI_GetProjTimeFromPPQPos(take, startppqpos)
             local note_end_time =   reaper.MIDI_GetProjTimeFromPPQPos(take, endppqpos)
+            local start_retval, start_measures, start_cml, start_fullbeats, start_cdenom = reaper.TimeMap2_timeToBeats(0, note_start_time)
+            local end_retval, end_measures, end_cml, end_fullbeats, end_cdenom = reaper.TimeMap2_timeToBeats(0, note_end_time)
+            start_bar = start_bar + 1  -- Convert 0-based to 1-based index
+            end_bar = end_bar + 1      -- Convert 0-based to 1-based index
  -- Only process the note if it's not muted and within the time selection
             if not muted and note_start_time >= timeSelStart - 0.01 and note_start_time <= timeSelEnd  - 0.01 then
                 -- Add note information to the string 'notes' in the required format
-                notes = notes .. string.format('{"track":"%d","note":"%d","velocity":"%d","start":"%.15f","end":"%.15f"},', track_num, pitch, vel, note_start_time, note_end_time)
+                notes = notes ..  string.format(
+                    '{"track":"%d","note":"%d","velocity":"%d","start":"%.15f","end":"%.15f","startBar":%d,"endBar":%d,"startBeat":%.3f,"endBeat":%.3f},',
+                    track_num, pitch, vel, note_start_time, note_end_time, start_measures, end_measures, start_fullbeats, end_fullbeats
+                )
             end
         end
     end
