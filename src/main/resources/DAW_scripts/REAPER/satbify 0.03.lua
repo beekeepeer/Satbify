@@ -254,7 +254,7 @@ function read_notes(tracks)
             then
                 -- Add note information to the string 'notes' in the required format
                 notes = notes ..  string.format(
-                    '{"track":"%d","note":"%d","velocity":"%d","start":"%.4f","end":"%.4f","startBar":%d,"endBar":%d,"startBeat":%.3f,"endBeat":%.3f},',
+                    '{"track":%d,"note":%d,"velocity":%d,"start":%.4f,"end":%.4f,"startBar":%d,"endBar":%d,"startBeat":%.3f,"endBeat":%.3f},',
                     track_num, pitch, vel, note_start_time, note_end_time, start_measures, end_measures, start_fullbeats, end_fullbeats
                 )
             end
@@ -281,7 +281,7 @@ function read_notes(tracks)
             if not muted and note_start_time >= timeSelStart - 0.01 and note_start_time <= timeSelEnd  - 0.01 then
                 -- Add note information to the string 'notes' in the required format
                 notes = notes ..  string.format(
-                    '{"track":"%d","note":"%d","velocity":"%d","start":"%.4f","end":"%.4f","startBar":%d,"endBar":%d,"startBeat":%.3f,"endBeat":%.3f},',
+                    '{"track":%d,"note":%d,"velocity":%d,"start":%.4f,"end":%.4f,"startBar":%d,"endBar":%d,"startBeat":%.3f,"endBeat":%.3f},',
                     track_num, pitch, vel, note_start_time, note_end_time, start_measures, end_measures, start_fullbeats, end_fullbeats
                 )
             end
