@@ -7,6 +7,10 @@ import lombok.Data;
 @Data @AllArgsConstructor
 // mutable
 public class FatChord implements Cloneable {
+    // TODO id only for debugging. should be deleted on production
+    private static int counter;
+    private int id;
+
     private int soprano, alto, tenor, bass;
     private int finalSoprano, finalAlto, finalTenor, finalBass; // for harmonizing given notes
     private double startTime, endTime;
@@ -24,13 +28,12 @@ public class FatChord implements Cloneable {
     private Occurrence occurrence;
     private int register = 68;
     private boolean legato = true;
-    private int id;
     private int phraseNumber, periodNumber;
     // smoothness should be always maximum, but lines should be "musical" and follow textbook (best practice).
     // public boolean smoothSoprano = false;
     // public boolean smoothBass = false;
 
-    // constructor for ChordRepository
+    // constructor for ChordRepository only.
     public FatChord(MelodicPosition melodicPosition,
             Spacing spacing,
             Inversion inversion,
@@ -54,9 +57,11 @@ public class FatChord implements Cloneable {
     }
 
     private FatChord() {
+        this.id = counter;
     }
 
     public static FatChord getNewInstance() {
+        counter++;
         return new FatChord();
     }
 

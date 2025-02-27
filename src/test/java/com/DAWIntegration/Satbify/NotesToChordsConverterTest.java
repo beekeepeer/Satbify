@@ -61,6 +61,7 @@ class NotesToChordsConverterTest {
         
         // Check that only valid degrees are converted
         for (FatChord chord : chords) {
+            System.out.println(chord);
             assertNotNull(chord.getChordDegree());
         }
     }
