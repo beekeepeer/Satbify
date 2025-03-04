@@ -2,7 +2,6 @@ package com.DAWIntegration.Satbify.Refactor;
 
 import com.DAWIntegration.Satbify.module.Note;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SatbifyFacade {
@@ -24,8 +23,20 @@ public class SatbifyFacade {
         System.out.println("Facade");
         //set Root key, 
         var preChords = NotesToChordsConverter.getInstance().notesToChords(this.allKS);
-        preChords = ScaleKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
+        preChords = ChordFinder.getInstance().findMissingChord(this.allKS, preChords);
+        preChords = FinalNotesKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
+        preChords = MusicalTimingKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
         preChords = RootKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords); 
+        preChords = ScaleKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
+        preChords = MelodicPositionKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
+        preChords = ChordTypeKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
+        preChords = InversionKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
+        preChords = SpacingKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
+        preChords = AlterationKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
+        preChords = RegisterKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
+        preChords = LegatoKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
+        preChords = PhrasePeriodKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
+        preChords = ChordConnector.getInstance().connectChords(this.allKS, preChords);
 
         return "";
     }
