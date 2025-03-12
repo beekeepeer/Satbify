@@ -25,7 +25,6 @@ public class SatbifyFacade {
         var preChords = NotesToChordsConverter.getInstance().notesToChords(this.allKS);
         preChords = ChordFinder.getInstance().findMissingChord(this.allKS, preChords);
         preChords = FinalNotesKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
-        preChords = MusicalTimingKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
         preChords = RootKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords); 
         preChords = ScaleKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
         preChords = MelodicPositionKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);

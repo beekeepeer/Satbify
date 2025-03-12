@@ -1,5 +1,8 @@
 package com.DAWIntegration.Satbify.Refactor;
 
+import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.applyKeySwitch;
+import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.isDegree;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -13,9 +16,6 @@ import com.DAWIntegration.Satbify.module.MelodicPosition;
 import com.DAWIntegration.Satbify.module.Note;
 import com.DAWIntegration.Satbify.module.Scale;
 import com.DAWIntegration.Satbify.module.Spacing;
-
-import static com.DAWIntegration.Satbify.module.SatbifyMethods.applyKeySwitch;
-import static com.DAWIntegration.Satbify.module.SatbifyMethods.isDegree;
 
 public class KeySwitchesToChordsConverterToRefactor {
     private int phraseNumber, periodNumber = 1;

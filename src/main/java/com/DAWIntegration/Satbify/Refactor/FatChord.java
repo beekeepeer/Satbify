@@ -14,7 +14,6 @@ public class FatChord implements Cloneable {
     private int soprano, alto, tenor, bass;
     private int finalSoprano, finalAlto, finalTenor, finalBass; // for harmonizing given notes
     private double startTime, endTime;
-    // TODO 
     private int startBar, endBar; // Musical timing
     private double startBeat, endBeat; // Musical timing
     private Key keyRoot = Key.C;

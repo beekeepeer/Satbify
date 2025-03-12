@@ -1,10 +1,19 @@
-package com.DAWIntegration.Satbify.module;
+package com.DAWIntegration.Satbify.Refactor;
 
-import com.DAWIntegration.Satbify.Refactor.FatChord;
+import java.util.List;
+
+import com.DAWIntegration.Satbify.module.ChordType;
+import com.DAWIntegration.Satbify.module.Degree;
+import com.DAWIntegration.Satbify.module.Inversion;
+import com.DAWIntegration.Satbify.module.Key;
+import com.DAWIntegration.Satbify.module.MelodicPosition;
+import com.DAWIntegration.Satbify.module.Note;
+import com.DAWIntegration.Satbify.module.Scale;
+import com.DAWIntegration.Satbify.module.Spacing;
 
 public class SatbifyMethods {
 
-public static boolean isDegree(int pitch) {
+    public static boolean isDegree(int pitch) {
         return pitch == Degree.I.getKeyNumber() ||
                 pitch == Degree.II.getKeyNumber() ||
                 pitch == Degree.III.getKeyNumber() ||
@@ -14,6 +23,21 @@ public static boolean isDegree(int pitch) {
                 pitch == Degree.VII.getKeyNumber();
     }
 
+    public static boolean isScale(int pitch) {
+        return pitch == Scale.MAJOR_NATURAL.getKeySwitch() ||
+                pitch == Scale.MAJOR_HARMONIC.getKeySwitch() ||
+                pitch == Scale.MINOR_NATURAL.getKeySwitch() ||
+                pitch == Scale.MINOR_HARMONIC.getKeySwitch() ||
+                pitch == Scale.MINOR_MELODIC.getKeySwitch();
+    }
+
+    public static boolean isMelodicPosition(int pitch) {
+        return pitch == MelodicPosition.I.getKeySwitch() ||
+                pitch == MelodicPosition.III.getKeySwitch() ||
+                pitch == MelodicPosition.V.getKeySwitch() ||
+                pitch == MelodicPosition.VII.getKeySwitch() ||
+                pitch == MelodicPosition.IX.getKeySwitch();
+    }
     public static void applyKeySwitch(int pitch, FatChord chord) {
         switch (pitch) {
             case 0: chord.setKeyRoot(Key.C); break;
@@ -76,6 +100,32 @@ public static boolean isDegree(int pitch) {
 
         //     case 108: chord.setPhraseNumber(chord.phraseNumber);
 
+        }}
+
+    // check if a chord is under a non-lutching keyswitch
+    public static boolean shouldApplyNonLatching(Note note, FatChord chord) {
+        // int backlash = 0; // TODO set aproximation here later
+        if (chord.getStartTime() >= note.startTime()
+                && chord.getStartTime() < note.endTime()) {
+            return true;
+        } else {
+            return false;
         }
+    }
+
+    // unfinished
+    public static boolean shouldApplyLatching(List<Note> notes, int index, FatChord chord) {
+        // int backlash = 0; // TODO set aproximation here later
+        boolean flag = false;
+        boolean result = false;
+        for (int i = 0; i < notes.size(); i++) {
+            Note note = notes.get(i);
+            if (chord.getStartTime() >= note.startTime() && flag == false) {
+                result = true;
+            } else {
+                flag = true;
+            }
+        }
+        return result;
     }
 }

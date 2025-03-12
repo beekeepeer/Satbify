@@ -1,10 +1,11 @@
 package com.DAWIntegration.Satbify.Refactor;
 
+import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.isDegree;
+
 import java.util.ArrayList;
 import java.util.List;
 import com.DAWIntegration.Satbify.module.Degree;
 import com.DAWIntegration.Satbify.module.Note;
-import static com.DAWIntegration.Satbify.module.SatbifyMethods.isDegree;
 
 public class NotesToChordsConverter {
 

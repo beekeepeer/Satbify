@@ -1,7 +1,8 @@
 package com.DAWIntegration.Satbify.Refactor;
 
 import com.DAWIntegration.Satbify.module.Note;
-import static com.DAWIntegration.Satbify.module.SatbifyMethods.isDegree;
+
+import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.isDegree;
 
 import java.util.Comparator;
 import java.util.List;
