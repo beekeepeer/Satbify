@@ -1,21 +1,13 @@
 package com.DAWIntegration.Satbify.Refactor;
 
 import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.applyKeySwitch;
-import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.isDegree;
+import static com.DAWIntegration.Satbify.Refactor.NotesToChordsConverter.isDegree;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-
-import com.DAWIntegration.Satbify.module.ChordType;
-import com.DAWIntegration.Satbify.module.Degree;
-import com.DAWIntegration.Satbify.module.Inversion;
-import com.DAWIntegration.Satbify.module.Key;
-import com.DAWIntegration.Satbify.module.MelodicPosition;
 import com.DAWIntegration.Satbify.module.Note;
-import com.DAWIntegration.Satbify.module.Scale;
-import com.DAWIntegration.Satbify.module.Spacing;
 
 public class KeySwitchesToChordsConverterToRefactor {
     private int phraseNumber, periodNumber = 1;

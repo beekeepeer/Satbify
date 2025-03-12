@@ -13,31 +13,6 @@ import com.DAWIntegration.Satbify.module.Spacing;
 
 public class SatbifyMethods {
 
-    public static boolean isDegree(int pitch) {
-        return pitch == Degree.I.getKeyNumber() ||
-                pitch == Degree.II.getKeyNumber() ||
-                pitch == Degree.III.getKeyNumber() ||
-                pitch == Degree.IV.getKeyNumber() ||
-                pitch == Degree.V.getKeyNumber() ||
-                pitch == Degree.VI.getKeyNumber() ||
-                pitch == Degree.VII.getKeyNumber();
-    }
-
-    public static boolean isScale(int pitch) {
-        return pitch == Scale.MAJOR_NATURAL.getKeySwitch() ||
-                pitch == Scale.MAJOR_HARMONIC.getKeySwitch() ||
-                pitch == Scale.MINOR_NATURAL.getKeySwitch() ||
-                pitch == Scale.MINOR_HARMONIC.getKeySwitch() ||
-                pitch == Scale.MINOR_MELODIC.getKeySwitch();
-    }
-
-    public static boolean isMelodicPosition(int pitch) {
-        return pitch == MelodicPosition.I.getKeySwitch() ||
-                pitch == MelodicPosition.III.getKeySwitch() ||
-                pitch == MelodicPosition.V.getKeySwitch() ||
-                pitch == MelodicPosition.VII.getKeySwitch() ||
-                pitch == MelodicPosition.IX.getKeySwitch();
-    }
     public static void applyKeySwitch(int pitch, FatChord chord) {
         switch (pitch) {
             case 0: chord.setKeyRoot(Key.C); break;
@@ -102,11 +77,9 @@ public class SatbifyMethods {
 
         }}
 
-    // check if a chord is under a non-lutching keyswitch
     public static boolean shouldApplyNonLatching(Note note, FatChord chord) {
         // int backlash = 0; // TODO set aproximation here later
-        if (chord.getStartTime() >= note.startTime()
-                && chord.getStartTime() < note.endTime()) {
+        if (chord.getStartTime() >= note.startTime() && chord.getStartTime() < note.endTime()) {
             return true;
         } else {
             return false;

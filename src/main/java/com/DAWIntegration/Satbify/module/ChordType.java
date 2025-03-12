@@ -1,11 +1,14 @@
 package com.DAWIntegration.Satbify.module;
 
-public enum ChordType {
-    TRIAD(117),
-    SEVENTH_CHORD(118),
-    NINTH_CHORD(117),
-    ;
+import lombok.Getter;
 
-    ChordType(int i) {
+public enum ChordType {
+    TRIAD(24), SEVENTH_CHORD(25), NINTH_CHORD(26) ;
+
+    @Getter
+    private final int keySwitch;
+
+    ChordType(int keySwitch) {
+        this.keySwitch = keySwitch;
     }
 }

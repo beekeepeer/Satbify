@@ -56,11 +56,11 @@ public class FatChord implements Cloneable {
     }
 
     private FatChord() {
+        counter++;
         this.id = counter;
     }
 
     public static FatChord getNewInstance() {
-        counter++;
         return new FatChord();
     }
 
@@ -77,26 +77,24 @@ public class FatChord implements Cloneable {
 
 
 
-    // @Override
-    // public String toString() {
-    // return "FatChord{" +
-    // " \n id = " + id +
-    // " \n keyRoot = " + keyRoot +
-    // " \n keyScale = " + keyScale +
-    // " \n chordDegree = " + chordDegree +
-    // " \n melodicPosition = " + melodicPosition +
-    // " \n spacing = " + spacing +
-    // " \n inversion = " + inversion +
-    // " \n chordType = " + chordType +
-    // " \n alteration = " + alteration +
-    // " \n occurrence = " + occurrence +
-    // " \n tickStartTime = " + noteStartTime +
-    // " \n tickEndTime = " + noteEndTime +
-    // " \n soprano = " + soprano +
-    // " \n alto = " + alto +
-    // " \n tenor = " + tenor +
-    // " \n bass = " + bass +
-    // '}' +
-    // " \n";
-    // }
+    @Override
+    public String toString() {
+    return "FatChord{" +
+    " \n id = " + id +
+    " \n keyRoot = " + keyRoot +
+    " \n keyScale = " + keyScale +
+    " \n chordDegree = " + chordDegree +
+    " \n melodicPosition = " + melodicPosition +
+    " \n spacing = " + spacing +
+    " \n inversion = " + inversion +
+    " \n chordType = " + chordType +
+    " \n alteration = " + alteration +
+    " \n occurrence = " + occurrence +
+    " \n Time = " + startTime + " " + endTime + 
+    " \n MusicStart = " + startBar + " / " + startBeat + 
+    " \n MusicEnd = " + endBar + " / " + endBeat +
+    " \n voices = " + soprano + " " + alto + " " + tenor + " " + bass +
+    '}' +
+    " \n";
+    }
 }

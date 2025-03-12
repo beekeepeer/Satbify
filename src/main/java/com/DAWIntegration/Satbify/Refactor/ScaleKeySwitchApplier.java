@@ -1,7 +1,6 @@
 package com.DAWIntegration.Satbify.Refactor;
 
 import java.util.List;
-import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.isScale;
 import com.DAWIntegration.Satbify.module.Note;
 import com.DAWIntegration.Satbify.module.Scale;
 
@@ -21,13 +20,22 @@ public class ScaleKeySwitchApplier implements KeySwitchApplier{
                 if (isScale(note.pitch()) && chord.getStartTime() >= note.startTime()) {
                     applyScale(chord, note);
                     }
-                    if (chord.getStartTime() < note.startTime() + backlash) {
-                        // it works if notes list is sorded by startTime.
-                        break;
-                }
+                    // if (chord.getStartTime() < note.startTime() + backlash) {
+                    //     // it works if notes list is sorded by startTime.
+                    //     break;
+                // }
             }
         }
         return preChords;
+    }
+    
+
+    public boolean isScale(int pitch) {
+        return pitch == Scale.MAJOR_NATURAL.getKeySwitch() ||
+                pitch == Scale.MAJOR_HARMONIC.getKeySwitch() ||
+                pitch == Scale.MINOR_NATURAL.getKeySwitch() ||
+                pitch == Scale.MINOR_HARMONIC.getKeySwitch() ||
+                pitch == Scale.MINOR_MELODIC.getKeySwitch();
     }
 
     private void applyScale(FatChord chord, Note note) {

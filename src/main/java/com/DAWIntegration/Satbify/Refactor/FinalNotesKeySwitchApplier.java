@@ -14,18 +14,13 @@ public class FinalNotesKeySwitchApplier implements KeySwitchApplier{
     public List<FatChord> applyKeySwitch(List<Note> allKS, List<FatChord> preChords) {
         for (Note note : allKS) {
             for (FatChord chord : preChords) {
-               if(shouldApplyNonLatching(note, chord)) {
-                applyFinalNote(note, chord);
-               }
+                if (note.reaperTrack() > 1
+                        && note.reaperTrack() < 4
+                        && shouldApplyNonLatching(note, chord)) {
+                    chord.setFinalSoprano(note.pitch());
+                }
             }
         }
         return preChords;
     }
-
-    private void applyFinalNote(Note note, FatChord chord) {
-        if (note.reaperTrack() > 1 && note.reaperTrack() < 4) {
-            chord.setFinalSoprano(note.pitch());
-        }
-    }
-
 }

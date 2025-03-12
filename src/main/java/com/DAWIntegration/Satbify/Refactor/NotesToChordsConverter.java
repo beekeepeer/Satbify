@@ -1,6 +1,5 @@
 package com.DAWIntegration.Satbify.Refactor;
 
-import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.isDegree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +21,16 @@ public class NotesToChordsConverter {
             }
         }
         return chords;
+    }
+
+    public static boolean isDegree(int pitch) {
+        return pitch == Degree.I.getKeyNumber() ||
+                pitch == Degree.II.getKeyNumber() ||
+                pitch == Degree.III.getKeyNumber() ||
+                pitch == Degree.IV.getKeyNumber() ||
+                pitch == Degree.V.getKeyNumber() ||
+                pitch == Degree.VI.getKeyNumber() ||
+                pitch == Degree.VII.getKeyNumber();
     }
 
     private FatChord noteToChord(Note note) {

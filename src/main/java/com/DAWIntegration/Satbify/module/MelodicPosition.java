@@ -3,7 +3,7 @@ package com.DAWIntegration.Satbify.module;
 import lombok.Getter;
 
 public enum MelodicPosition {
-    I(112), III(113), V(114), VII(115), IX(116);
+    I(31), III(32), V(33), VII(34), IX(35);
 
     @Getter
     private final int keySwitch;
