@@ -21,6 +21,7 @@ public class SatbifyFacade {
     // facade method
     public String processRequest() {
         var preChords = NotesToChordsConverter.getInstance().notesToChords(this.allKS);
+        preChords = PhrasePeriodKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
         preChords = ChordFinder.getInstance().findMissingChord(this.allKS, preChords);
         preChords = FinalNotesKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
         preChords = RootKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords); 
@@ -29,12 +30,9 @@ public class SatbifyFacade {
         preChords = ChordTypeKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
         preChords = InversionKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
         preChords = SpacingKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
-        preChords.forEach(System.out::println);
-
         // preChords = AlterationKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
-        // preChords = RegisterKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
-        // preChords = LegatoKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
-        // preChords = PhrasePeriodKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
+        preChords = RegisterKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
+        preChords.forEach(System.out::println);
         // preChords = ChordConnector.getInstance().connectChords(this.allKS, preChords);
 
         return ChodsToJson.getInstance().toJson(preChords);

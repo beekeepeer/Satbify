@@ -90,6 +90,8 @@ public class FatChord implements Cloneable {
     " \n chordType = " + chordType +
     " \n alteration = " + alteration +
     " \n occurrence = " + occurrence +
+    " \n register = " + register +
+    " \n Phrasing = " + periodNumber + " " + phraseNumber + 
     " \n Time = " + startTime + " " + endTime + 
     " \n MusicStart = " + startBar + " / " + startBeat + 
     " \n MusicEnd = " + endBar + " / " + endBeat +

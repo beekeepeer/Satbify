@@ -18,7 +18,6 @@ public class KeySwitchesToChordsConverterToRefactor {
         }
     
         public List<FatChord> notesToChords(List<Note> notes) {
-            System.out.println(notes);
             final List<FatChord> preChords = new ArrayList<>();
             final List<Note> activeKeySwitches = new ArrayList<>();
             double currentTime = 0.0;
@@ -27,7 +26,6 @@ public class KeySwitchesToChordsConverterToRefactor {
                 if (!isDegree(note.pitch())) {
                     activeKeySwitches.add(note);
                 } else {
-                    System.out.println(i);
                     updateActiveKeySwitches(note, activeKeySwitches, currentTime);
                     currentTime = note.endTime();
                     addChord(preChords, note, activeKeySwitches);

@@ -13,10 +13,8 @@ public class ScaleKeySwitchApplier implements KeySwitchApplier{
 
     @Override
     public List<FatChord> applyKeySwitch(List<Note> notes, List<FatChord> preChords) {
-        var backlash = 0.1;
         for (FatChord chord : preChords) {
             for (Note note : notes) {
-                // backlash should be applied + and -.
                 if (isScale(note.pitch()) && chord.getStartTime() >= note.startTime()) {
                     applyScale(chord, note);
                     }

@@ -11,8 +11,7 @@ public class AlterationKeySwitchApplier {
     }
 
     public List<FatChord> applyKeySwitch(List<Note> allKS, List<FatChord> preChords) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'applyKeySwitch'");
+        return preChords;
     }
 
 }
