@@ -29,11 +29,11 @@
       "note": 31,
       "velocity": 96,
       "start": 235.2891,
-      "end": 237.3185,
+      "end": 235.9655,
       "startBar": 69,
-      "endBar": 70,
+      "endBar": 69,
       "startBeat": 276.0,
-      "endBeat": 279.0
+      "endBeat": 277.0
     },
     {
       "track": 0,
@@ -331,6 +331,50 @@
       "endBar": 74,
       "startBeat": 286.0,
       "endBeat": 287.0
+    },
+    {
+      "track": 1,
+      "note": 74,
+      "velocity": 127,
+      "start": 235.9655,
+      "end": 236.642,
+      "startBar": 69,
+      "endBar": 70,
+      "startBeat": 277.0,
+      "endBeat": 278.0
+    },
+    {
+      "track": 2,
+      "note": 71,
+      "velocity": 127,
+      "start": 236.642,
+      "end": 237.3185,
+      "startBar": 70,
+      "endBar": 70,
+      "startBeat": 278.0,
+      "endBeat": 279.0
+    },
+    {
+      "track": 4,
+      "note": 57,
+      "velocity": 127,
+      "start": 242.0538,
+      "end": 242.7302,
+      "startBar": 74,
+      "endBar": 74,
+      "startBeat": 286.0,
+      "endBeat": 287.0
+    },
+    {
+      "track": 3,
+      "note": 61,
+      "velocity": 127,
+      "start": 237.9949,
+      "end": 238.6714,
+      "startBar": 71,
+      "endBar": 71,
+      "startBeat": 280.0,
+      "endBeat": 281.0
     }
   ]
 }

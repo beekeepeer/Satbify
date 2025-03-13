@@ -93,6 +93,7 @@ public class FatChord implements Cloneable {
     " \n Time = " + startTime + " " + endTime + 
     " \n MusicStart = " + startBar + " / " + startBeat + 
     " \n MusicEnd = " + endBar + " / " + endBeat +
+    " \n FinalVoices = " + finalSoprano + " " + finalAlto + " " + finalTenor + " " + finalBass +
     " \n voices = " + soprano + " " + alto + " " + tenor + " " + bass +
     '}' +
     " \n";
