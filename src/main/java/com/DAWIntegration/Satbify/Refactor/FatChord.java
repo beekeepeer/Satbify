@@ -55,13 +55,13 @@ public class FatChord implements Cloneable {
         this.bass = bass;
     }
 
-    private FatChord() {
-        counter++;
-        this.id = counter;
-    }
+    private FatChord() {}
 
     public static FatChord getNewInstance() {
-        return new FatChord();
+        FatChord fatChord = new FatChord();
+        counter++;
+        fatChord.id = counter;
+        return fatChord;
     }
 
     @Override
