@@ -30,25 +30,47 @@ public class ChordVersionsFilter {
                 // .parallelStream()
                 .filter(x -> c.getMelodicPosition() == null || x.getMelodicPosition() == c.getMelodicPosition())
                 .filter(x -> c.getChordType() == null || x.getChordType() == c.getChordType())
-                .filter(x -> (x.getInversion() != Inversion.SECOND_INVERSION
-                        && c.getInversion() == null
+                .filter(x -> (x.getInversion() != Inversion.SECOND_INVERSION && c.getInversion() == null
                 )
                         || (x.getInversion() == c.getInversion()))
                 .filter(x -> c.getSpacing() == null || x.getSpacing() == c.getSpacing())
                 .filter(x -> c.getAlteration() == null || x.getAlteration() == c.getAlteration())
                 .filter(x -> c.getOccurrence() == null || x.getOccurrence() == c.getOccurrence())
                 .map(x -> {
-                    x = c.clone();
+                    x = duplicate(x, c);
                     x = applyRootDegreeScale(x);
                     return x;
                 })
+                // shift octave of all voices to fit the final notes
+                // filter chords with unsutable final notes.
                 .flatMap(x -> addBassVariant(x))
-//                .peek(chord -> System.out.println(chord.getFinalTenor()))
+                // .peek(chord -> System.out.println(chord.getFinalTenor()))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    private static FatChord duplicate(FatChord original, FatChord fromRepo) {
+        var duplicate = fromRepo.clone();
+        duplicate.setFinalSoprano(fromRepo.getFinalSoprano());
+        duplicate.setFinalAlto(fromRepo.getFinalAlto());
+        duplicate.setFinalTenor(fromRepo.getFinalTenor());
+        duplicate.setFinalBass(fromRepo.getFinalBass());
+        duplicate.setStartTime(fromRepo.getStartTime());
+        duplicate.setEndTime(fromRepo.getEndTime());
+        duplicate.setStartBar(fromRepo.getStartBar());
+        duplicate.setEndBar(fromRepo.getEndBar());
+        duplicate.setStartBeat(fromRepo.getStartBeat());
+        duplicate.setEndBeat(fromRepo.getEndBeat());
+        duplicate.setKeyRoot(fromRepo.getKeyRoot());
+        duplicate.setChordDegree(fromRepo.getChordDegree());
+        duplicate.setKeyScale(fromRepo.getKeyScale());
+        duplicate.setRegister(fromRepo.getRegister());
+        duplicate.setLegato(fromRepo.isLegato());
+        duplicate.setPhraseNumber(fromRepo.getPhraseNumber());
+        duplicate.setPeriodNumber(fromRepo.getPeriodNumber());
 
+        return duplicate;
 
+    }
 
     private static FatChord applyRootDegreeScale(FatChord x) {
         //todo: optimize for C Major
