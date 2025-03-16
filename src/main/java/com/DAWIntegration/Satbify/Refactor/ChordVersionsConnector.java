@@ -11,8 +11,8 @@ public class ChordVersionsConnector {
         return new ChordVersionsConnector();
     }
 
-    public List<FatChord> connectChords(List<List<FatChord>> versions, List<Note> allKS) {
-        return new ChordConnector().connect(versions);
-    }
+    // public List<FatChord> connectChords(List<List<FatChord>> versions, List<Note> allKS) {
+    //     return new ChordConnector().connect(versions);
+    // }
 
 }

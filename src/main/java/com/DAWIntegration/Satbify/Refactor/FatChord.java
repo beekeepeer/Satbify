@@ -91,11 +91,12 @@ public class FatChord implements Cloneable {
     " \n alteration = " + alteration +
     " \n occurrence = " + occurrence +
     " \n register = " + register +
+    " \n legato = " + legato +
     " \n Phrasing = " + periodNumber + " " + phraseNumber + 
     " \n Time = " + startTime + " " + endTime + 
     " \n MusicStart = " + startBar + " / " + startBeat + 
     " \n MusicEnd = " + endBar + " / " + endBeat +
-    " \n FinalVoices = " + finalSoprano + " " + finalAlto + " " + finalTenor + " " + finalBass +
+    " \n Finals = " + finalSoprano + " " + finalAlto + " " + finalTenor + " " + finalBass +
     " \n voices = " + soprano + " " + alto + " " + tenor + " " + bass +
     '}' +
     " \n";
