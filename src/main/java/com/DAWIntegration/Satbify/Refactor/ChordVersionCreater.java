@@ -1,14 +1,13 @@
 package com.DAWIntegration.Satbify.Refactor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.DAWIntegration.Satbify.module.Alteration;
 import com.DAWIntegration.Satbify.module.Degree;
 import com.DAWIntegration.Satbify.module.Inversion;
 import com.DAWIntegration.Satbify.module.Note;
+import com.DAWIntegration.Satbify.module.Occurrence;
 import com.DAWIntegration.Satbify.module.Scale;
 
 public class ChordVersionCreater {
@@ -25,30 +24,24 @@ public class ChordVersionCreater {
 
     
     private List<FatChord> populateFromRepo(FatChord c) {
-        List<FatChord> chordsRepositoryList = FatChordRepository.INSTANCE.getChordsRepository();
-        return chordsRepositoryList
-                       .stream()
-                // .parallelStream()
-                .filter(x -> c.getMelodicPosition() == null || x.getMelodicPosition() == c.getMelodicPosition())
-                .filter(x -> c.getChordType() == null || x.getChordType() == c.getChordType())
-                .filter(x -> (x.getInversion() != Inversion.SECOND_INVERSION && c.getInversion() == null
-                )
-                        || (x.getInversion() == c.getInversion()))
-                .filter(x -> c.getSpacing() == null || x.getSpacing() == c.getSpacing())
-                .filter(x -> c.getAlteration() == null || x.getAlteration() == c.getAlteration())
-                .filter(x -> c.getOccurrence() == null || x.getOccurrence() == c.getOccurrence())
-                .map(x -> {
-                    x = duplicate(x, c);
-                    x = applyRootDegreeScale(x);
-                    x = adjustOctaves(x);
-                    x = setFinalNots(x);
-                    return x;
-                })
-                // shift octave of all voices to fit the final notes
-                // filter chords with unsutable final notes.
+        return FatChordRepository.INSTANCE.getChordsRepository().stream()
+                .filter(x -> isGoodVersion(x, c))
+                .map(x -> setFinalNots(
+                            adjustOctaves(
+                                applyRootDegreeScale(
+                                    duplicate(x, c)))))
+                .filter(x -> x.getOccurrence() != Occurrence.UNUSABLE)
                 .flatMap(x -> addBassVariant(x))
-                // .peek(chord -> System.out.println(chord.getFinalTenor()))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toList());
+    }
+
+    private boolean isGoodVersion(FatChord x, FatChord c) {
+        return c.getMelodicPosition() == null || x.getMelodicPosition() == c.getMelodicPosition()
+                && (c.getChordType() == null || x.getChordType() == c.getChordType())
+                && (x.getInversion() != Inversion.SECOND_INVERSION
+                        && c.getInversion() == null || x.getInversion() == c.getInversion())
+                && (c.getSpacing() == null || x.getSpacing() == c.getSpacing())
+                && (c.getAlteration() == null || x.getAlteration() == c.getAlteration());
     }
 
     private FatChord duplicate(FatChord fromRepo, FatChord original) {
@@ -151,7 +144,7 @@ public class ChordVersionCreater {
                 chord.setBass(chord.getBass() + difCommon);
                 return chord;
             } else { // differences are no octaves - this is the wrong Chord!!!
-                chord.setAlteration(Alteration.DD_Flat_IV); // todo: it is temporary! change to a different way of filtering.
+                chord.setOccurrence(Occurrence.UNUSABLE);
                 return chord;
             }
         } else { // This Chord should not be touched!!! Return the original.

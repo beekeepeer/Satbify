@@ -33,8 +33,8 @@ public class SatbifyFacade {
         // preChords = AlterationKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
         preChords = RegisterKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
         List<List<FatChord>> versions = ChordVersionCreater.getInstance().filterChordVersions(this.allKS, preChords);
-        // List<FatChord> connectedChords = ChordVersionsConnector.getInstance().connectChords(versions, preChords);
-        versions.forEach(System.out::println);
+        List<FatChord> connectedChords = ChordVersionsConnector.getInstance().connectChords(versions, this.allKS);
+        connectedChords.forEach(System.out::println);
 
         return ChodsToJson.getInstance().toJson(preChords);
     }
