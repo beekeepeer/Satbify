@@ -303,7 +303,7 @@ end
 function send_http_request(url, body)
     -- Escape special characters in the body to ensure the curl command works correctly
     local escaped_body = string.gsub(body, '"', '\\"')
-    print(escaped_body)
+    -- print(escaped_body)
     -- Use curl to send the HTTP request and capture the response directly
     local command = string.format('curl -s -w "%%{http_code}" -X POST -H "Content-Type: application/json" -d "%s" "%s"',
         escaped_body, url)

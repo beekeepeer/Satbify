@@ -34,8 +34,9 @@ public class SatbifyFacade {
         preChords = RegisterKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
         List<List<FatChord>> versions = ChordVersionCreater.getInstance().filterChordVersions(this.allKS, preChords);
         List<FatChord> connectedChords = ChordVersionsConnector.getInstance().connectChords(versions, this.allKS);
-        connectedChords.forEach(System.out::println);
-
-        return ChodsToJson.getInstance().toJson(preChords);
+        String out = ChordsToReaperSerializer.getInstance().ChordsToJson(connectedChords);
+        System.out.println(out);
+        // 
+        return out;
     }
 }

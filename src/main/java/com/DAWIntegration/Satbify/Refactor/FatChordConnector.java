@@ -1,6 +1,5 @@
 package com.DAWIntegration.Satbify.Refactor;
 
-import com.DAWIntegration.Satbify.module.Alteration;
 import static com.DAWIntegration.Satbify.Chords.smoothBass;
 
 import java.util.ArrayList;

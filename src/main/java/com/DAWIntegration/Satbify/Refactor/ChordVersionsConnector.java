@@ -1,6 +1,5 @@
 package com.DAWIntegration.Satbify.Refactor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.DAWIntegration.Satbify.module.Note;

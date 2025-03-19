@@ -35,7 +35,7 @@ public class SatbifyControllerTest {
 
     @Test
     public void testProcessString() throws Exception {
-        String path = "src\\main\\resources\\data\\incomingDataExample.json";
+        String path = "src\\main\\resources\\data\\incomingDataExampleSmall.json";
         String requestJson = new String(Files.readAllBytes(Paths.get(path)));
 
         mockMvc.perform(post("/api")

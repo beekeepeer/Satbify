@@ -25,23 +25,25 @@ public class ChordVersionCreater {
     
     private List<FatChord> populateFromRepo(FatChord c) {
         return FatChordRepository.INSTANCE.getChordsRepository().stream()
-                .filter(x -> isGoodVersion(x, c))
+                .filter(x -> isSuitableVersion(x, c))
                 .map(x -> setFinalNots(
-                            adjustOctaves(
+                        adjustOctaves(
                                 applyRootDegreeScale(
-                                    duplicate(x, c)))))
+                                        duplicate(x, c)))))
                 .filter(x -> x.getOccurrence() != Occurrence.UNUSABLE)
                 .flatMap(x -> addBassVariant(x))
                 .collect(Collectors.toList());
     }
 
-    private boolean isGoodVersion(FatChord x, FatChord c) {
-        return c.getMelodicPosition() == null || x.getMelodicPosition() == c.getMelodicPosition()
-                && (c.getChordType() == null || x.getChordType() == c.getChordType())
-                && (x.getInversion() != Inversion.SECOND_INVERSION
-                        && c.getInversion() == null || x.getInversion() == c.getInversion())
-                && (c.getSpacing() == null || x.getSpacing() == c.getSpacing())
-                && (c.getAlteration() == null || x.getAlteration() == c.getAlteration());
+    private boolean isSuitableVersion(FatChord x, FatChord c) {
+        return ((c.getMelodicPosition() == null
+                        || x.getMelodicPosition() == c.getMelodicPosition())
+                        && (c.getChordType() == null
+                                || x.getChordType() == c.getChordType())
+                        && ((x.getInversion() != Inversion.SECOND_INVERSION && c.getInversion() == null)
+                                || (x.getInversion() == c.getInversion()))
+                        && (c.getSpacing() == null
+                                || x.getSpacing() == c.getSpacing()));
     }
 
     private FatChord duplicate(FatChord fromRepo, FatChord original) {
