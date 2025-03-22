@@ -1,8 +1,8 @@
 package com.DAWIntegration.Satbify;
 
-import com.DAWIntegration.Satbify.Refactor.FatChord;
-import com.DAWIntegration.Satbify.Refactor.NotesToChordsConverter;
+import com.DAWIntegration.Satbify.module.FatChord;
 import com.DAWIntegration.Satbify.module.Note;
+import com.DAWIntegration.Satbify.service.NotesToChordsConverter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;

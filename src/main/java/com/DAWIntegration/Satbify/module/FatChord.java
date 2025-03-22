@@ -1,6 +1,5 @@
-package com.DAWIntegration.Satbify.Refactor;
+package com.DAWIntegration.Satbify.module;
 
-import com.DAWIntegration.Satbify.module.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

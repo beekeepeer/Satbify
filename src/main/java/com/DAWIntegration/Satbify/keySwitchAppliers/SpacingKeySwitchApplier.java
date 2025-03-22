@@ -1,10 +1,10 @@
-package com.DAWIntegration.Satbify.Refactor.keySwitchAppliers;
+package com.DAWIntegration.Satbify.keySwitchAppliers;
+
+import static com.DAWIntegration.Satbify.service.SatbifyMethods.*;
 
 import java.util.List;
 
-import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.*;
-
-import com.DAWIntegration.Satbify.Refactor.FatChord;
+import com.DAWIntegration.Satbify.module.FatChord;
 import com.DAWIntegration.Satbify.module.Note;
 import com.DAWIntegration.Satbify.module.Spacing;
 /*

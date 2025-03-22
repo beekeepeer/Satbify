@@ -1,8 +1,8 @@
-package com.DAWIntegration.Satbify.Refactor.keySwitchAppliers;
+package com.DAWIntegration.Satbify.keySwitchAppliers;
 
 import java.util.List;
 
-import com.DAWIntegration.Satbify.Refactor.FatChord;
+import com.DAWIntegration.Satbify.module.FatChord;
 import com.DAWIntegration.Satbify.module.Note;
 
 public interface KeySwitchApplier {

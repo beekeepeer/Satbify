@@ -1,9 +1,10 @@
-package com.DAWIntegration.Satbify.Refactor;
+package com.DAWIntegration.Satbify.service;
 
 
 import java.util.ArrayList;
 import java.util.List;
 import com.DAWIntegration.Satbify.module.Degree;
+import com.DAWIntegration.Satbify.module.FatChord;
 import com.DAWIntegration.Satbify.module.Note;
 
 /**

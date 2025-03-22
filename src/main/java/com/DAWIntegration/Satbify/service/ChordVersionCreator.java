@@ -1,10 +1,11 @@
-package com.DAWIntegration.Satbify.Refactor;
+package com.DAWIntegration.Satbify.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.DAWIntegration.Satbify.module.Degree;
+import com.DAWIntegration.Satbify.module.FatChord;
 import com.DAWIntegration.Satbify.module.Inversion;
 import com.DAWIntegration.Satbify.module.Note;
 import com.DAWIntegration.Satbify.module.Occurrence;

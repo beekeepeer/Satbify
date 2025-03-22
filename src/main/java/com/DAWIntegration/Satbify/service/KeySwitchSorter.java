@@ -1,8 +1,8 @@
-package com.DAWIntegration.Satbify.Refactor;
+package com.DAWIntegration.Satbify.service;
 
 import com.DAWIntegration.Satbify.module.Note;
 
-import static com.DAWIntegration.Satbify.Refactor.NotesToChordsConverter.isDegree;
+import static com.DAWIntegration.Satbify.service.NotesToChordsConverter.isDegree;
 
 import java.util.Comparator;
 import java.util.List;

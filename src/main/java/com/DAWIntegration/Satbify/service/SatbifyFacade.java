@@ -1,14 +1,15 @@
-package com.DAWIntegration.Satbify.Refactor;
+package com.DAWIntegration.Satbify.service;
 
-import com.DAWIntegration.Satbify.Refactor.keySwitchAppliers.ChordTypeKeySwitchApplier;
-import com.DAWIntegration.Satbify.Refactor.keySwitchAppliers.FinalNotesKeySwitchApplier;
-import com.DAWIntegration.Satbify.Refactor.keySwitchAppliers.InversionKeySwitchApplier;
-import com.DAWIntegration.Satbify.Refactor.keySwitchAppliers.MelodicPositionKeySwitchApplier;
-import com.DAWIntegration.Satbify.Refactor.keySwitchAppliers.PhrasePeriodKeySwitchApplier;
-import com.DAWIntegration.Satbify.Refactor.keySwitchAppliers.RegisterKeySwitchApplier;
-import com.DAWIntegration.Satbify.Refactor.keySwitchAppliers.RootKeySwitchApplier;
-import com.DAWIntegration.Satbify.Refactor.keySwitchAppliers.ScaleKeySwitchApplier;
-import com.DAWIntegration.Satbify.Refactor.keySwitchAppliers.SpacingKeySwitchApplier;
+import com.DAWIntegration.Satbify.keySwitchAppliers.ChordTypeKeySwitchApplier;
+import com.DAWIntegration.Satbify.keySwitchAppliers.FinalNotesKeySwitchApplier;
+import com.DAWIntegration.Satbify.keySwitchAppliers.InversionKeySwitchApplier;
+import com.DAWIntegration.Satbify.keySwitchAppliers.MelodicPositionKeySwitchApplier;
+import com.DAWIntegration.Satbify.keySwitchAppliers.PhrasePeriodKeySwitchApplier;
+import com.DAWIntegration.Satbify.keySwitchAppliers.RegisterKeySwitchApplier;
+import com.DAWIntegration.Satbify.keySwitchAppliers.RootKeySwitchApplier;
+import com.DAWIntegration.Satbify.keySwitchAppliers.ScaleKeySwitchApplier;
+import com.DAWIntegration.Satbify.keySwitchAppliers.SpacingKeySwitchApplier;
+import com.DAWIntegration.Satbify.module.FatChord;
 import com.DAWIntegration.Satbify.module.Note;
 
 import java.util.List;

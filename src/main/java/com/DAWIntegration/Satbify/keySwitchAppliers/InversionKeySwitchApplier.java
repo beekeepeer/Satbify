@@ -1,11 +1,12 @@
-package com.DAWIntegration.Satbify.Refactor.keySwitchAppliers;
+package com.DAWIntegration.Satbify.keySwitchAppliers;
+
+import static com.DAWIntegration.Satbify.service.SatbifyMethods.*;
 
 import java.util.List;
 
-import com.DAWIntegration.Satbify.Refactor.FatChord;
+import com.DAWIntegration.Satbify.module.FatChord;
 import com.DAWIntegration.Satbify.module.Inversion;
 import com.DAWIntegration.Satbify.module.Note;
-import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.*;
 
 /*
  * This class only moves information about the musical chord inversion
