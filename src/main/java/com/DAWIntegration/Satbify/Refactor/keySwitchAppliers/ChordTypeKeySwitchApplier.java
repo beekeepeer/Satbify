@@ -1,8 +1,10 @@
-package com.DAWIntegration.Satbify.Refactor;
+package com.DAWIntegration.Satbify.Refactor.keySwitchAppliers;
 
 import java.util.List;
 
 import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.shouldApplyNonLatching;
+
+import com.DAWIntegration.Satbify.Refactor.FatChord;
 import com.DAWIntegration.Satbify.module.ChordType;
 import com.DAWIntegration.Satbify.module.Note;
 

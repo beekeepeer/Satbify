@@ -1,8 +1,10 @@
-package com.DAWIntegration.Satbify.Refactor;
+package com.DAWIntegration.Satbify.Refactor.keySwitchAppliers;
 
 import java.util.List;
 
 import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.shouldApplyLatching;
+
+import com.DAWIntegration.Satbify.Refactor.FatChord;
 import com.DAWIntegration.Satbify.module.Note;
 /*
  * This class only moves information about the musical register of chord (how low or high all the notes of the chord is)

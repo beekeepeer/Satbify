@@ -9,6 +9,7 @@ import com.DAWIntegration.Satbify.module.Inversion;
 import com.DAWIntegration.Satbify.module.Note;
 import com.DAWIntegration.Satbify.module.Occurrence;
 import com.DAWIntegration.Satbify.module.Scale;
+import com.DAWIntegration.Satbify.repository.FatChordRepository;
 
 /*
  * This class only creates a list of chord versions in place of each chord object in the preChords list.
