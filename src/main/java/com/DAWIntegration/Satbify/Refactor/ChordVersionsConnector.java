@@ -8,7 +8,7 @@ import com.DAWIntegration.Satbify.module.Note;
 
 /**
  * This class select the best sequence of chord versions from a two-dimensional list.
- * Each sublist within the 2D structure represents all possible variations of a single chord within a musical progression.
+ * It evaluates each possible combination utilizing a set of rules.
  */
 
 public class ChordVersionsConnector {
@@ -17,7 +17,6 @@ public class ChordVersionsConnector {
         return new ChordVersionsConnector();
     }
 
-
     public List<FatChord> connectChords(List<List<FatChord>> versions, List<Note> allKS) {
         
         FatChord[][] chordArray = versions.stream().map(x -> x.stream()
@@ -25,7 +24,7 @@ public class ChordVersionsConnector {
 
         return new ArrayList<>(Arrays.asList(findBestConnected(chordArray)));
     }
-
+    // Main algorithm method with dynamic programming approach
     private FatChord[] findBestConnected(FatChord[][] arr) {
         int l = arr.length;
         int[] outIndexes = new int[l];
@@ -33,7 +32,22 @@ public class ChordVersionsConnector {
         // DP arrays to store the minimum smoothness and the path to reconstruct
         int[][] dp = new int[l][];
         int[][] path = new int[l][];
+        initializeArrays(arr, l, dp, path);
+        zeroSmoothness(arr, dp);
+        fillWithSmoothness(arr, l, dp, path);
+        int bestLastIndex = getBestLastIndex(arr, l, dp);
+        return getCurrentIndex(arr, l, outIndexes, out, path, bestLastIndex);
+    }
+
+        // Base case: for the first chord set, there's no previous chord, so smoothness is 0
+    private void zeroSmoothness(FatChord[][] arr, int[][] dp) {
+        for (int j = 0; j < arr[0].length; j++) {
+            dp[0][j] = 0; // No smoothness cost for the first chord
+        }
+    }
+
         // Initialize dp and path arrays
+    private void initializeArrays(FatChord[][] arr, int l, int[][] dp, int[][] path) {
         for (int i = 0; i < l; i++) {
             if (arr[i].length == 0) {
                 throw new UnsupportedOperationException("THIS CHORD HAS NO VERSIONS!!!!!!!!");
@@ -43,27 +57,15 @@ public class ChordVersionsConnector {
             // Fill dp[i] with a large number (since we are minimizing)
             Arrays.fill(dp[i], Integer.MAX_VALUE);
         }
-        // Base case: for the first chord set, there's no previous chord, so smoothness
-        // is 0
-        for (int j = 0; j < arr[0].length; j++) {
-            dp[0][j] = 0; // No smoothness cost for the first chord
-        }
-        // Fill dp array using previously computed values
-        extracted(arr, l, dp, path);
-        // Find the best final chord with the minimum smoothness
-        int bestLastIndex = getBestLastIndex(arr, l, dp);
-        // Reconstruct the best path
-        return getCurrentIndex(arr, l, outIndexes, out, path, bestLastIndex);
     }
 
-
-    private void extracted(FatChord[][] arr, int l, int[][] dp, int[][] path) {
+        // Fill dp array using previously computed values
+    private void fillWithSmoothness(FatChord[][] arr, int l, int[][] dp, int[][] path) {
         for (int i = 1; i < l; i++) {
             for (int j = 0; j < arr[i].length; j++) {
                 for (int k = 0; k < arr[i - 1].length; k++) {
                     int currentSmoothness = dp[i - 1][k] + calculateSmoothness(arr[i - 1][k], arr[i][j]);
-                    if (currentSmoothness < dp[i][j] && !haveParallels(arr[i - 1][k], arr[i][j])) { // eliminate
-                                                                                                    // parallels
+                    if (currentSmoothness < dp[i][j] && !haveParallels(arr[i - 1][k], arr[i][j])) { // eliminate parallels
                         dp[i][j] = currentSmoothness;
                         path[i][j] = k; // Record the index that led to this minimum
                     }
@@ -72,9 +74,8 @@ public class ChordVersionsConnector {
         }
     }
 
-
-    private FatChord[] getCurrentIndex(FatChord[][] arr, int l, int[] outIndexes, FatChord[] out, int[][] path,
-            int bestLastIndex) {
+        // Reconstruct the best path
+    private FatChord[] getCurrentIndex(FatChord[][] arr, int l, int[] outIndexes, FatChord[] out, int[][] path, int bestLastIndex) {
         int currentIndex = bestLastIndex;
         for (int i = l - 1; i >= 0; i--) {
             outIndexes[i] = currentIndex;
@@ -87,7 +88,7 @@ public class ChordVersionsConnector {
         return out;
     }
 
-
+        // Find the best final chord with the minimum smoothness
     private int getBestLastIndex(FatChord[][] arr, int l, int[][] dp) {
         int minSmoothness = Integer.MAX_VALUE;
         int bestLastIndex = -1;
