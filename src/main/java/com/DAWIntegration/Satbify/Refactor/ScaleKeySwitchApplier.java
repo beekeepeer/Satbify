@@ -4,8 +4,12 @@ import java.util.List;
 import com.DAWIntegration.Satbify.module.Note;
 import com.DAWIntegration.Satbify.module.Scale;
 
-public class ScaleKeySwitchApplier implements KeySwitchApplier{
+/*
+ * This class only moves information about the musical scale context
+ * from the keySwitches to the Chord objects to store.
+ */
 
+public class ScaleKeySwitchApplier implements KeySwitchApplier{
     public static ScaleKeySwitchApplier getInstance() {
         return new ScaleKeySwitchApplier();
     }

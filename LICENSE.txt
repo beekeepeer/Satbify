@@ -1,0 +1,4 @@
+The Satbify application which includes the Reaper scripts is written solely by Dmitri Goriuc.
+All rights reserved.
+
+Copyright (Dmitri Goriuc) (2024)

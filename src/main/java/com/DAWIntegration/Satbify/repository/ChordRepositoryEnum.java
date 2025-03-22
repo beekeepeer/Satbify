@@ -3,14 +3,11 @@ package com.DAWIntegration.Satbify.repository;
 
 import com.DAWIntegration.Satbify.module.*;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 /*
-This is a substance of the database of all variations of chords without mentioning its Degree and scale. For simplicity it is in C major
-TODO add comments to lines about practical usage from textbook.
+This is a substitution of the database of all variations of chords without mentioning its Degree and Tonality. For simplicity it is in C major
+Enum singleton is inherently thread-safe and guarantees a single instance.
  */
-//  enum singleton is inherently thread-safe and guarantees a single instance.
 public enum ChordRepositoryEnum {
     INSTANCE;
 
@@ -384,7 +381,7 @@ public enum ChordRepositoryEnum {
 
 
 
-                // very rare. можно удваивать квинту только для обращений :
+                // very rare. можно удваивать квинту только при перемещении :
 
 //            new Chord(MelodicPosition.IX, Spacing.CLOSE, Inversion.ROOT_POSITION, ChordType.NINTH_CHORD, Alteration.NONE, Occurrence.UNUSABLE,
 //                    74,

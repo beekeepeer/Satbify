@@ -10,10 +10,16 @@ import com.DAWIntegration.Satbify.module.Note;
 import com.DAWIntegration.Satbify.module.Occurrence;
 import com.DAWIntegration.Satbify.module.Scale;
 
-public class ChordVersionCreater {
+/*
+ * This class only creates a list of chord versions in place of each chord object in the preChords list.
+ * For now the versions are filtered here according to some common rules as well, but will bi moved to a distinct class soon.
+ * In the future there will be a set of more complex rules.
+ */
 
-    public static ChordVersionCreater getInstance() {
-        return new ChordVersionCreater();
+public class ChordVersionCreator {
+
+    public static ChordVersionCreator getInstance() {
+        return new ChordVersionCreator();
     }
 
     public List<List<FatChord>> filterChordVersions(List<Note> allKS, List<FatChord> preChords) {

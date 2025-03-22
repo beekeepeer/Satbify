@@ -5,7 +5,10 @@ import java.util.List;
 import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.*;
 import com.DAWIntegration.Satbify.module.Note;
 import com.DAWIntegration.Satbify.module.Spacing;
-
+/*
+ * This class only moves information about the musical chord spacing
+ * from the keySwitches to the Chord objects to store.
+ */
 public class SpacingKeySwitchApplier implements KeySwitchApplier{
 
     public static SpacingKeySwitchApplier getInstance() {

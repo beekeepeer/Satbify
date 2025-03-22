@@ -5,6 +5,11 @@ import java.util.List;
 import com.DAWIntegration.Satbify.module.MelodicPosition;
 import com.DAWIntegration.Satbify.module.Note;
 
+/*
+ * This class only moves information about the melodic position of the chords
+ * from the keySwitches to the Chord objects to store.
+ */
+
 public class MelodicPositionKeySwitchApplier implements KeySwitchApplier {
 
     public static MelodicPositionKeySwitchApplier getInstance() {

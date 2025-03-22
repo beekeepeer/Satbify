@@ -4,7 +4,10 @@ import java.util.List;
 
 import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.shouldApplyLatching;
 import com.DAWIntegration.Satbify.module.Note;
-
+/*
+ * This class only moves information about the musical register of chord (how low or high all the notes of the chord is)
+ * from the keySwitches to the Chord objects to store.
+ */
 public class RegisterKeySwitchApplier {
 
     public static RegisterKeySwitchApplier getInstance() {

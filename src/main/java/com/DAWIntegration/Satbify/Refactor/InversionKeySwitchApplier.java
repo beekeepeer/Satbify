@@ -6,6 +6,11 @@ import com.DAWIntegration.Satbify.module.Inversion;
 import com.DAWIntegration.Satbify.module.Note;
 import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.*;
 
+/*
+ * This class only moves information about the musical chord inversion
+ * from the keySwitches to the Chord objects to store.
+ */
+
 public class InversionKeySwitchApplier implements KeySwitchApplier{
 
     public static InversionKeySwitchApplier getInstance() {

@@ -6,6 +6,14 @@ import java.util.List;
 import com.DAWIntegration.Satbify.module.Degree;
 import com.DAWIntegration.Satbify.module.Note;
 
+/**
+ * The {@code NotesToChordsConverter} class is responsible for converting a list of {@code Note} objects 
+ * into a list of {@code FatChord} objects based on specific pitch-based key switches.
+ * 
+ * <p>This class utilizes musical degrees to determine chord mappings and applies the corresponding 
+ * degree to each generated chord.</p>
+ */
+
 public class NotesToChordsConverter {
 
     public static NotesToChordsConverter getInstance() {

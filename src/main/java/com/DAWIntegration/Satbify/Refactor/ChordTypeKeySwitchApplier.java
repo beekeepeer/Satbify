@@ -6,6 +6,11 @@ import static com.DAWIntegration.Satbify.Refactor.SatbifyMethods.shouldApplyNonL
 import com.DAWIntegration.Satbify.module.ChordType;
 import com.DAWIntegration.Satbify.module.Note;
 
+/*
+ * This class only moves information about the musical scale context
+ * from the keySwitches to the Chord objects to store.
+ */
+
 public class ChordTypeKeySwitchApplier implements KeySwitchApplier{
 
     public static ChordTypeKeySwitchApplier getInstance() {

@@ -4,8 +4,10 @@ import com.DAWIntegration.Satbify.module.Note;
 
 import java.util.List;
 
+
+
 public class SatbifyFacade {
-    
+
     private final KeySwitchSorter keySwitchSorter = KeySwitchSorter.getInstance();
     
     public final List<Note> allKS;
@@ -32,7 +34,7 @@ public class SatbifyFacade {
         preChords = SpacingKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
         // preChords = AlterationKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
         preChords = RegisterKeySwitchApplier.getInstance().applyKeySwitch(this.allKS, preChords);
-        List<List<FatChord>> versions = ChordVersionCreater.getInstance().filterChordVersions(this.allKS, preChords);
+        List<List<FatChord>> versions = ChordVersionCreator.getInstance().filterChordVersions(this.allKS, preChords);
         List<FatChord> connectedChords = ChordVersionsConnector.getInstance().connectChords(versions, this.allKS);
         String out = ChordsToReaperSerializer.getInstance().ChordsToJson(connectedChords);
         System.out.println(out);

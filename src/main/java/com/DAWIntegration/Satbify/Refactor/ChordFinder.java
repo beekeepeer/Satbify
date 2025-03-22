@@ -11,6 +11,7 @@ public class ChordFinder {
     }
 
     public List<FatChord> findMissingChord(List<Note> allKS, List<FatChord> preChords) {
+        //TODO Automatic chord finding is not implemented yet.
         return preChords;
     }
 
