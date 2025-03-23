@@ -24,7 +24,7 @@ If there is sufficient interest, future updates may include:
 
 - **Core Application**: Written in Java 17, utilizing dynamic programming for decision-making.
 - **Reaper Script**: Implemented in Lua.
-- **Cross-Platform Communication**: Uses `cURL` and a REST API with json load to facilitate interaction.
+- **Communication with the server**: Uses `cURL` and a REST API with json load to facilitate interaction.
 
 ## Installation & Usage
 
