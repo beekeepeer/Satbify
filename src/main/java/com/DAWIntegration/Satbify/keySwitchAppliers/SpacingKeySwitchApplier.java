@@ -22,7 +22,7 @@ public class SpacingKeySwitchApplier implements KeySwitchApplier{
         for (FatChord chord : preChords) {
             for (Note note : allKS) {
                 if (isSpacing(note.pitch()) && shouldApplyNonLatching(note, chord)) {
-                    applySpacing(chord, note);
+                    chord.setSpacing(applySpacing(note));
                 }
             }
         }
@@ -35,12 +35,13 @@ public class SpacingKeySwitchApplier implements KeySwitchApplier{
                 pitch == Spacing.MIXED_1.getKeySwith();
     }
 
-    private void applySpacing(FatChord chord, Note note) {
-        switch (note.pitch()) {
-                case 36: chord.setSpacing(Spacing.CLOSE);break;
-                case 37: chord.setSpacing(Spacing.OPEN);break;
-                case 38: chord.setSpacing(Spacing.MIXED_1);break;
-            }
+    private Spacing applySpacing(Note note) {
+        return switch (note.pitch()) {
+            case 36 -> Spacing.CLOSE;
+            case 37 -> Spacing.OPEN;
+            case 38 -> Spacing.MIXED_1;
+            default -> Spacing.MIXED_2; // unusable
+        };
     }
 
 }

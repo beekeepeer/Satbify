@@ -32,7 +32,6 @@ public class MelodicPositionKeySwitchApplier implements KeySwitchApplier {
         return preChords;
     }
 
-
     public boolean isMelodicPosition(int pitch) {
         return pitch == MelodicPosition.I.getKeySwitch() ||
                 pitch == MelodicPosition.III.getKeySwitch() ||
@@ -41,13 +40,13 @@ public class MelodicPositionKeySwitchApplier implements KeySwitchApplier {
                 pitch == MelodicPosition.IX.getKeySwitch();
     }
 
-   private void applyMelodicPosition(FatChord chord, Note note) {
-    switch (note.pitch()) {
+    private void applyMelodicPosition(FatChord chord, Note note) {
+        switch (note.pitch()) {
             case 31: chord.setMelodicPosition(MelodicPosition.I);break;
             case 32: chord.setMelodicPosition(MelodicPosition.III);break;
             case 33: chord.setMelodicPosition(MelodicPosition.V);break;
             case 34: chord.setMelodicPosition(MelodicPosition.VII);break;
             case 35: chord.setMelodicPosition(MelodicPosition.IX);break;
-    }}
-
+        }
+    }
 }

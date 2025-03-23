@@ -18,15 +18,9 @@ public class PageController {
         return "main_page";
     }
 
-    // explain how it words and requirements.
     @GetMapping("/download")
     public String displayDownloadPage() {
         return "download_page";
-    }
-
-    @GetMapping("/versions")
-    public String displayVersionsPage() {
-        return "versions_page";
     }
 
     @GetMapping("/download/{filename:.+}")

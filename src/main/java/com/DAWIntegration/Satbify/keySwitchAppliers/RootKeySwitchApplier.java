@@ -31,20 +31,19 @@ public class RootKeySwitchApplier implements KeySwitchApplier {
     }
 
     private Key rootFromNote(Note note) {
-        switch (note.pitch()) {
-            case 0:  return Key.C;
-            case 1:  return Key.C_Sharp;
-            case 2:  return Key.D;
-            case 3:  return Key.D_Sharp;
-            case 4:  return Key.E;
-            case 5:  return Key.F;
-            case 6:  return Key.F_Sharp;
-            case 7:  return Key.G;
-            case 8:  return Key.G_Sharp;
-            case 9:  return Key.A;
-            case 10: return Key.A_Sharp;
-            case 11: return Key.B;
-            default: return Key.C;
-        }
+        return switch (note.pitch()) {
+            case 1 -> Key.C_Sharp;
+            case 2 -> Key.D;
+            case 3 -> Key.D_Sharp;
+            case 4 -> Key.E;
+            case 5 -> Key.F;
+            case 6 -> Key.F_Sharp;
+            case 7 -> Key.G;
+            case 8 -> Key.G_Sharp;
+            case 9 -> Key.A;
+            case 10 -> Key.A_Sharp;
+            case 11 -> Key.B;
+            default -> Key.C;
+        };
     }
 }

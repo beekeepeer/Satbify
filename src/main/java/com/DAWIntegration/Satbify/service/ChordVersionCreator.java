@@ -25,9 +25,7 @@ public class ChordVersionCreator {
     }
 
     public List<List<FatChord>> filterChordVersions(List<Note> allKS, List<FatChord> preChords) {
-
-        return preChords.parallelStream().map(c -> populateFromRepo(c)).toList();
-
+        return preChords.parallelStream().map(this::populateFromRepo).toList();
     }
 
     
@@ -39,7 +37,7 @@ public class ChordVersionCreator {
                                 applyRootDegreeScale(
                                         duplicate(x, c)))))
                 .filter(x -> x.getOccurrence() != Occurrence.UNUSABLE)
-                .flatMap(x -> addBassVariant(x))
+                .flatMap(this::addBassVariant)
                 .collect(Collectors.toList());
     }
 
@@ -129,15 +127,16 @@ public class ChordVersionCreator {
 
     private FatChord adjustOctaves(FatChord chord) {
         double highestSoprano = 84, lowestBass = 35;
-        double tessitura = chord.getRegister();
-        double averagePitch = ((double) chord.getSoprano()
+        double register = chord.getRegister();
+        double averagePitch = (
+         (double) chord.getSoprano()
                 + chord.getAlto()
                 + chord.getTenor())
                 / 3;
-        if (averagePitch == tessitura || Math.abs(averagePitch - tessitura) < 7.0) {
+        if (averagePitch == register || Math.abs(averagePitch - register) < 7.0) {
             return chord;
         }
-        return (averagePitch < tessitura) 
+        return (averagePitch < register)
                 ? adjustOctaves(shiftOctave(chord, 12))
                 : adjustOctaves(shiftOctave(chord, -12));
 
@@ -152,14 +151,11 @@ public class ChordVersionCreator {
                 chord.setAlto(chord.getAlto() + difCommon);
                 chord.setTenor(chord.getTenor() + difCommon);
                 chord.setBass(chord.getBass() + difCommon);
-                return chord;
             } else { // differences are no octaves - this is the wrong Chord!!!
                 chord.setOccurrence(Occurrence.UNUSABLE);
-                return chord;
             }
-        } else { // This Chord should not be touched!!! Return the original.
-            return chord;
         }
+        return chord;
     }
 
 
@@ -220,7 +216,7 @@ public class ChordVersionCreator {
         return a;
     }
 
-    private static Stream<FatChord> addBassVariant(FatChord original) {
+    private Stream<FatChord> addBassVariant(FatChord original) {
         int t = original.getTenor();
         int b = original.getBass();
         if(t-b < 7){

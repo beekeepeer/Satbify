@@ -8,9 +8,8 @@ import com.DAWIntegration.Satbify.module.FatChord;
 import com.DAWIntegration.Satbify.module.Note;
 
 /**
- * The {@code PhrasePeriodKeySwitchApplier} class is an implementation of the {@code KeySwitchApplier} interface
- * that applies musical phrase and period number assignments to a list of {@code FatChord}
- * objects based on events of a single key switch with pitch 108. The main logic relies on the time gap between
+ * The PhrasePeriodKeySwitchApplier class applies musical phrase and period number assignments to a list of FatChord
+ * objects based on events of a single keySwitch with pitch 108. The main logic relies on the time gap between
  * the repetitive keySwitches.
  */
 

@@ -22,12 +22,8 @@ public class ScaleKeySwitchApplier implements KeySwitchApplier{
         for (FatChord chord : preChords) {
             for (Note note : notes) {
                 if (isScale(note.pitch()) && chord.getStartTime() >= note.startTime()) {
-                    applyScale(chord, note);
+                    chord.setKeyScale(applyScale(note));
                     }
-                    // if (chord.getStartTime() < note.startTime() + backlash) {
-                    //     // it works if notes list is sorded by startTime.
-                    //     break;
-                // }
             }
         }
         return preChords;
@@ -42,13 +38,13 @@ public class ScaleKeySwitchApplier implements KeySwitchApplier{
                 pitch == Scale.MINOR_MELODIC.getKeySwitch();
     }
 
-    private void applyScale(FatChord chord, Note note) {
-        switch (note.pitch()) {
-            case 13: chord.setKeyScale(Scale.MAJOR_NATURAL);break;
-            case 15: chord.setKeyScale(Scale.MAJOR_HARMONIC);break;
-            case 18: chord.setKeyScale(Scale.MINOR_NATURAL);break;
-            case 20: chord.setKeyScale(Scale.MINOR_HARMONIC);break;
-            case 22: chord.setKeyScale(Scale.MINOR_MELODIC);break;
-        }
+    private Scale applyScale(Note note) {
+        return switch (note.pitch()) {
+            case 15 -> Scale.MAJOR_HARMONIC;
+            case 18 -> Scale.MINOR_NATURAL;
+            case 20 -> Scale.MINOR_HARMONIC;
+            case 22 -> Scale.MINOR_MELODIC;
+            default -> Scale.MAJOR_NATURAL;
+        };
     }
 }

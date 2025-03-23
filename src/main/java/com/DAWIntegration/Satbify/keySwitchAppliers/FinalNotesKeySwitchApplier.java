@@ -11,6 +11,7 @@ import com.DAWIntegration.Satbify.module.Note;
  * This class only moves information about the notes which should be harmonized
  * from the keySwitches to the Chord objects to store.
  */
+
 public class FinalNotesKeySwitchApplier implements KeySwitchApplier{
 
     public static FinalNotesKeySwitchApplier getInstance() {

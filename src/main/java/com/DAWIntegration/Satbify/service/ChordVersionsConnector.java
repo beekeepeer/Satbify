@@ -19,12 +19,11 @@ public class ChordVersionsConnector {
     }
 
     public List<FatChord> connectChords(List<List<FatChord>> versions, List<Note> allKS) {
-        
-        FatChord[][] chordArray = versions.stream().map(x -> x.stream()
-                .toArray(FatChord[]::new)).toArray(FatChord[][]::new);
-
+        FatChord[][] chordArray = versions.stream().
+                map(x -> x.toArray(FatChord[]::new)).toArray(FatChord[][]::new);
         return new ArrayList<>(Arrays.asList(findBestConnected(chordArray)));
     }
+
     // Main algorithm method with dynamic programming approach
     private FatChord[] findBestConnected(FatChord[][] arr) {
         int l = arr.length;
@@ -76,7 +75,8 @@ public class ChordVersionsConnector {
     }
 
         // Reconstruct the best path
-    private FatChord[] getCurrentIndex(FatChord[][] arr, int l, int[] outIndexes, FatChord[] out, int[][] path, int bestLastIndex) {
+    private FatChord[] getCurrentIndex(
+            FatChord[][] arr, int l, int[] outIndexes, FatChord[] out, int[][] path, int bestLastIndex) {
         int currentIndex = bestLastIndex;
         for (int i = l - 1; i >= 0; i--) {
             outIndexes[i] = currentIndex;

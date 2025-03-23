@@ -5,7 +5,6 @@ import com.DAWIntegration.Satbify.module.*;
 import java.util.List;
 /*
 This is a substance of the database of all variations of chords without mentioning its Degree and scale. For simplicity it is in C major
-TODO add comments to lines about practical usage from textbook.
  */
 //  enum singleton is inherently thread-safe and guarantees a single instance.
 public enum FatChordRepository {
