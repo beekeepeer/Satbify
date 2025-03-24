@@ -111,5 +111,4 @@ src
          │
          └───templates
                  download_page.html
-                 main_page.html
-                ```
+                 main_page.html```
