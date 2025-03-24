@@ -37,3 +37,78 @@ https://www.youtube.com/embed/IDbd3HZmEW0
 
 ## License
 All rights reserved.
+
+src
+ └───main
+     ├───java
+     │   └───com
+     │       └───DAWIntegration
+     │           └───Satbify
+     │               │   SatbifyApplication.java
+     │               │
+     │               ├───controllers
+     │               │       PageController.java
+     │               │       SatbifyController.java
+     │               │
+     │               ├───keySwitchAppliers
+     │               │       AlterationKeySwitchApplier.java
+     │               │       ChordTypeKeySwitchApplier.java
+     │               │       FinalNotesKeySwitchApplier.java
+     │               │       InversionKeySwitchApplier.java
+     │               │       KeySwitchApplier.java
+     │               │       MelodicPositionKeySwitchApplier.java
+     │               │       PhrasePeriodKeySwitchApplier.java
+     │               │       RegisterKeySwitchApplier.java
+     │               │       RootKeySwitchApplier.java
+     │               │       ScaleKeySwitchApplier.java
+     │               │       SpacingKeySwitchApplier.java
+     │               │
+     │               ├───module
+     │               │       Alteration.java
+     │               │       ChordType.java
+     │               │       Degree.java
+     │               │       FatChord.java
+     │               │       Inversion.java
+     │               │       Key.java
+     │               │       MelodicPosition.java
+     │               │       Note.java
+     │               │       Occurrence.java
+     │               │       REAPER_stuff.java
+     │               │       RequestDeserialized.java
+     │               │       Scale.java
+     │               │       Spacing.java
+     │               │
+     │               ├───repository
+     │               │       FatChordRepository.java
+     │               │
+     │               └───service
+     │                       ChordFinder.java
+     │                       ChordsToReaperSerializer.java
+     │                       ChordVersionCreator.java
+     │                       ChordVersionsConnector.java
+     │                       KeySwitchSorter.java
+     │                       NotesToChordsConverter.java
+     │                       ReaperDeserializer.java
+     │                       SatbifyFacade.java
+     │                       SatbifyMethods.java
+     │
+     └───resources
+         │   application.properties
+         │
+         ├───data
+         │       incomingDataExample.json
+         │       incomingDataExampleSmall.json
+         │       incomingDataHumanized.json
+         │
+         ├───DAW_scripts
+         │   └───REAPER
+         │           satbify 0.03.lua
+         │           satbify_note_names.txt
+         │           SaveTockenExample.lua
+         │
+         ├───META-INF
+         │       MANIFEST.MF
+         │
+         └───templates
+                 download_page.html
+                 main_page.html
