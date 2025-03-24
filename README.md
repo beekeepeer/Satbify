@@ -104,7 +104,7 @@ src
          │   └───REAPER
          │           satbify 0.03.lua
          │           satbify_note_names.txt
-         │           SaveTockenExample.lua
+         │           SaveTokenExample.lua
          │
          ├───META-INF
          │       MANIFEST.MF
